@@ -37,12 +37,6 @@
     "cz-conventional-changelog": "^3.3.0",
     "semantic-release": "^20.1.0"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
