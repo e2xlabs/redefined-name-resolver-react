@@ -7,7 +7,7 @@ module.exports = function override(config, env) {
 
     aliasDangerous({
         ...aliasMap,
-        "redefined-resolver": !!process.env.DEV_MODE
+        "redefined-resolver": process.env.NODE_ENV === "development"
           ? "../redefined-name-resolver-js"
           : "node_modules/@redefined/name-resolver-js",
     })(config)
