@@ -3,7 +3,7 @@ import React from 'react';
 function RedefinedDomainResolver() {
   return (
     <div className="App">
-      <input />
+      <input placeholder="White yor domain" />
     </div>
   );
 }

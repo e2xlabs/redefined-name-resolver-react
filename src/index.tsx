@@ -3,13 +3,6 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import RedefinedDomainResolver from "./field/RedefinedDomainResolver";
-import { RedefinedResolver } from "redefined-resolver";
-
-const resolver = new RedefinedResolver();
-//
-// resolver.resolve('ik@soft.com', "eth").then((val) => {
-//   console.log("RESPONSE", val)
-// }).catch(console.error);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
