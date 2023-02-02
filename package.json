@@ -12,7 +12,7 @@
     "access": "public"
   },
   "release": {
-    "branches": ["master", "RED-368_init"],
+    "branches": ["master"],
     "access": "public"
   },
   "scripts": {
