@@ -12,15 +12,20 @@
     "access": "public"
   },
   "release": {
-    "branches": ["master"],
+    "branches": [
+      "master"
+    ],
     "access": "public"
   },
   "scripts": {
     "commit": "git-cz",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "DEV_MODE=true && react-app-rewired start",
+    "win-start": "set DEV_MODE=true && react-app-rewired start",
+    "build:dev": "DEV_MODE=true && react-app-rewired build",
+    "win-build:dev": "set DEV_MODE=true && react-app-rewired build",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject",
     "semantic-release": "semantic-release"
   },
   "dependencies": {
@@ -32,6 +37,8 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "react": "^18.2.0",
+    "react-app-rewire-alias": "^1.1.7",
+    "react-app-rewired": "^2.2.1",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
