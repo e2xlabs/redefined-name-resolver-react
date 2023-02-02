@@ -1,5 +1,5 @@
 {
-  "name": "redefined-name-resolver-react",
+  "name": "@redefined/name-resolver-react",
   "version": "0.0.0-development",
   "description": "React component to resolve crypto names",
   "author": "Cifrex",
@@ -9,7 +9,8 @@
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
-    "access": "restricted"
+    "access": "public",
+    "branches": ["master", "RED-368_init"]
   },
   "scripts": {
     "commit": "git-cz",
