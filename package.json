@@ -9,8 +9,11 @@
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
-    "access": "public",
-    "branches": ["master", "RED-368_init"]
+    "access": "public"
+  },
+  "release": {
+    "branches": ["master", "RED-368_init"],
+    "access": "public"
   },
   "scripts": {
     "commit": "git-cz",
