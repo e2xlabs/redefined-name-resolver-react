@@ -22,6 +22,7 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-scripts test",
+    "test:ci": "npm run test -- --watchAll=false --ci --coverage",
     "eject": "react-scripts eject",
     "semantic-release": "semantic-release"
   },
