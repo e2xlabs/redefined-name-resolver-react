@@ -29,14 +29,15 @@ const RedefinedDomainResolver = (props: InputFieldProps) => {
         <StyledImage src={companyLogo} alt="logo" />
         <Input value={domain} onChange={(e) => setDomain(e.target.value)} />
       </InputContainer>
-      <DropDown active={dropDownActive} content={content} onChange={onChangeValue}/>
+      {/*<Progress />*/}
+      <DropDown active={dropDownActive} domain={domain} onChange={onChangeValue}/>
       {error ? <ErrorMsg>{getErrorMessage(error)}</ErrorMsg> : null}
     </Container>
   );
 }
 
 const Container = styled.div`
-  width: 20vw;
+  width: 90%;
   position: fixed;
 `
 
@@ -57,7 +58,7 @@ const Input = styled.input`
   font-family: "Poppins", serif;
   font-size: 16px;
   color: #222222;
-  min-height: 40px;
+  height: 40px;
   border-radius: 8px;
   outline-color: #C7C7C7;
   border-color: #707070;
@@ -70,11 +71,5 @@ const StyledImage = styled.img`
   padding-top: 5px;
   padding-left: 5px;
 `
-
-const content = [
-  "D3y4Qj4t2YrtxjFA3snjbAGTriTvWkNMRJEWwqEZCC3T",
-  "0xCFf789960Bc9B919010321943A4DBC4fC1a3C726",
-  "terra1280ext9wmt8xc4gz6hzyrvt4n8ph65vnl0ml4k"
-]
 
 export default RedefinedDomainResolver;

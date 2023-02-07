@@ -11,5 +11,12 @@ export const copyText = (text: string): void => {
 };
 
 export const getAbbreviatedAddress = (address: string): string => (
-    `${address.substring(0, 12)}...${address.substring(address.length - 5, address.length)}`
+  `${address.substring(0, 12)}...${address.substring(address.length - 5, address.length)}`
 );
+
+export enum CoinLogos {
+  ETH = "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png",
+  BSC = "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png",
+  SOL = "https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png",
+  ZIL = "https://s2.coinmarketcap.com/static/img/coins/64x64/2469.png"
+}

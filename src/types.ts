@@ -7,8 +7,8 @@ export type InputFieldChangeEvent = {
 
 export type DropdownProps = {
   active: boolean;
-  content: any[];
-  onChange: (value: any) => void;
+  domain: string;
+  onChange: (value: string) => void;
 }
 
 export interface InputFieldProps {
