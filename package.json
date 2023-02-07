@@ -12,14 +12,17 @@
     "access": "public"
   },
   "release": {
-    "branches": ["master"],
+    "branches": [
+      "master"
+    ],
     "access": "public"
   },
   "scripts": {
     "commit": "git-cz",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
     "test": "react-scripts test",
+    "test:ci": "npm run test -- --watchAll=false --ci --coverage",
     "eject": "react-scripts eject",
     "semantic-release": "semantic-release"
   },
@@ -32,6 +35,8 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "react": "^18.2.0",
+    "react-app-rewire-alias": "^1.1.7",
+    "react-app-rewired": "^2.2.1",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
