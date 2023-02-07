@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import RedefinedDomainResolver from "./field/RedefinedDomainResolver";
+import RedefinedDomainResolver from "./components/RedefinedDomainResolver";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
