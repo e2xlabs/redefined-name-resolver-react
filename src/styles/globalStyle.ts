@@ -20,6 +20,10 @@ const GlobalStyle = createGlobalStyle`
       background-color: ${baseStyle.primaryColor};
     }
   }
+  
+  body {
+    font-family: "Poppins",serif;
+  }
 `
 
 export default GlobalStyle;
