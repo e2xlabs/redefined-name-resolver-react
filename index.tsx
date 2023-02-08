@@ -1,1 +1,1 @@
-export * as RedefinedDomainResolver from "./src/field/RedefinedDomainResolver";
+export * as RedefinedDomainResolver from "./src/components/RedefinedDomainResolver";

@@ -9,7 +9,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <RedefinedDomainResolver />
+    <RedefinedDomainResolver
+      onSelect={(val) => console.log(`Congratulate! Your Address: ${val}`)}
+    />
   </React.StrictMode>
 );
 

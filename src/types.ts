@@ -1,28 +1,25 @@
-import {HTMLProps, ClipboardEvent} from "react";
-
-export type InputFieldChangeEvent = {
-  index: number;
-  value: string;
-}
+import {Account} from "redefined-resolver";
 
 export type DropdownProps = {
   active: boolean;
-  domain: string;
-  onChange: (value: string) => void;
+  content: Account[];
+  loading: boolean;
+  error: string | Error;
+  onChange?: (value: string) => void;
+  onClickOutside?: () => void;
 }
 
-export interface InputFieldProps {
-  readonly?: boolean;
-  required?: boolean;
-  disabled?: boolean;
+export interface RedefinedDomainResolverProps {
+  width?: string;
+  height?: string;
+  theme?: "light" | "dark";
+  onSelect(address: string): void;
+}
 
-  autoFocus?: boolean;
-  index?: number;
-  value?: HTMLProps<HTMLInputElement>["value"];
-  error?: string | Error;
-  label?: string;
+export interface ContainerProps {
+  width?: string;
+}
 
-  onChange?(event: InputFieldChangeEvent): void;
-
-  onCopy?(event: ClipboardEvent): void;
+export interface InputProps {
+  height?: string;
 }
