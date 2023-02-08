@@ -13,6 +13,7 @@ export interface RedefinedDomainResolverProps {
   width?: string;
   height?: string;
   theme?: "light" | "dark";
+
   onSelect(address: string): void;
 }
 

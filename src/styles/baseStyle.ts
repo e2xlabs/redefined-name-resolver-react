@@ -1,5 +1,5 @@
 export const baseStyle = {
-  width: '30%',
+  width: '40%',
   primaryColor: "#faab1e",
 
   error: {

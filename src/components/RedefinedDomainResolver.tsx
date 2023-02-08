@@ -6,10 +6,10 @@ import {ContainerProps, RedefinedDomainResolverProps, InputProps} from "../types
 import companyLogo from '../assets/small-logo.svg';
 import {baseStyle} from "../styles/baseStyle";
 import GlobalStyle from "../styles/globalStyle";
-import { RedefinedResolver } from "redefined-resolver";
+import {RedefinedResolver} from "redefined-resolver";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
-  const {onSelect} = props;
+  const {width, height, onSelect} = props;
   const [dropDownActive, setDropDownActive] = useState(false);
   const [domain, setDomain] = useState("");
   const [addresses, setAddresses] = useState([]);
@@ -27,8 +27,8 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
       setAddresses([]);
       setError("");
       await new RedefinedResolver().resolve(value)
-          .then((res) => setAddresses(res))
-          .catch(error => setError(error));
+        .then((res) => setAddresses(res))
+        .catch(error => setError(error));
       setLoading(false);
     }
   }
@@ -50,21 +50,21 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
   }
 
   return (
-      <Container>
-        <GlobalStyle/>
-        <InputContainer onClick={onInputClick}>
-          <StyledLogo src={companyLogo} alt="logo"/>
-          <StyledInput value={domain} onChange={onChangeInput}/>
-        </InputContainer>
-        <DropDown
-          active={dropDownActive}
-          loading={loading}
-          error={error}
-          content={addresses}
-          onChange={onChangeValue}
-          onClickOutside={() => setDropDownActive(false)}
-        />
-      </Container>
+    <Container width={width}>
+      <GlobalStyle/>
+      <InputContainer onClick={onInputClick}>
+        <StyledLogo src={companyLogo} alt="logo"/>
+        <StyledInput height={height} value={domain} onChange={onChangeInput}/>
+      </InputContainer>
+      <DropDown
+        active={dropDownActive}
+        loading={loading}
+        error={error}
+        content={addresses}
+        onChange={onChangeValue}
+        onClickOutside={() => setDropDownActive(false)}
+      />
+    </Container>
   );
 }
 

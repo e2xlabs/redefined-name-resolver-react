@@ -21,19 +21,23 @@ const DropDown = (props: DropdownProps) => {
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, [ onClickOutside ]);
+  }, [onClickOutside]);
 
   return active ? (
     <DropDownWrapper ref={ref}>
-      {loading ? <StyledLoader type="spinningBubbles" color={baseStyle.primaryColor} height={baseStyle.loader.height} width={baseStyle.loader.height}/> : null}
+      {loading ? <StyledLoader type="spinningBubbles" color={baseStyle.primaryColor} height={baseStyle.loader.height}
+                               width={baseStyle.loader.height}/> : null}
       {!loading && content.length > 0 ? <UnorderedList>
         {content.map((item, key) => {
           return (
             <ListItem key={key}>
               <ItemWrapper>
                 <StyledContent>
-                  <StyledLogo width={baseStyle.dropDown.logo.width} src={CoinLogos[item.network.toLocaleUpperCase()]} alt="coinLogo"/>
-                  <div onClick={() => { onChange(item.address)}}>
+                  <StyledLogo width={baseStyle.dropDown.logo.width} src={CoinLogos[item.network.toLocaleUpperCase()]}
+                              alt="coinLogo"/>
+                  <div onClick={() => {
+                    onChange(item.address)
+                  }}>
                     <StyledTitle>{getAbbreviatedAddress(item.address)}</StyledTitle>
                     <StyledSubTitle>{item.from}</StyledSubTitle>
                   </div>
@@ -110,7 +114,7 @@ const StyledTitle = styled.div`
   }
 `
 
-const StyledSubTitle = styled.div` 
+const StyledSubTitle = styled.div`
   color: darkgrey;
   font-size: 12px;
 `
@@ -129,7 +133,7 @@ const StyledErrorMessage = styled.div`
   font-size: ${baseStyle.error.fontSize};
 `;
 
-const StyledNotFoundMessage = styled(StyledErrorMessage)` 
+const StyledNotFoundMessage = styled(StyledErrorMessage)`
   color: black;
 `
 

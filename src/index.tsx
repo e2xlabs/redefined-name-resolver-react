@@ -11,6 +11,7 @@ root.render(
   <React.StrictMode>
     <RedefinedDomainResolver
       onSelect={(val) => console.log(`Congratulate! Your Address: ${val}`)}
+      width={"40%"}
     />
   </React.StrictMode>
 );
