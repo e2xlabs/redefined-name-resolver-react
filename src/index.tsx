@@ -10,7 +10,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <RedefinedDomainResolver
-      onSelect={(val) => console.log(`Congratulate! Your Address: ${val}`)}
+      onSelect={(val) => console.log(`Your Address: ${val}`)}
       width={"40%"}
     />
   </React.StrictMode>
