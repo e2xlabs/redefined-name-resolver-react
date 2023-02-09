@@ -13,8 +13,8 @@ const DropDown = (props: DropdownProps) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (ref.current && !ref.current.contains(event.target)) {
-        onClickOutside && onClickOutside();
+      if (ref.current && !ref.current.contains(event.target) && onClickOutside) {
+         onClickOutside();
       }
     };
     document.addEventListener('click', handleClickOutside, true);

@@ -17,23 +17,26 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    domain.length === 0 && setDropDownActive(false);
+    if (domain.length === 0) setDropDownActive(false);
   }, [domain])
 
-  const handleDebounceFn = async (value: string) => {
+  const resolveDomain = async (value: string) => {
     if (value.length > 0) {
       setDropDownActive(true);
       setLoading(true);
       setAddresses([]);
       setError("");
-      await new RedefinedResolver().resolve(value)
-        .then((res) => setAddresses(res))
-        .catch(error => setError(error));
+      try {
+        setAddresses(await new RedefinedResolver().resolve(value));
+      } catch (e) {
+        setError(e)
+      }
       setLoading(false);
     }
   }
 
-  const fetchAddresses = useCallback(_debounce(handleDebounceFn, 500), []);
+  const resolveDomainWithDebounce
+    = useCallback(_debounce(resolveDomain, 500), []);
 
   const onChangeValue = (value) => {
     setDropDownActive(false);
@@ -46,7 +49,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
 
   const onChangeInput = (e) => {
     setDomain(e.target.value);
-    fetchAddresses(e.target.value);
+    resolveDomainWithDebounce(e.target.value);
   }
 
   return (
