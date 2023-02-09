@@ -17,7 +17,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    domain.length === 0 && setDropDownActive(false);
+    if (domain.length === 0) setDropDownActive(false);
   }, [domain])
 
   const resolveDomain = async (value: string) => {
@@ -26,9 +26,11 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
       setLoading(true);
       setAddresses([]);
       setError("");
-      await new RedefinedResolver().resolve(value)
-        .then((res) => setAddresses(res))
-        .catch(error => setError(error));
+      try {
+        setAddresses(await new RedefinedResolver().resolve(value));
+      } catch (e) {
+        setError(e)
+      }
       setLoading(false);
     }
   }
