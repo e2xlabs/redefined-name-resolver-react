@@ -28,7 +28,7 @@ const DropDown = (props: DropdownProps) => {
       {loading ? <StyledLoader type="spinningBubbles" color={baseStyle.primaryColor} height={baseStyle.loader.height}
                                width={baseStyle.loader.height}/> : null}
       {!loading && content.length > 0 ? <UnorderedList>
-        {content.map((item, key) => {
+        {content.sort((a, b) => a.network.localeCompare(b.network)).map((item, key) => {
           return (
             <ListItem key={key}>
               <ItemWrapper>
