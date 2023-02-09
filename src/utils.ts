@@ -11,7 +11,7 @@ export const copyText = (text: string): void => {
 };
 
 export const getAbbreviatedAddress = (address: string): string => (
-  `${address.substring(0, 12)}...${address.substring(address.length - 5, address.length)}`
+  `${address.substring(0, 6)} ... ${address.substring(address.length - 4, address.length)}`
 );
 
 export enum CoinLogos {

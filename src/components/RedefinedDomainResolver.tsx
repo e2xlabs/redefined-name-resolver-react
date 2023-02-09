@@ -20,7 +20,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
     domain.length === 0 && setDropDownActive(false);
   }, [domain])
 
-  const handleDebounceFn = async (value: string) => {
+  const resolveDomain = async (value: string) => {
     if (value.length > 0) {
       setDropDownActive(true);
       setLoading(true);
@@ -33,7 +33,8 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
     }
   }
 
-  const fetchAddresses = useCallback(_debounce(handleDebounceFn, 500), []);
+  const resolveDomainWithDebounce
+    = useCallback(_debounce(resolveDomain, 500), []);
 
   const onChangeValue = (value) => {
     setDropDownActive(false);
@@ -46,7 +47,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
 
   const onChangeInput = (e) => {
     setDomain(e.target.value);
-    fetchAddresses(e.target.value);
+    resolveDomainWithDebounce(e.target.value);
   }
 
   return (
