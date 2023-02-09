@@ -5,16 +5,25 @@ export type DropdownProps = {
   content: Account[];
   loading: boolean;
   error: string | Error;
+  hiddenAddressGap?: HiddenAddressGap;
   onChange?: (value: string) => void;
   onClickOutside?: () => void;
 }
 
 export type Theme = "light" | "dark"
 
+type HiddenAddressGap = {
+  indexA: number;
+  indexB: number;
+}
+
 export interface RedefinedDomainResolverProps {
+  theme: Theme;
   width?: string;
   height?: string;
-  theme: Theme;
+  autoFocus?: boolean
+  disabled?: boolean
+  hiddenAddressGap?: HiddenAddressGap
 
   onSelect(address: string): void;
 }
@@ -25,6 +34,11 @@ export interface ContainerProps {
 
 export interface InputProps {
   height?: string;
+  disabled?: boolean;
+}
+
+export interface LogoProps {
+  disabled?: boolean;
 }
 
 export interface ITheme {
@@ -33,6 +47,7 @@ export interface ITheme {
     primary: string
     secondary: string
     error: string,
-    brandColor: string
+    brandColor: string,
+    disabled: string
   }
 }

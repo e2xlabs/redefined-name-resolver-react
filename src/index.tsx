@@ -11,8 +11,11 @@ root.render(
   <React.StrictMode>
     <RedefinedDomainResolver
       onSelect={(val) => console.log(`Your Address: ${val}`)}
+      theme={"dark"}
       width={"40%"}
-      theme={"light"}
+      autoFocus={false}
+      disabled={false}
+      hiddenAddressGap={{indexA: 3, indexB: 5}}
     />
   </React.StrictMode>
 );

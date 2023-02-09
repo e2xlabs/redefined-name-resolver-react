@@ -7,7 +7,8 @@ export const baseTheme: ITheme = {
     error: "#cc0033",
     primary: "#222222",
     secondary: "#FFCCCC",
-    brandColor: "#faab1e"
+    brandColor: "#faab1e",
+    disabled: "#ebebe4"
   }
 }
 
@@ -28,6 +29,7 @@ export const darkTheme: DefaultTheme = {
     background: "#222222",
     primary: "#FFCCCC",
     secondary: "#222222",
+    disabled: "#9a9a9a",
   },
 }
 

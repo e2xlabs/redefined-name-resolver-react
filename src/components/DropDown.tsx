@@ -8,7 +8,7 @@ import ReactLoading from "react-loading";
 import {baseStyle} from "../styles/baseStyle";
 
 const DropDown = (props: DropdownProps) => {
-  const {active, content, loading, error, onChange, onClickOutside} = props;
+  const {active, content, loading, error, hiddenAddressGap, onChange, onClickOutside} = props;
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const DropDown = (props: DropdownProps) => {
                   <div onClick={() => {
                     onChange(item.address)
                   }}>
-                    <StyledTitle>{getAbbreviatedAddress(item.address)}</StyledTitle>
+                    <StyledTitle>{getAbbreviatedAddress(item.address, hiddenAddressGap.indexA, hiddenAddressGap.indexB)}</StyledTitle>
                     <StyledSubTitle>{item.from}</StyledSubTitle>
                   </div>
                 </StyledContent>

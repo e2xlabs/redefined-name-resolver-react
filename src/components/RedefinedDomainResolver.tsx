@@ -2,14 +2,14 @@ import React, {useCallback, useEffect, useState} from "react";
 import _debounce from 'lodash/debounce';
 import styled, {ThemeProvider} from "styled-components";
 import DropDown from "./DropDown";
-import {ContainerProps, RedefinedDomainResolverProps, InputProps} from "../types";
+import {ContainerProps, RedefinedDomainResolverProps, InputProps, LogoProps} from "../types";
 import companyLogo from '../assets/small-logo.svg';
 import {baseStyle, darkTheme, lightTheme} from "../styles/baseStyle";
 import GlobalStyle from "../styles/globalStyle";
 import {RedefinedResolver} from "redefined-resolver";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
-  const {width, height, theme, onSelect} = props;
+  const {width, height, disabled, autoFocus, theme, onSelect} = props;
   const [dropDownActive, setDropDownActive] = useState(false);
   const [domain, setDomain] = useState("");
   const [addresses, setAddresses] = useState([]);
@@ -57,8 +57,8 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
       <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
       <GlobalStyle/>
       <InputContainer onClick={onInputClick}>
-        <StyledLogo src={companyLogo} alt="logo"/>
-        <StyledInput height={height} value={domain} onChange={onChangeInput}/>
+        <StyledLogo disabled={disabled} src={companyLogo} alt="logo"/>
+        <StyledInput disabled={disabled} autoFocus={autoFocus} height={height} value={domain} onChange={onChangeInput}/>
       </InputContainer>
       <DropDown
         active={dropDownActive}
@@ -66,6 +66,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         error={error}
         content={addresses}
         onChange={onChangeValue}
+        hiddenAddressGap={props.hiddenAddressGap}
         onClickOutside={() => setDropDownActive(false)}
       />
       </ThemeProvider>
@@ -85,7 +86,7 @@ const InputContainer = styled.div`
 const StyledInput = styled.input<InputProps>`
   padding: 0 0 0 calc(${baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - ${baseStyle.input.logo.padding});
   width: 100%;
-  background: ${({ theme }) => theme.colors.background};
+  background: ${(props) => props.disabled ? props.theme.colors.disabled : props.theme.colors.background};
   font-family: ${baseStyle.input.fontFamily};
   font-size: ${baseStyle.input.fontSize};
   color: ${({ theme }) => theme.colors.primary};
@@ -96,12 +97,12 @@ const StyledInput = styled.input<InputProps>`
   border-width: ${baseStyle.input.borderWidth};
 `;
 
-const StyledLogo = styled.img`
+const StyledLogo = styled.img<LogoProps>`
   width: calc(${baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - 2 * ${baseStyle.input.logo.padding});
   position: absolute;
   bottom: ${baseStyle.input.logo.padding};
   left: ${baseStyle.input.logo.padding};
-  background: ${({ theme }) => theme.colors.background};
+  background: ${(props) => props.disabled ? props.theme.colors.disabled : props.theme.colors.background};
   border-bottom-left-radius: 8px;
   border-top-left-radius: 8px;
 `
