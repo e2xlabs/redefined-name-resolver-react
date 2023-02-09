@@ -1,15 +1,15 @@
 import React, {useCallback, useEffect, useState} from "react";
 import _debounce from 'lodash/debounce';
-import styled from "styled-components";
+import styled, {ThemeProvider} from "styled-components";
 import DropDown from "./DropDown";
 import {ContainerProps, RedefinedDomainResolverProps, InputProps} from "../types";
 import companyLogo from '../assets/small-logo.svg';
-import {baseStyle} from "../styles/baseStyle";
+import {baseStyle, darkTheme, lightTheme} from "../styles/baseStyle";
 import GlobalStyle from "../styles/globalStyle";
 import {RedefinedResolver} from "redefined-resolver";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
-  const {width, height, onSelect} = props;
+  const {width, height, theme, onSelect} = props;
   const [dropDownActive, setDropDownActive] = useState(false);
   const [domain, setDomain] = useState("");
   const [addresses, setAddresses] = useState([]);
@@ -51,6 +51,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
 
   return (
     <Container width={width}>
+      <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
       <GlobalStyle/>
       <InputContainer onClick={onInputClick}>
         <StyledLogo src={companyLogo} alt="logo"/>
@@ -64,6 +65,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         onChange={onChangeValue}
         onClickOutside={() => setDropDownActive(false)}
       />
+      </ThemeProvider>
     </Container>
   );
 }
@@ -78,11 +80,12 @@ const InputContainer = styled.div`
 `
 
 const StyledInput = styled.input<InputProps>`
-  padding: 0 0 0 calc(${baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - 2 * ${baseStyle.input.logo.paddingTop} + ${baseStyle.input.logo.paddingLeft} + 3px);
+  padding: 0 0 0 calc(${baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - ${baseStyle.input.logo.padding});
   width: 100%;
+  background: ${({ theme }) => theme.colors.background};
   font-family: ${baseStyle.input.fontFamily};
   font-size: ${baseStyle.input.fontSize};
-  color: ${baseStyle.input.color};
+  color: ${({ theme }) => theme.colors.primary};
   height: ${p => p.height || baseStyle.input.height};
   border-radius: ${baseStyle.input.borderRadius};
   outline-color: ${baseStyle.input.outlineColor};
@@ -91,11 +94,11 @@ const StyledInput = styled.input<InputProps>`
 `;
 
 const StyledLogo = styled.img`
-  width: calc(${baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - 2 * ${baseStyle.input.logo.paddingTop});
+  width: calc(${baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - 2 * ${baseStyle.input.logo.padding});
   position: absolute;
-  padding-top: ${baseStyle.input.logo.paddingTop};
-  padding-left: ${baseStyle.input.logo.paddingLeft};
-  background: black;
+  bottom: ${baseStyle.input.logo.padding};
+  left: ${baseStyle.input.logo.padding};
+  background: ${({ theme }) => theme.colors.background};
   border-bottom-left-radius: 8px;
   border-top-left-radius: 8px;
 `

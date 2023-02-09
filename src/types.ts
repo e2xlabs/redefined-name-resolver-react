@@ -9,10 +9,12 @@ export type DropdownProps = {
   onClickOutside?: () => void;
 }
 
+export type Theme = "light" | "dark"
+
 export interface RedefinedDomainResolverProps {
   width?: string;
   height?: string;
-  theme?: "light" | "dark";
+  theme: Theme;
 
   onSelect(address: string): void;
 }
@@ -23,4 +25,14 @@ export interface ContainerProps {
 
 export interface InputProps {
   height?: string;
+}
+
+export interface ITheme {
+  colors: {
+    background: string
+    primary: string
+    secondary: string
+    error: string,
+    brandColor: string
+  }
 }

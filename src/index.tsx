@@ -12,6 +12,7 @@ root.render(
     <RedefinedDomainResolver
       onSelect={(val) => console.log(`Your Address: ${val}`)}
       width={"40%"}
+      theme={"light"}
     />
   </React.StrictMode>
 );

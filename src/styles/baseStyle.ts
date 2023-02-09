@@ -1,9 +1,42 @@
+import {ITheme} from "../types";
+import {DefaultTheme} from "styled-components";
+
+export const baseTheme: ITheme = {
+  colors: {
+    background: "#FFFFFF",
+    error: "#cc0033",
+    primary: "#222222",
+    secondary: "#FFCCCC",
+    brandColor: "#faab1e"
+  }
+}
+
+export const lightTheme: DefaultTheme = {
+  ...baseTheme,
+  type: "light",
+
+  colors: {
+    ...baseTheme.colors,
+  },
+}
+
+export const darkTheme: DefaultTheme = {
+  type: "dark",
+
+  colors: {
+    ...baseTheme.colors,
+    background: "#222222",
+    primary: "#FFCCCC",
+    secondary: "#222222",
+  },
+}
+
 export const baseStyle = {
   width: '40%',
-  primaryColor: "#faab1e",
+  brandColor: baseTheme.colors.brandColor,
 
   error: {
-    color: "#cc0033",
+    color: baseTheme.colors.error,
     fontSize: "14px",
   },
 
@@ -17,8 +50,7 @@ export const baseStyle = {
     borderColor: "#707070",
     borderWidth: "1px",
     logo: {
-      paddingTop: "0px",
-      paddingLeft: "0px",
+      padding: "5px"
     }
   },
 

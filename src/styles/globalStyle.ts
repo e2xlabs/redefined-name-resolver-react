@@ -17,7 +17,7 @@ const GlobalStyle = createGlobalStyle`
     ::-webkit-scrollbar-thumb {
       border-radius: 8px;
       --webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
-      background-color: ${baseStyle.primaryColor};
+      background-color: ${baseStyle.brandColor};
     }
   }
   

@@ -25,7 +25,7 @@ const DropDown = (props: DropdownProps) => {
 
   return active ? (
     <DropDownWrapper ref={ref}>
-      {loading ? <StyledLoader type="spinningBubbles" color={baseStyle.primaryColor} height={baseStyle.loader.height}
+      {loading ? <StyledLoader type="spinningBubbles" color={baseStyle.brandColor} height={baseStyle.loader.height}
                                width={baseStyle.loader.height}/> : null}
       {!loading && content.length > 0 ? <UnorderedList>
         {content.sort((a, b) => a.network.localeCompare(b.network)).map((item, key) => {
@@ -50,7 +50,7 @@ const DropDown = (props: DropdownProps) => {
           );
         })}
       </UnorderedList> : null}
-      {!loading && content.length == 0 ? <StyledNotFoundMessage>Addresses not found</StyledNotFoundMessage> : null}
+      {!loading && !error && content.length == 0 ? <StyledNotFoundMessage>Addresses not found</StyledNotFoundMessage> : null}
       {error ? <StyledErrorMessage>{getErrorMessage(error)}</StyledErrorMessage> : null}
     </DropDownWrapper>
   ) : null;
@@ -61,6 +61,7 @@ const DropDownWrapper = styled.div`
   width: calc(100% - 2 * ${baseStyle.input.borderWidth});
   border-radius: ${baseStyle.input.borderRadius};
   border: ${baseStyle.input.borderWidth} solid ${baseStyle.input.borderColor};
+  background: ${({ theme }) => theme.colors.background};
   transition: 0.5s ease all;
 `
 
@@ -98,18 +99,20 @@ const StyledIcon = styled(Icon)`
   width: ${baseStyle.dropDown.copyIcon.width};
   vertical-align: middle;
   cursor: pointer;
+  color: ${({ theme }) => theme.colors.primary};
 
   :hover {
-    color: ${baseStyle.primaryColor};
+    color: ${baseStyle.brandColor};
     transition: 0.5s ease all;
   }
 `
 
 const StyledTitle = styled.div`
   cursor: pointer;
+  color: ${({ theme }) => theme.colors.primary};
 
   :hover {
-    color: ${baseStyle.primaryColor};
+    color: ${baseStyle.brandColor};
     transition: 0.5s ease all;
   }
 `
@@ -134,7 +137,7 @@ const StyledErrorMessage = styled.div`
 `;
 
 const StyledNotFoundMessage = styled(StyledErrorMessage)`
-  color: black;
+  color: ${({ theme }) => theme.colors.primary};
 `
 
 export default DropDown;
