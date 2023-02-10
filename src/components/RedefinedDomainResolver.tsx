@@ -58,7 +58,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
       <GlobalStyle/>
       <InputContainer onClick={onInputClick}>
         <StyledLogo disabled={disabled} src={companyLogo} alt="logo"/>
-        <StyledInput disabled={disabled} autoFocus={autoFocus} height={height} value={domain} onChange={onChangeInput}/>
+        <StyledInput isDropDownActive={dropDownActive} disabled={disabled} autoFocus={autoFocus} height={height} value={domain} onChange={onChangeInput}/>
       </InputContainer>
       <DropDown
         active={dropDownActive}
@@ -76,6 +76,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
 
 const Container = styled.div<ContainerProps>`
   width: ${p => p.width || baseStyle.width};
+  position: relative;
 `
 
 const InputContainer = styled.div`

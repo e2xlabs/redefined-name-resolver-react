@@ -48,8 +48,7 @@ export const baseStyle = {
     color: "#222222",
     height: "40px",
     borderRadius: "8px",
-    outlineColor: "#C7C7C7",
-    borderColor: "#707070",
+    borderColor: "#222222",
     borderWidth: "1px",
     logo: {
       padding: "5px"

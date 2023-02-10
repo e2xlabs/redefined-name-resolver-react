@@ -6,6 +6,7 @@ import {mdiContentCopy} from "@mdi/js";
 import {CoinLogos, copyText, getAbbreviatedAddress, getErrorMessage} from "../utils";
 import ReactLoading from "react-loading";
 import {baseStyle} from "../styles/baseStyle";
+import {Account} from "redefined-resolver";
 
 const DropDown = (props: DropdownProps) => {
   const {active, content, loading, error, hiddenAddressGap, onChange, onClickOutside} = props;
@@ -23,26 +24,29 @@ const DropDown = (props: DropdownProps) => {
     };
   }, [onClickOutside]);
 
+  const onCopyClick = (event: any, address: string) => {
+    copyText(address);
+    event.stopPropagation();
+  }
+
   return active ? (
     <DropDownWrapper ref={ref}>
       {loading ? <StyledLoader type="spinningBubbles" color={baseStyle.brandColor} height={baseStyle.loader.height}
                                width={baseStyle.loader.height}/> : null}
       {!loading && content.length > 0 ? <UnorderedList>
-        {content.sort((a, b) => a.network.localeCompare(b.network)).map((item, key) => {
+        {content.sort((a, b) => a.network.localeCompare(b.network)).map((item: Account, key) => {
           return (
             <ListItem key={key}>
-              <ItemWrapper>
+              <ItemWrapper onClick={() => onChange(item.address)}>
                 <StyledContent>
                   <StyledLogo width={baseStyle.dropDown.logo.width} src={CoinLogos[item.network.toLocaleUpperCase()]}
                               alt="coinLogo"/>
-                  <div onClick={() => {
-                    onChange(item.address)
-                  }}>
+                  <div>
                     <StyledTitle>{getAbbreviatedAddress(item.address, hiddenAddressGap.indexA, hiddenAddressGap.indexB)}</StyledTitle>
                     <StyledSubTitle>{item.from}</StyledSubTitle>
                   </div>
                 </StyledContent>
-                <div onClick={() => copyText(item.address)}>
+                <div onClick={(e) => onCopyClick(e, item.address)}>
                   <StyledIcon path={mdiContentCopy}/>
                 </div>
               </ItemWrapper>
@@ -69,20 +73,37 @@ const DropDownWrapper = styled.div`
 const UnorderedList = styled.ul`
   list-style: none;
   margin: 0;
-  padding: 3px 10px;
+  padding: 5px 5px;
   max-height: 30vh;
   overflow: auto;
 `
 
 const ListItem = styled.li`
-  padding: 10px 0;
+  //padding: 10px 0;
   font-weight: 300;
+`
+
+const StyledTitle = styled.div`
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: 14px;
+`
+
+const StyledSubTitle = styled.div`
+  color: darkgrey;
+  font-size: 12px;
 `
 
 const ItemWrapper = styled.div`
   display: flex;
+  padding: 0 5px;
   justify-content: space-between;
   align-items: center;
+  :hover {
+    background: whitesmoke;
+    border-radius: ${baseStyle.input.borderRadius};
+    cursor: pointer;
+  }
 `
 
 const StyledContent = styled.div`
@@ -106,22 +127,6 @@ const StyledIcon = styled(Icon)`
     color: ${baseStyle.brandColor};
     transition: 0.5s ease all;
   }
-`
-
-const StyledTitle = styled.div`
-  cursor: pointer;
-  color: ${({ theme }) => theme.colors.primary};
-  font-size: 14px;
-
-  :hover {
-    color: ${baseStyle.brandColor};
-    transition: 0.5s ease all;
-  }
-`
-
-const StyledSubTitle = styled.div`
-  color: darkgrey;
-  font-size: 12px;
 `
 
 const StyledLoader = styled(ReactLoading)`
