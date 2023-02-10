@@ -2,14 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import RedefinedDomainResolver from "./field/RedefinedDomainResolver";
+import RedefinedDomainResolver from "./components/RedefinedDomainResolver";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <RedefinedDomainResolver />
+    <RedefinedDomainResolver
+      onSelect={(val) => console.log(`Your Address: ${val}`)}
+      width={"40%"}
+    />
   </React.StrictMode>
 );
 
