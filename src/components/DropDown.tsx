@@ -65,7 +65,7 @@ const DropDownWrapper = styled.div`
   width: calc(100% - 2 * ${baseStyle.input.borderWidth});
   border-bottom-left-radius: ${baseStyle.input.borderRadius};
   border-bottom-right-radius: ${baseStyle.input.borderRadius};
-  border: ${baseStyle.input.borderWidth} solid ${baseStyle.input.borderColor};
+  border: ${baseStyle.input.borderWidth} solid ${({ theme }) => theme.colors.primary};
   background: ${({ theme }) => theme.colors.background};
   transition: 0.5s ease all;
 `
@@ -100,7 +100,7 @@ const ItemWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   :hover {
-    background: whitesmoke;
+    background: ${({ theme }) => theme.colors.hover};
     border-radius: ${baseStyle.input.borderRadius};
     cursor: pointer;
   }

@@ -96,7 +96,7 @@ const StyledInput = styled.input<InputProps>`
   border-bottom-left-radius: ${(props) => props.isDropDownActive ? "0px" : baseStyle.input.borderRadius};
   border-bottom-right-radius: ${(props) => props.isDropDownActive ? "0px" : baseStyle.input.borderRadius};
   outline: none;
-  border-color: ${baseStyle.input.borderColor};
+  border-color: ${({ theme }) => theme.colors.primary};
   border-width: ${baseStyle.input.borderWidth};
 `;
 

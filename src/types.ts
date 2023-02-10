@@ -49,6 +49,7 @@ export interface ITheme {
     secondary: string
     error: string,
     brandColor: string,
-    disabled: string
+    disabled: string,
+    hover: string
   }
 }

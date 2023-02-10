@@ -8,7 +8,8 @@ export const baseTheme: ITheme = {
     primary: "#222222",
     secondary: "#FFCCCC",
     brandColor: "#faab1e",
-    disabled: "#ebebe4"
+    disabled: "#ebebe4",
+    hover: "whitesmoke"
   }
 }
 
@@ -30,6 +31,7 @@ export const darkTheme: DefaultTheme = {
     primary: "#FFCCCC",
     secondary: "#222222",
     disabled: "#9a9a9a",
+    hover: "black"
   },
 }
 
@@ -45,10 +47,10 @@ export const baseStyle = {
   input: {
     fontFamily: "Poppins, serif",
     fontSize: "16px",
-    color: "#222222",
+    color: baseTheme.colors.primary,
     height: "40px",
     borderRadius: "8px",
-    borderColor: "#222222",
+    borderColor: baseTheme.colors.primary,
     borderWidth: "1px",
     logo: {
       padding: "5px"

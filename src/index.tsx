@@ -11,7 +11,7 @@ root.render(
   <React.StrictMode>
     <RedefinedDomainResolver
       onSelect={(val) => console.log(`Your Address: ${val}`)}
-      theme={"light"}
+      theme={"dark"}
       width={"30%"}
       autoFocus={false}
       disabled={false}
