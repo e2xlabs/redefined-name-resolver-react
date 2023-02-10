@@ -35,6 +35,7 @@ export interface ContainerProps {
 export interface InputProps {
   height?: string;
   disabled?: boolean;
+  isDropDownActive?: boolean;
 }
 
 export interface LogoProps {

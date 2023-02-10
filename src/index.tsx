@@ -12,7 +12,7 @@ root.render(
     <RedefinedDomainResolver
       onSelect={(val) => console.log(`Your Address: ${val}`)}
       theme={"dark"}
-      width={"40%"}
+      width={"30%"}
       autoFocus={false}
       disabled={false}
       hiddenAddressGap={{indexA: 3, indexB: 5}}

@@ -58,7 +58,7 @@ export const baseStyle = {
 
   dropDown: {
     logo: {
-      width: "28px",
+      width: "20px",
     },
     copyIcon: {
       width: "20px"

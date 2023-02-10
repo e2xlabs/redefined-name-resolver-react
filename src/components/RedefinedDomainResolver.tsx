@@ -76,7 +76,6 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
 
 const Container = styled.div<ContainerProps>`
   width: ${p => p.width || baseStyle.width};
-  position: fixed;
 `
 
 const InputContainer = styled.div`
@@ -91,8 +90,11 @@ const StyledInput = styled.input<InputProps>`
   font-size: ${baseStyle.input.fontSize};
   color: ${({ theme }) => theme.colors.primary};
   height: ${p => p.height || baseStyle.input.height};
-  border-radius: ${baseStyle.input.borderRadius};
-  outline-color: ${baseStyle.input.outlineColor};
+  border-top-right-radius: ${baseStyle.input.borderRadius};
+  border-top-left-radius: ${baseStyle.input.borderRadius};
+  border-bottom-left-radius: ${(props) => props.isDropDownActive ? "0px" : baseStyle.input.borderRadius};
+  border-bottom-right-radius: ${(props) => props.isDropDownActive ? "0px" : baseStyle.input.borderRadius};
+  outline: none;
   border-color: ${baseStyle.input.borderColor};
   border-width: ${baseStyle.input.borderWidth};
 `;

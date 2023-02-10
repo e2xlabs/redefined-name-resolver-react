@@ -59,7 +59,8 @@ const DropDown = (props: DropdownProps) => {
 const DropDownWrapper = styled.div`
   position: absolute;
   width: calc(100% - 2 * ${baseStyle.input.borderWidth});
-  border-radius: ${baseStyle.input.borderRadius};
+  border-bottom-left-radius: ${baseStyle.input.borderRadius};
+  border-bottom-right-radius: ${baseStyle.input.borderRadius};
   border: ${baseStyle.input.borderWidth} solid ${baseStyle.input.borderColor};
   background: ${({ theme }) => theme.colors.background};
   transition: 0.5s ease all;
@@ -68,7 +69,7 @@ const DropDownWrapper = styled.div`
 const UnorderedList = styled.ul`
   list-style: none;
   margin: 0;
-  padding: 10px;
+  padding: 3px 10px;
   max-height: 30vh;
   overflow: auto;
 `
@@ -91,7 +92,7 @@ const StyledContent = styled.div`
 `
 
 const StyledLogo = styled.img`
-  margin-right: 15px;
+  margin-right: 10px;
   border-radius: ${baseStyle.dropDown.logo.width};
 `
 
@@ -110,6 +111,7 @@ const StyledIcon = styled(Icon)`
 const StyledTitle = styled.div`
   cursor: pointer;
   color: ${({ theme }) => theme.colors.primary};
+  font-size: 14px;
 
   :hover {
     color: ${baseStyle.brandColor};
