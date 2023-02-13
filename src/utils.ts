@@ -10,8 +10,8 @@ export const copyText = (text: string): void => {
   });
 };
 
-export const getAbbreviatedAddress = (address: string, indexA: number = 6, indexB: number = 4): string => (
-  `${address.substring(0, indexA)} ... ${address.substring(address.length - indexB, address.length)}`
+export const getAbbreviatedAddress = (address: string, leadingCharLimit: number = 6, trailingCharLimit: number = 4): string => (
+  `${address.substring(0, leadingCharLimit)} ... ${address.substring(address.length - trailingCharLimit, address.length)}`
 );
 
 export enum CoinLogos {

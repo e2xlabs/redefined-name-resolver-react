@@ -13,8 +13,8 @@ export type DropdownProps = {
 export type Theme = "light" | "dark"
 
 type HiddenAddressGap = {
-  indexA: number;
-  indexB: number;
+  leadingCharLimit: number;
+  trailingCharLimit: number;
 }
 
 export interface RedefinedDomainResolverProps {

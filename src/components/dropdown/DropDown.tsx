@@ -41,7 +41,7 @@ const DropDown = (props: DropdownProps) => {
                   <StyledLogo width={baseStyle.dropDown.logo.width} src={CoinLogos[item.network.toLocaleUpperCase()]}
                               alt="coinLogo"/>
                   <div>
-                    <StyledTitle>{getAbbreviatedAddress(item.address, hiddenAddressGap?.indexA, hiddenAddressGap?.indexB)}</StyledTitle>
+                    <StyledTitle>{getAbbreviatedAddress(item.address, hiddenAddressGap?.leadingCharLimit, hiddenAddressGap?.trailingCharLimit)}</StyledTitle>
                     <StyledSubTitle>from: <StyledSpan isRedefined={item.from === "redefined"}>{item.from}</StyledSpan></StyledSubTitle>
                   </div>
                 </StyledContent>

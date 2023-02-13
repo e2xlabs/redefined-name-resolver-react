@@ -19,7 +19,7 @@
   },
   "scripts": {
     "commit": "git-cz",
-    "rollup": "rollup -c",
+    "build": "rollup -c",
     "semantic-release": "semantic-release"
   },
   "dependencies": {
