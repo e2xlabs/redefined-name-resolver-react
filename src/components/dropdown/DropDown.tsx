@@ -1,14 +1,14 @@
 import React, {useEffect, useRef} from "react";
 import styled from "styled-components";
-import {DropdownProps} from "../types";
+import {DropdownProps} from "../../types";
 import Icon from "@mdi/react";
 import {mdiContentCopy} from "@mdi/js";
-import {CoinLogos, copyText, getAbbreviatedAddress, getErrorMessage} from "../utils";
+import {CoinLogos, copyText, getAbbreviatedAddress, getErrorMessage} from "../../utils";
 import ReactLoading from "react-loading";
-import {baseStyle} from "../styles/baseStyle";
+import {baseStyle} from "../../styles/baseStyle";
 
 const DropDown = (props: DropdownProps) => {
-  const {active, content, loading, error, onChange, onClickOutside} = props;
+  const {active, content, loading, error, hiddenAddressGap, onChange, onClickOutside} = props;
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -23,26 +23,29 @@ const DropDown = (props: DropdownProps) => {
     };
   }, [onClickOutside]);
 
+  const onCopyClick = (event: any, address: string) => {
+    copyText(address);
+    event.stopPropagation();
+  }
+
   return active ? (
     <DropDownWrapper ref={ref}>
-      {loading ? <StyledLoader type="spinningBubbles" color={baseStyle.primaryColor} height={baseStyle.loader.height}
+      {loading ? <StyledLoader type="spinningBubbles" color={baseStyle.brandColor} height={baseStyle.loader.height}
                                width={baseStyle.loader.height}/> : null}
       {!loading && content.length > 0 ? <UnorderedList>
         {content.sort((a, b) => a.network.localeCompare(b.network)).map((item, key) => {
           return (
             <ListItem key={key}>
-              <ItemWrapper>
+              <ItemWrapper onClick={() => onChange(item.address)}>
                 <StyledContent>
                   <StyledLogo width={baseStyle.dropDown.logo.width} src={CoinLogos[item.network.toLocaleUpperCase()]}
                               alt="coinLogo"/>
-                  <div onClick={() => {
-                    onChange(item.address)
-                  }}>
-                    <StyledTitle>{getAbbreviatedAddress(item.address)}</StyledTitle>
-                    <StyledSubTitle>{item.from}</StyledSubTitle>
+                  <div>
+                    <StyledTitle>{getAbbreviatedAddress(item.address, hiddenAddressGap?.leadingCharLimit, hiddenAddressGap?.trailingCharLimit)}</StyledTitle>
+                    <StyledSubTitle>from: <StyledSpan isRedefined={item.from === "redefined"}>{item.from}</StyledSpan></StyledSubTitle>
                   </div>
                 </StyledContent>
-                <div onClick={() => copyText(item.address)}>
+                <div onClick={(e) => onCopyClick(e, item.address)}>
                   <StyledIcon path={mdiContentCopy}/>
                 </div>
               </ItemWrapper>
@@ -50,7 +53,7 @@ const DropDown = (props: DropdownProps) => {
           );
         })}
       </UnorderedList> : null}
-      {!loading && content.length == 0 ? <StyledNotFoundMessage>Addresses not found</StyledNotFoundMessage> : null}
+      {!loading && !error && content.length == 0 ? <StyledNotFoundMessage>No addresses found</StyledNotFoundMessage> : null}
       {error ? <StyledErrorMessage>{getErrorMessage(error)}</StyledErrorMessage> : null}
     </DropDownWrapper>
   ) : null;
@@ -58,29 +61,48 @@ const DropDown = (props: DropdownProps) => {
 
 const DropDownWrapper = styled.div`
   position: absolute;
+  top: ${baseStyle.input.height};
   width: calc(100% - 2 * ${baseStyle.input.borderWidth});
-  border-radius: ${baseStyle.input.borderRadius};
-  border: ${baseStyle.input.borderWidth} solid ${baseStyle.input.borderColor};
+  border-bottom-left-radius: ${baseStyle.input.borderRadius};
+  border-bottom-right-radius: ${baseStyle.input.borderRadius};
+  border: ${baseStyle.input.borderWidth} solid ${({ theme }) => theme.colors.borderColor};
+  background: ${({ theme }) => theme.colors.background};
   transition: 0.5s ease all;
 `
 
 const UnorderedList = styled.ul`
   list-style: none;
   margin: 0;
-  padding: 10px;
+  padding: 5px 5px;
   max-height: 30vh;
   overflow: auto;
 `
 
 const ListItem = styled.li`
-  padding: 10px 0;
   font-weight: 300;
+`
+
+const StyledTitle = styled.div`
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: 14px;
+`
+
+const StyledSubTitle = styled.div`
+  color: darkgrey;
+  font-size: 12px;
 `
 
 const ItemWrapper = styled.div`
   display: flex;
+  padding: 5px 5px;
   justify-content: space-between;
   align-items: center;
+  :hover {
+    background: ${({ theme }) => theme.colors.hover};
+    border-radius: ${baseStyle.input.borderRadius};
+    cursor: pointer;
+  }
 `
 
 const StyledContent = styled.div`
@@ -90,7 +112,7 @@ const StyledContent = styled.div`
 `
 
 const StyledLogo = styled.img`
-  margin-right: 15px;
+  margin-right: 10px;
   border-radius: ${baseStyle.dropDown.logo.width};
 `
 
@@ -98,25 +120,12 @@ const StyledIcon = styled(Icon)`
   width: ${baseStyle.dropDown.copyIcon.width};
   vertical-align: middle;
   cursor: pointer;
+  color: ${({ theme }) => theme.colors.primary};
 
   :hover {
-    color: ${baseStyle.primaryColor};
+    color: ${baseStyle.brandColor};
     transition: 0.5s ease all;
   }
-`
-
-const StyledTitle = styled.div`
-  cursor: pointer;
-
-  :hover {
-    color: ${baseStyle.primaryColor};
-    transition: 0.5s ease all;
-  }
-`
-
-const StyledSubTitle = styled.div`
-  color: darkgrey;
-  font-size: 12px;
 `
 
 const StyledLoader = styled(ReactLoading)`
@@ -134,7 +143,11 @@ const StyledErrorMessage = styled.div`
 `;
 
 const StyledNotFoundMessage = styled(StyledErrorMessage)`
-  color: black;
-`
+  color: ${({ theme }) => theme.colors.primary};
+`;
+
+const StyledSpan = styled.span<{isRedefined: boolean}>`
+  ${({isRedefined}) => isRedefined ? baseStyle.brandTextColor : null}
+`;
 
 export default DropDown;
