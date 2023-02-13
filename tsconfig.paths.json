@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@resolver/*": ["@redefined/name-resolver-js/src/*"],
-    }
-  }
-}

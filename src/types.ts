@@ -1,8 +1,8 @@
-// import {type Account} from "@redefined/name-resolver-js";
+import {Account} from "@redefined/name-resolver-js";
 
 export type DropdownProps = {
   active: boolean;
-  content: any[];
+  content: Account[];
   loading: boolean;
   error: string | Error;
   hiddenAddressGap?: HiddenAddressGap;

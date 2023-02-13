@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useState} from "react";
 import _debounce from 'lodash/debounce';
 import styled, {ThemeProvider} from "styled-components";
-import DropDown from "./DropDown";
-import {ContainerProps, RedefinedDomainResolverProps, InputProps, LogoProps} from "../types";
-import companyLogo from '../assets/small-logo.svg';
-import {baseStyle, darkTheme, lightTheme} from "../styles/baseStyle";
-import GlobalStyle from "../styles/globalStyle";
-import {RedefinedResolver} from "@redefined/name-resolver-js/src/redefined.resolver";
+import {ContainerProps, RedefinedDomainResolverProps, InputProps, LogoProps} from "../../types";
+import companyLogo from "../../../assets/small-logo.svg";
+import {baseStyle, darkTheme, lightTheme} from "../../styles/baseStyle";
+import GlobalStyle from "../../styles/globalStyle";
+import DropDown from "../dropdown";
+import {RedefinedResolver} from "@redefined/name-resolver-js";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
   const {width, height, disabled, autoFocus, theme, hiddenAddressGap, onSelect} = props;

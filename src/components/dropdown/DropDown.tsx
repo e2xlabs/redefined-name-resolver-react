@@ -1,11 +1,11 @@
 import React, {useEffect, useRef} from "react";
 import styled from "styled-components";
-import {DropdownProps} from "../types";
+import {DropdownProps} from "../../types";
 import Icon from "@mdi/react";
 import {mdiContentCopy} from "@mdi/js";
-import {CoinLogos, copyText, getAbbreviatedAddress, getErrorMessage} from "../utils";
+import {CoinLogos, copyText, getAbbreviatedAddress, getErrorMessage} from "../../utils";
 import ReactLoading from "react-loading";
-import {baseStyle} from "../styles/baseStyle";
+import {baseStyle} from "../../styles/baseStyle";
 
 const DropDown = (props: DropdownProps) => {
   const {active, content, loading, error, hiddenAddressGap, onChange, onClickOutside} = props;
