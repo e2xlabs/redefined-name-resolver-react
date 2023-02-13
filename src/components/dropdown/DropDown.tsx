@@ -41,7 +41,7 @@ const DropDown = (props: DropdownProps) => {
                   <StyledLogo width={baseStyle.dropDown.logo.width} src={CoinLogos[item.network.toLocaleUpperCase()]}
                               alt="coinLogo"/>
                   <div>
-                    <StyledTitle>{getAbbreviatedAddress(item.address, hiddenAddressGap.indexA, hiddenAddressGap.indexB)}</StyledTitle>
+                    <StyledTitle>{getAbbreviatedAddress(item.address, hiddenAddressGap?.indexA, hiddenAddressGap?.indexB)}</StyledTitle>
                     <StyledSubTitle>from: <StyledSpan isRedefined={item.from === "redefined"}>{item.from}</StyledSpan></StyledSubTitle>
                   </div>
                 </StyledContent>
@@ -53,7 +53,7 @@ const DropDown = (props: DropdownProps) => {
           );
         })}
       </UnorderedList> : null}
-      {!loading && !error && content.length == 0 ? <StyledNotFoundMessage>Addresses not found</StyledNotFoundMessage> : null}
+      {!loading && !error && content.length == 0 ? <StyledNotFoundMessage>No addresses found</StyledNotFoundMessage> : null}
       {error ? <StyledErrorMessage>{getErrorMessage(error)}</StyledErrorMessage> : null}
     </DropDownWrapper>
   ) : null;
@@ -61,6 +61,7 @@ const DropDown = (props: DropdownProps) => {
 
 const DropDownWrapper = styled.div`
   position: absolute;
+  top: ${baseStyle.input.height};
   width: calc(100% - 2 * ${baseStyle.input.borderWidth});
   border-bottom-left-radius: ${baseStyle.input.borderRadius};
   border-bottom-right-radius: ${baseStyle.input.borderRadius};
@@ -78,7 +79,6 @@ const UnorderedList = styled.ul`
 `
 
 const ListItem = styled.li`
-  //padding: 10px 0;
   font-weight: 300;
 `
 

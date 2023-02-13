@@ -1,4 +1,4 @@
-import {Account} from "@redefined/name-resolver-js";
+import {Account, ResolverOptions} from "@redefined/name-resolver-js";
 
 export type DropdownProps = {
   active: boolean;
@@ -18,12 +18,13 @@ type HiddenAddressGap = {
 }
 
 export interface RedefinedDomainResolverProps {
-  theme: Theme;
+  theme?: Theme;
   width?: string;
   height?: string;
   autoFocus?: boolean;
   disabled?: boolean;
   hiddenAddressGap?: HiddenAddressGap;
+  resolverOptions?: ResolverOptions;
 
   onSelect(address: string): void;
 }
