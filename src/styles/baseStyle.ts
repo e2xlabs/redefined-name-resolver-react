@@ -1,5 +1,5 @@
 import {ITheme} from "../types";
-import {DefaultTheme} from "styled-components";
+import {css, DefaultTheme} from "styled-components";
 
 export const baseTheme: ITheme = {
   colors: {
@@ -9,7 +9,8 @@ export const baseTheme: ITheme = {
     secondary: "#FFCCCC",
     brandColor: "#faab1e",
     disabled: "#ebebe4",
-    hover: "whitesmoke"
+    hover: "whitesmoke",
+    borderColor: "rgb(5%, 5%, 5%)"
   }
 }
 
@@ -28,16 +29,22 @@ export const darkTheme: DefaultTheme = {
   colors: {
     ...baseTheme.colors,
     background: "#222222",
-    primary: "#FFCCCC",
+    primary: "#d4d3d3",
     secondary: "#222222",
     disabled: "#9a9a9a",
-    hover: "black"
+    hover: "#313131",
+    borderColor: "rgb(95%, 95%, 95%)"
   },
 }
 
 export const baseStyle = {
   width: '40%',
   brandColor: baseTheme.colors.brandColor,
+  brandTextColor: css`
+    background: linear-gradient(-90deg, #FF8254, #FFBD80, #FFE870);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  `,
 
   error: {
     color: baseTheme.colors.error,

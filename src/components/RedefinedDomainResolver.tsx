@@ -6,10 +6,10 @@ import {ContainerProps, RedefinedDomainResolverProps, InputProps, LogoProps} fro
 import companyLogo from '../assets/small-logo.svg';
 import {baseStyle, darkTheme, lightTheme} from "../styles/baseStyle";
 import GlobalStyle from "../styles/globalStyle";
-import {RedefinedResolver} from "redefined-resolver";
+import {RedefinedResolver} from "@redefined/name-resolver-js/src/redefined.resolver";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
-  const {width, height, disabled, autoFocus, theme, onSelect} = props;
+  const {width, height, disabled, autoFocus, theme, hiddenAddressGap, onSelect} = props;
   const [dropDownActive, setDropDownActive] = useState(false);
   const [domain, setDomain] = useState("");
   const [addresses, setAddresses] = useState([]);
@@ -55,20 +55,20 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
   return (
     <Container width={width}>
       <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
-      <GlobalStyle/>
-      <InputContainer onClick={onInputClick}>
-        <StyledLogo disabled={disabled} src={companyLogo} alt="logo"/>
-        <StyledInput isDropDownActive={dropDownActive} disabled={disabled} autoFocus={autoFocus} height={height} value={domain} onChange={onChangeInput}/>
-      </InputContainer>
-      <DropDown
-        active={dropDownActive}
-        loading={loading}
-        error={error}
-        content={addresses}
-        onChange={onChangeValue}
-        hiddenAddressGap={props.hiddenAddressGap}
-        onClickOutside={() => setDropDownActive(false)}
-      />
+        <GlobalStyle/>
+          <InputContainer onClick={onInputClick}>
+            <StyledLogo disabled={disabled} src={companyLogo} alt="logo"/>
+            <StyledInput isDropDownActive={dropDownActive} disabled={disabled} autoFocus={autoFocus} height={height} value={domain} onChange={onChangeInput}/>
+          </InputContainer>
+          <DropDown
+            active={dropDownActive}
+            loading={loading}
+            error={error}
+            content={addresses}
+            onChange={onChangeValue}
+            hiddenAddressGap={hiddenAddressGap}
+            onClickOutside={() => setDropDownActive(false)}
+          />
       </ThemeProvider>
     </Container>
   );
@@ -96,7 +96,8 @@ const StyledInput = styled.input<InputProps>`
   border-bottom-left-radius: ${(props) => props.isDropDownActive ? "0px" : baseStyle.input.borderRadius};
   border-bottom-right-radius: ${(props) => props.isDropDownActive ? "0px" : baseStyle.input.borderRadius};
   outline: none;
-  border-color: ${({ theme }) => theme.colors.primary};
+  border-style: solid;
+  border-color: ${({ theme }) => theme.colors.borderColor};
   border-width: ${baseStyle.input.borderWidth};
 `;
 

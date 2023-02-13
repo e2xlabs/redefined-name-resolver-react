@@ -1,8 +1,8 @@
-import {Account} from "redefined-resolver";
+// import {type Account} from "@redefined/name-resolver-js";
 
 export type DropdownProps = {
   active: boolean;
-  content: Account[];
+  content: any[];
   loading: boolean;
   error: string | Error;
   hiddenAddressGap?: HiddenAddressGap;
@@ -21,9 +21,9 @@ export interface RedefinedDomainResolverProps {
   theme: Theme;
   width?: string;
   height?: string;
-  autoFocus?: boolean
-  disabled?: boolean
-  hiddenAddressGap?: HiddenAddressGap
+  autoFocus?: boolean;
+  disabled?: boolean;
+  hiddenAddressGap?: HiddenAddressGap;
 
   onSelect(address: string): void;
 }
@@ -44,12 +44,13 @@ export interface LogoProps {
 
 export interface ITheme {
   colors: {
-    background: string
-    primary: string
-    secondary: string
-    error: string,
-    brandColor: string,
-    disabled: string,
-    hover: string
+    background: string;
+    primary: string;
+    secondary: string;
+    error: string;
+    brandColor: string;
+    disabled: string;
+    hover: string;
+    borderColor: string;
   }
 }

@@ -6,7 +6,6 @@ import {mdiContentCopy} from "@mdi/js";
 import {CoinLogos, copyText, getAbbreviatedAddress, getErrorMessage} from "../utils";
 import ReactLoading from "react-loading";
 import {baseStyle} from "../styles/baseStyle";
-import {Account} from "redefined-resolver";
 
 const DropDown = (props: DropdownProps) => {
   const {active, content, loading, error, hiddenAddressGap, onChange, onClickOutside} = props;
@@ -34,7 +33,7 @@ const DropDown = (props: DropdownProps) => {
       {loading ? <StyledLoader type="spinningBubbles" color={baseStyle.brandColor} height={baseStyle.loader.height}
                                width={baseStyle.loader.height}/> : null}
       {!loading && content.length > 0 ? <UnorderedList>
-        {content.sort((a, b) => a.network.localeCompare(b.network)).map((item: Account, key) => {
+        {content.sort((a, b) => a.network.localeCompare(b.network)).map((item, key) => {
           return (
             <ListItem key={key}>
               <ItemWrapper onClick={() => onChange(item.address)}>
@@ -43,7 +42,7 @@ const DropDown = (props: DropdownProps) => {
                               alt="coinLogo"/>
                   <div>
                     <StyledTitle>{getAbbreviatedAddress(item.address, hiddenAddressGap.indexA, hiddenAddressGap.indexB)}</StyledTitle>
-                    <StyledSubTitle>{item.from}</StyledSubTitle>
+                    <StyledSubTitle>from: <StyledSpan isRedefined={item.from === "redefined"}>{item.from}</StyledSpan></StyledSubTitle>
                   </div>
                 </StyledContent>
                 <div onClick={(e) => onCopyClick(e, item.address)}>
@@ -65,7 +64,7 @@ const DropDownWrapper = styled.div`
   width: calc(100% - 2 * ${baseStyle.input.borderWidth});
   border-bottom-left-radius: ${baseStyle.input.borderRadius};
   border-bottom-right-radius: ${baseStyle.input.borderRadius};
-  border: ${baseStyle.input.borderWidth} solid ${({ theme }) => theme.colors.primary};
+  border: ${baseStyle.input.borderWidth} solid ${({ theme }) => theme.colors.borderColor};
   background: ${({ theme }) => theme.colors.background};
   transition: 0.5s ease all;
 `
@@ -96,7 +95,7 @@ const StyledSubTitle = styled.div`
 
 const ItemWrapper = styled.div`
   display: flex;
-  padding: 0 5px;
+  padding: 5px 5px;
   justify-content: space-between;
   align-items: center;
   :hover {
@@ -145,6 +144,10 @@ const StyledErrorMessage = styled.div`
 
 const StyledNotFoundMessage = styled(StyledErrorMessage)`
   color: ${({ theme }) => theme.colors.primary};
-`
+`;
+
+const StyledSpan = styled.span<{isRedefined: boolean}>`
+  ${({isRedefined}) => isRedefined ? baseStyle.brandTextColor : null}
+`;
 
 export default DropDown;
