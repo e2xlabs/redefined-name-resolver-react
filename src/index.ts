@@ -1,1 +1,1 @@
-export * from "./components/domain-resolver/RedefinedDomainResolver";
+export * from './components';
