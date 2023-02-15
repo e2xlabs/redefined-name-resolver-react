@@ -1,0 +1,1 @@
+export { default as RedefinedDomainResolver } from "./domain-resolver";
