@@ -13,6 +13,7 @@ root.render(
             eth: ETH_GOERLI_NODE
           }
         }}
+        hiddenAddressGap={{leadingCharLimit: 4, trailingCharLimit: 6}}
         onSelect={(val) => console.log(val)}/>
     </div>
   </React.StrictMode>,
