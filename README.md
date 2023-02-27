@@ -4,7 +4,7 @@ Simple input component that will help resolve domains on services such as [Redef
 
 See [redefined-name-resolver-react](https://) for live demos.
 
-***redefined-name-resolver-react*** is founded by [E2xLabs](https://)
+***redefined-name-resolver-react*** is founded by [E2xLabs](https://).
 We will be glad to see the integration of our library in other services.
 
 Features include:
