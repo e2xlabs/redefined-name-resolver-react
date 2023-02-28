@@ -2,7 +2,7 @@
 
 Simple input component that will help resolve domains on services such as [Redefined](https://redefined.org/), [ENS](https://ens.domains/) and [Unstoppable](https://unstoppabledomains.com/).
 
-See [redefined-name-resolver-react](https://) for live demos.
+See [redefined-name-resolver-react](https://e2xlabs.github.io/redefined-name-resolver-react/) for live demos.
 
 ***redefined-name-resolver-react*** is founded by [E2xLabs](https://).
 We will be glad to see the integration of our library in other services.
