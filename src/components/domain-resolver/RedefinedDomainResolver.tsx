@@ -27,7 +27,17 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
       setAddresses([]);
       setError("");
       try {
-        setAddresses(await new RedefinedResolver(resolverOptions).resolve(value));
+        // setAddresses(await new RedefinedResolver(resolverOptions).resolve(value));
+        setAddresses([{
+          address: "0x123",
+          from: "redefined",
+          network: "evm"
+        },
+          {
+            address: "0x123",
+            from: "redefined",
+            network: "eth"
+          }]);
       } catch (e) {
         setError(e)
       }
@@ -57,7 +67,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
       <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
         <GlobalStyle/>
           <InputContainer onClick={onInputClick}>
-            <StyledLogo disabled={disabled} src={companyLogo} alt="logo"/>
+            <StyledLogo inputHeight={height} disabled={disabled} src={companyLogo} alt="logo"/>
             <StyledInput isDropDownActive={dropDownActive} disabled={disabled} autoFocus={autoFocus} height={height} value={domain} onChange={onChangeInput}/>
           </InputContainer>
           <DropDown
@@ -84,7 +94,7 @@ const InputContainer = styled.div`
 `
 
 const StyledInput = styled.input<InputProps>`
-  padding: 0 0 0 calc(${baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - ${baseStyle.input.logo.padding});
+  padding: 0 0 0 calc(${p => p.height || baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - ${baseStyle.input.logo.padding});
   width: 100%;
   background: ${(props) => props.disabled ? props.theme.colors.disabled : props.theme.colors.background};
   font-family: ${baseStyle.input.fontFamily};
@@ -102,7 +112,7 @@ const StyledInput = styled.input<InputProps>`
 `;
 
 const StyledLogo = styled.img<LogoProps>`
-  width: calc(${baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - 2 * ${baseStyle.input.logo.padding});
+  width: calc(${p => p.inputHeight || baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - 2 * ${baseStyle.input.logo.padding});
   position: absolute;
   bottom: ${baseStyle.input.logo.padding};
   left: ${baseStyle.input.logo.padding};

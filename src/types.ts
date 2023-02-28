@@ -41,6 +41,7 @@ export interface InputProps {
 
 export interface LogoProps {
   disabled?: boolean;
+  inputHeight?: string;
 }
 
 export interface ITheme {
