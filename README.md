@@ -9,7 +9,7 @@ We will be glad to see the integration of our library in other services.
 
 Features include:
 
-- The ability to find documents in 3 services at once
+- The ability to find addresses in 3 services at once
 - Copy the address of the found domain
 - And if you are a developer, then just pass a function to the props and do whatever you want with the address
 
