@@ -27,17 +27,20 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
       setAddresses([]);
       setError("");
       try {
-        // setAddresses(await new RedefinedResolver(resolverOptions).resolve(value));
-        setAddresses([{
-          address: "0x123",
-          from: "redefined",
-          network: "evm"
-        },
-          {
-            address: "0x123",
-            from: "redefined",
-            network: "eth"
-          }]);
+        const a = new RedefinedResolver(resolverOptions);
+        const b = a.hasOwnProperty("resolve");
+        console.log(b);
+        setAddresses(await new RedefinedResolver(resolverOptions).resolve(value));
+        // setAddresses([{
+        //   address: "0x123",
+        //   from: "redefined",
+        //   network: "evm"
+        // },
+        //   {
+        //     address: "0x123",
+        //     from: "redefined",
+        //     network: "eth"
+        //   }]);
       } catch (e) {
         setError(e)
       }
