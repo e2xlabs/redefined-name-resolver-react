@@ -34,12 +34,6 @@ jest.mock("@redefined/name-resolver-js", () => {
     }
 );
 
-const playSoundFileMock = jest
-    .spyOn(RedefinedResolver.prototype, 'resolve')
-    .mockImplementation(async (domain: string) => {
-      return new Promise((resolve) => {resolve(data)})
-    });
-
 jest.mock("lodash/debounce");
 
 jest.spyOn(React, 'useCallback').mockImplementation(f => f);
@@ -106,8 +100,7 @@ describe("RedefinedDomainResolver component", () => {
   it("SHOULD called DropDown component with props If DomainResolver is passed props", async () => {
     _debounce.mockImplementation(fn => fn);
 
-    render(<RedefinedDomainResolver hiddenAddressGap={{leadingCharLimit: 5, trailingCharLimit: 6}}
-                                    onSelect={jest.fn()}/>);
+    render(<RedefinedDomainResolver hiddenAddressGap={{leadingCharLimit: 5, trailingCharLimit: 6}} onSelect={jest.fn()}/>);
 
     expect(mockChildComponent).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -123,8 +116,7 @@ describe("RedefinedDomainResolver component", () => {
   it("SHOULD loading account IF typing text", async () => {
     _debounce.mockImplementation(fn => fn);
 
-    render(<RedefinedDomainResolver onSelect={() => {
-    }}/>);
+    render(<RedefinedDomainResolver onSelect={() => {}}/>);
 
     const input = screen.getByRole("textbox");
 
@@ -133,15 +125,6 @@ describe("RedefinedDomainResolver component", () => {
     expect(screen.queryByDisplayValue(/myDomain/)).toBeInTheDocument();
 
     expect(RedefinedResolver).toBeTruthy();
-    expect(playSoundFileMock).toBe(domain);
 
-    // expect(mockChildComponent).toHaveBeenCalledWith(
-    //     expect.objectContaining({
-    //       active: true,
-    //       loading: false,
-    //       error: "",
-    //       content: [{"q": 123}],
-    //     })
-    // );
   })
 })

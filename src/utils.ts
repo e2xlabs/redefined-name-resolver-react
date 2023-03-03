@@ -1,7 +1,7 @@
 import EvmImage from "./assets/evm.png"
 
-export const getErrorMessage = (error?: string | Error, disabled?: boolean) => {
-  if (!error || disabled) return "";
+export const getErrorMessage = (error?: string | Error) => {
+  if (!error) return "";
   if (error instanceof Error) return error.message;
   return error;
 }
