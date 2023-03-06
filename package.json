@@ -22,7 +22,7 @@
     "commit": "git-cz",
     "build": "rollup -c",
     "semantic-release": "semantic-release",
-    "test": "react-scripts test"
+    "test": "react-scripts test --watchAll"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.1",
@@ -46,7 +46,7 @@
   "peerDependencies": {
     "@mdi/js": "^7.1.96",
     "@mdi/react": "^1.6.1",
-    "@redefined/name-resolver-js": "^1.4.0",
+    "@redefined/name-resolver-js": "^1.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-loading": "^2.0.3",

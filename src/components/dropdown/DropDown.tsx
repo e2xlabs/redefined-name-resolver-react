@@ -111,6 +111,7 @@ const StyledContent = styled.div`
 
 const StyledLogo = styled.img`
   margin-right: 10px;
+  background: white;
   border-radius: ${baseStyle.dropDown.logo.width};
 `
 
