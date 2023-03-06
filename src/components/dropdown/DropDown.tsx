@@ -61,11 +61,12 @@ const DropDown = (props: DropdownProps) => {
 
 const DropDownWrapper = styled.div`
   position: absolute;
-  top: ${baseStyle.input.height};
   width: calc(100% - 2 * ${baseStyle.input.borderWidth});
   border-bottom-left-radius: ${baseStyle.input.borderRadius};
   border-bottom-right-radius: ${baseStyle.input.borderRadius};
-  border: ${baseStyle.input.borderWidth} solid ${({ theme }) => theme.colors.borderColor};
+  border-bottom: ${baseStyle.input.borderWidth} solid ${({ theme }) => theme.colors.borderColor};
+  border-left: ${baseStyle.input.borderWidth} solid ${({ theme }) => theme.colors.borderColor};
+  border-right: ${baseStyle.input.borderWidth} solid ${({ theme }) => theme.colors.borderColor};
   background: ${({ theme }) => theme.colors.background};
   transition: 0.5s ease all;
 `
