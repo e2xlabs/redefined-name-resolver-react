@@ -17,6 +17,6 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
-    "@redefined/name-resolver-react": "^1.1.35"
+    "@redefined/name-resolver-react": "^1.1.36"
   }
 }
