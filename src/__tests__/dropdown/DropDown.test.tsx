@@ -65,8 +65,8 @@ describe("DropDown component", () => {
     expect(from2).toBeInTheDocument()
     expect(address1).toBeInTheDocument()
     expect(address2).toBeInTheDocument()
-    expect(logo1.getAttribute("src")).toContain(CoinLogos.BSC)
-    expect(logo2.getAttribute("src")).toContain(CoinLogos.ETH)
+    expect(logo1.getAttribute("src")).toContain(CoinLogos.bsc)
+    expect(logo2.getAttribute("src")).toContain(CoinLogos.eth)
   })
 
   it("SHOULD show no addresses found message IF content is empty", () => {
