@@ -36,7 +36,7 @@ const DropDown = (props: DropdownProps) => {
           <ListItem key={key}>
             <ItemWrapper onClick={() => onChange(item)}>
               <StyledContent>
-                <StyledLogo width={baseStyle.dropDown.logo.width} src={CoinLogos[item.network.toLocaleUpperCase()]} alt="coinLogo"/>
+                <StyledLogo width={baseStyle.dropDown.logo.width} src={CoinLogos[item.network]} alt="coinLogo"/>
                 <div>
                   <StyledTitle>{getAbbreviatedAddress(item.address, hiddenAddressGap?.leadingCharLimit, hiddenAddressGap?.trailingCharLimit)}</StyledTitle>
                   <StyledSubTitle>from: <StyledSpan isRedefined={item.from === "redefined"}>{item.from}</StyledSpan></StyledSubTitle>
