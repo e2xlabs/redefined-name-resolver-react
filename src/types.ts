@@ -26,7 +26,7 @@ export interface RedefinedDomainResolverProps {
   hiddenAddressGap?: HiddenAddressGap;
   resolverOptions?: ResolverOptions;
 
-  onUpdate(account: Account): void;
+  onUpdate(account: Account | null): void;
 }
 
 export interface ContainerProps {

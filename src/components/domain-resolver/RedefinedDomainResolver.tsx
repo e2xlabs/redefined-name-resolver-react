@@ -21,12 +21,12 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
   }, [domain])
 
   const resolveDomain = async (value: string) => {
+    onUpdate(null);
     if (value.length > 0) {
       setDropDownActive(true);
       setLoading(true);
       setAddresses([]);
       setError("");
-      onUpdate(null);
       try {
         setAddresses((await new RedefinedResolver(resolverOptions).resolve(value)).response);
       } catch (e) {
