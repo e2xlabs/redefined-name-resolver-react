@@ -45,7 +45,7 @@ describe("RedefinedDomainResolver component", () => {
   });
 
   it("SHOULD render input with log IF mount component", () => {
-    render(<RedefinedDomainResolver onSelect={() => {
+    render(<RedefinedDomainResolver onUpdate={() => {
     }}/>);
 
     const logo = screen.getByAltText("logo");
@@ -56,7 +56,7 @@ describe("RedefinedDomainResolver component", () => {
   })
 
   it("SHOULD render input with log IF mount component", () => {
-    render(<RedefinedDomainResolver onSelect={() => {
+    render(<RedefinedDomainResolver onUpdate={() => {
     }}/>);
 
     const logo = screen.getByAltText("logo");
@@ -69,7 +69,7 @@ describe("RedefinedDomainResolver component", () => {
   it("SHOULD change domain value IF typing text", async () => {
     _debounce.mockImplementation(fn => fn);
 
-    render(<RedefinedDomainResolver onSelect={() => {
+    render(<RedefinedDomainResolver onUpdate={() => {
     }}/>);
 
     expect(screen.queryByDisplayValue(/myDomain/)).toBeNull();
@@ -85,7 +85,7 @@ describe("RedefinedDomainResolver component", () => {
   it("SHOULD open dropdown IF typing text", async () => {
     _debounce.mockImplementation(fn => fn);
 
-    render(<RedefinedDomainResolver onSelect={() => {
+    render(<RedefinedDomainResolver onUpdate={() => {
     }}/>);
 
     expect(screen.queryByDisplayValue(/myDomain/)).toBeNull();
@@ -100,7 +100,7 @@ describe("RedefinedDomainResolver component", () => {
   it("SHOULD called DropDown component with props If DomainResolver is passed props", async () => {
     _debounce.mockImplementation(fn => fn);
 
-    render(<RedefinedDomainResolver hiddenAddressGap={{leadingCharLimit: 5, trailingCharLimit: 6}} onSelect={jest.fn()}/>);
+    render(<RedefinedDomainResolver hiddenAddressGap={{leadingCharLimit: 5, trailingCharLimit: 6}} onUpdate={jest.fn()}/>);
 
     expect(mockChildComponent).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -116,7 +116,7 @@ describe("RedefinedDomainResolver component", () => {
   it("SHOULD loading account IF typing text", async () => {
     _debounce.mockImplementation(fn => fn);
 
-    render(<RedefinedDomainResolver onSelect={() => {}}/>);
+    render(<RedefinedDomainResolver onUpdate={() => {}}/>);
 
     const input = screen.getByRole("textbox");
 
