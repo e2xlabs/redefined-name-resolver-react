@@ -44,7 +44,7 @@ Common props you may want to specify include:
 - `theme: "dark" | "light"` - apply a dark or light theme to the component
 - `width: string` - set component width
 - `disabled: boolean` - disable the control
-- `onSelect: (res: Account) => void` - subscribe to select event
+- `onUpdate: (res: Account | null) => void` - subscribe to select event
 - `hiddenAddressGap: { leadingCharLimit: number; trailingCharLimit: number; }` - specify the size of the address hidden. For example, for an address with the following parameters `hiddenAddressGap={{leadingCharLimit: 4, trailingCharLimit: 6}}` you can see following result: `0x6B ... D55d04`
 - `resolverOptions` - change the resolver options for [Resolver engine](https://github.com/e2xlabs/redefined-name-resolver-js) such as specify resolver services or set nodes
 

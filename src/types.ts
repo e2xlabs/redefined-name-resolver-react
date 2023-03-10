@@ -6,7 +6,7 @@ export type DropdownProps = {
   loading: boolean;
   error: string | Error;
   hiddenAddressGap?: HiddenAddressGap;
-  onChange?: (value: string) => void;
+  onChange?: (value: Account) => void;
   onClickOutside?: () => void;
 }
 
@@ -26,7 +26,7 @@ export interface RedefinedDomainResolverProps {
   hiddenAddressGap?: HiddenAddressGap;
   resolverOptions?: ResolverOptions;
 
-  onSelect(address: string): void;
+  onUpdate(account: Account | null): void;
 }
 
 export interface ContainerProps {

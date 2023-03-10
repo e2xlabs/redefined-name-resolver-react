@@ -29,29 +29,26 @@ const DropDown = (props: DropdownProps) => {
   }
 
   return active ? (
-    <DropDownWrapper ref={ref}>
-      {loading ? <StyledLoader type="spinningBubbles" color={baseStyle.brandColor} height={baseStyle.loader.height}
-                               width={baseStyle.loader.height}/> : null}
+    <DropDownWrapper ref={ref} data-testid="dropdown">
+      {loading ? <StyledLoader data-testid="loader" type="spinningBubbles" color={baseStyle.brandColor} height={baseStyle.loader.height} width={baseStyle.loader.height}/> : null}
       {!loading && content.length > 0 ? <UnorderedList>
-        {content.sort((a, b) => a.network.localeCompare(b.network)).map((item, key) => {
-          return (
-            <ListItem key={key}>
-              <ItemWrapper onClick={() => onChange(item.address)}>
-                <StyledContent>
-                  <StyledLogo width={baseStyle.dropDown.logo.width} src={CoinLogos[item.network.toLocaleUpperCase()]}
-                              alt="coinLogo"/>
-                  <div>
-                    <StyledTitle>{getAbbreviatedAddress(item.address, hiddenAddressGap?.leadingCharLimit, hiddenAddressGap?.trailingCharLimit)}</StyledTitle>
-                    <StyledSubTitle>from: <StyledSpan isRedefined={item.from === "redefined"}>{item.from}</StyledSpan></StyledSubTitle>
-                  </div>
-                </StyledContent>
-                <div onClick={(e) => onCopyClick(e, item.address)}>
-                  <StyledIcon path={mdiContentCopy}/>
+        {content.sort((a, b) => a.network.localeCompare(b.network)).map((item, key) => (
+          <ListItem key={key}>
+            <ItemWrapper onClick={() => onChange(item)}>
+              <StyledContent>
+                <StyledLogo width={baseStyle.dropDown.logo.width} src={CoinLogos[item.network]} alt="coinLogo"/>
+                <div>
+                  <StyledTitle>{getAbbreviatedAddress(item.address, hiddenAddressGap?.leadingCharLimit, hiddenAddressGap?.trailingCharLimit)}</StyledTitle>
+                  <StyledSubTitle>from: <StyledSpan isRedefined={item.from.startsWith("redefined")}>{item.from.startsWith("redefined") ? "redefined" : item.from}</StyledSpan></StyledSubTitle>
                 </div>
-              </ItemWrapper>
-            </ListItem>
-          );
-        })}
+              </StyledContent>
+              <div onClick={(e) => onCopyClick(e, item.address)}>
+                <StyledIcon path={mdiContentCopy}/>
+              </div>
+            </ItemWrapper>
+          </ListItem>
+          ))
+        }
       </UnorderedList> : null}
       {!loading && !error && content.length == 0 ? <StyledNotFoundMessage>No addresses found</StyledNotFoundMessage> : null}
       {error ? <StyledErrorMessage>{getErrorMessage(error)}</StyledErrorMessage> : null}
@@ -114,6 +111,7 @@ const StyledContent = styled.div`
 
 const StyledLogo = styled.img`
   margin-right: 10px;
+  background: white;
   border-radius: ${baseStyle.dropDown.logo.width};
 `
 

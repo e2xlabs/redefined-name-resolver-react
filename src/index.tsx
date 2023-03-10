@@ -6,7 +6,7 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
     <React.StrictMode>
       <>
-        <RedefinedDomainResolver onSelect={() => {}} />
+        <RedefinedDomainResolver onUpdate={() => {}} />
       </>
     </React.StrictMode>,
 )

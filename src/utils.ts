@@ -1,7 +1,19 @@
-import EvmImage from "./assets/evm.png"
+import EvmImage from "./assets/evm.svg"
+import AptosImage from "./assets/aptos.svg"
+import ArbitrumImage from "./assets/arbitrum.svg"
+import AvalancheImage from "./assets/avalanche.svg"
+import BscImage from "./assets/bsc.svg"
+import BtcImage from "./assets/btc.svg"
+import EthImage from "./assets/eth.svg"
+import FantomImage from "./assets/fantom.svg"
+import MoonBeamImage from "./assets/moonbeam.svg"
+import NearImage from "./assets/near.svg"
+import OptimismImage from "./assets/optimism.svg"
+import PolygonImage from "./assets/polygon.svg"
+import SolImage from "./assets/sol.svg"
 
-export const getErrorMessage = (error?: string | Error, disabled?: boolean) => {
-  if (!error || disabled) return "";
+export const getErrorMessage = (error?: string | Error) => {
+  if (!error) return "";
   if (error instanceof Error) return error.message;
   return error;
 }
@@ -17,9 +29,17 @@ export const getAbbreviatedAddress = (address: string, leadingCharLimit: number 
 );
 
 export const CoinLogos = {
-  ETH: "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png",
-  BSC: "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png",
-  SOL: "https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png",
-  ZIL: "https://s2.coinmarketcap.com/static/img/coins/64x64/2469.png",
-  EVM: EvmImage
+  eth: EthImage,
+  matic: PolygonImage,
+  avax: AvalancheImage,
+  arbitrum: ArbitrumImage,
+  optimism: OptimismImage,
+  ftm: FantomImage,
+  glmr: MoonBeamImage,
+  btc: BtcImage,
+  sol: SolImage,
+  near: NearImage,
+  apt: AptosImage,
+  bsc: BscImage,
+  evm: EvmImage
 }

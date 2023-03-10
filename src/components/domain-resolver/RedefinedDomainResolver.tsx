@@ -9,7 +9,7 @@ import DropDown from "../dropdown";
 import {RedefinedResolver} from "@redefined/name-resolver-js";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
-  const {width, height, disabled, autoFocus, theme, hiddenAddressGap, resolverOptions, onSelect} = props;
+  const {width, height, disabled, autoFocus, theme, hiddenAddressGap, resolverOptions, onUpdate} = props;
   const [dropDownActive, setDropDownActive] = useState(false);
   const [domain, setDomain] = useState("");
   const [addresses, setAddresses] = useState([]);
@@ -21,13 +21,14 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
   }, [domain])
 
   const resolveDomain = async (value: string) => {
+    onUpdate(null);
     if (value.length > 0) {
       setDropDownActive(true);
       setLoading(true);
       setAddresses([]);
       setError("");
       try {
-        setAddresses(await new RedefinedResolver(resolverOptions).resolve(value));
+        setAddresses((await new RedefinedResolver(resolverOptions).resolve(value)).response);
       } catch (e) {
         setError(e)
       }
@@ -40,7 +41,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
 
   const onChangeValue = (value) => {
     setDropDownActive(false);
-    onSelect(value);
+    onUpdate(value);
   }
 
   const onInputClick = () => {
