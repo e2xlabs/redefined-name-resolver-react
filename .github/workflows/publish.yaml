@@ -35,7 +35,7 @@ jobs:
           node-version: 16
       - name: run ci
         run: npm ci
-      - name: test:unit
+      - name: test
         run: npm run test
 
   publish:

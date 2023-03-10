@@ -46,7 +46,7 @@
   "peerDependencies": {
     "@mdi/js": "^7.1.96",
     "@mdi/react": "^1.6.1",
-    "@redefined/name-resolver-js": "^1.4.4",
+    "@redefined/name-resolver-js": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-loading": "^2.0.3",

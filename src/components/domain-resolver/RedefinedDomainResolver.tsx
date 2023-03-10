@@ -27,7 +27,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
       setAddresses([]);
       setError("");
       try {
-        setAddresses(await new RedefinedResolver(resolverOptions).resolve(value));
+        setAddresses((await new RedefinedResolver(resolverOptions).resolve(value)).response);
       } catch (e) {
         setError(e)
       }
