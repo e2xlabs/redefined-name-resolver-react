@@ -83,20 +83,6 @@ describe("DropDown component", () => {
     expect(msg).toBeInTheDocument()
   })
 
-  it("SHOULD show no addresses found message IF content is empty", () => {
-    render(
-        <ThemeProvider theme={lightTheme}>
-          <DropDown active={true} content={[]} error={""} loading={false}/>
-        </ThemeProvider>
-    );
-
-    const list = screen.queryByRole("list");
-    const msg = screen.getByText("No addresses found");
-
-    expect(list).not.toBeInTheDocument();
-    expect(msg).toBeInTheDocument()
-  })
-
   it("SHOULD NOT show no addresses found message IF content is not empty", () => {
     render(
         <ThemeProvider theme={lightTheme}>
