@@ -39,7 +39,7 @@ const DropDown = (props: DropdownProps) => {
                 <StyledLogo width={baseStyle.dropDown.logo.width} src={CoinLogos[item.network]} alt="coinLogo"/>
                 <div>
                   <StyledTitle>{getAbbreviatedAddress(item.address, hiddenAddressGap?.leadingCharLimit, hiddenAddressGap?.trailingCharLimit)}</StyledTitle>
-                  <StyledSubTitle>from: <StyledSpan isRedefined={item.from.startsWith("redefined")}>{item.from.startsWith("redefined") ? "redefined" : item.from}</StyledSpan></StyledSubTitle>
+                  <StyledSubTitle>{item.network} from: <StyledSpan isRedefined={item.from.startsWith("redefined")}>{item.from.startsWith("redefined") ? "redefined" : item.from}</StyledSpan></StyledSubTitle>
                 </div>
               </StyledContent>
               <div onClick={(e) => onCopyClick(e, item.address)}>
@@ -89,6 +89,10 @@ const StyledTitle = styled.div`
 const StyledSubTitle = styled.div`
   color: darkgrey;
   font-size: 12px;
+  
+  ::first-letter {
+    text-transform:capitalize;
+  }
 `
 
 const ItemWrapper = styled.div`
