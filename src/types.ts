@@ -6,6 +6,7 @@ export type DropdownProps = {
   loading: boolean;
   error: string | Error;
   hiddenAddressGap?: HiddenAddressGap;
+  assets: AssetsJson | undefined;
   onChange?: (value: Account) => void;
   onClickOutside?: () => void;
 }
@@ -55,4 +56,13 @@ export interface ITheme {
     hover: string;
     borderColor: string;
   }
+}
+
+export type AssetsJson = Record<string, AssetsJsonValue>
+
+export type AssetsJsonValue = {
+  logo: string;
+  name: string;
+  symbol: string;
+  type: string;
 }

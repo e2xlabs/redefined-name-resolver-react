@@ -1,0 +1,1 @@
+export const ASSETS_URL = "https://assets.sandbox.redefined.softwea.com/assets.json"
