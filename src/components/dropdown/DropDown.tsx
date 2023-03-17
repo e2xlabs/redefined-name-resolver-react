@@ -29,7 +29,7 @@ const DropDown = (props: DropdownProps) => {
   }
 
   const getAssetsByNetwork = useCallback((network: string) => (
-    assets.find(it => it.key === network)
+    assets?.find(it => it.key === network)
   ), [assets]);
 
   return active ? (

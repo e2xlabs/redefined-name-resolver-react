@@ -46,20 +46,22 @@ describe("DropDown component", () => {
   })
 
   it("SHOULD render content IF content is not empty", () => {
-    const assets = {
-      "eth": {
+    const assets = [
+      {
+        "key": "eth",
         "logo": "http://mock/assets/eth.svg",
         "name":"Ethereum",
         "symbol":"ETH",
         "type": "EVM"
       },
-      "bsc": {
+      {
+        "key": "bsc",
         "logo": "http://mock/assets/bsc.svg",
         "name": "Binance",
         "symbol": "BSC",
         "type": "EVM"
       }
-    }
+    ]
     render(
         <ThemeProvider theme={lightTheme}>
           <DropDown assets={assets} active={true} content={data} error={""} loading={false}/>
