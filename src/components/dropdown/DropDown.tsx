@@ -28,10 +28,6 @@ const DropDown = (props: DropdownProps) => {
     event.stopPropagation();
   }
 
-  const getInfoByNetwork = useCallback((network: string) => {
-    return assets?.[network];
-  }, [assets])
-
   return active ? (
     <DropDownWrapper ref={ref} data-testid="dropdown">
       {loading ? <StyledLoader data-testid="loader" type="spinningBubbles" color={baseStyle.brandColor} height={baseStyle.loader.height} width={baseStyle.loader.height}/> : null}
@@ -40,10 +36,10 @@ const DropDown = (props: DropdownProps) => {
           <ListItem key={key}>
             <ItemWrapper onClick={() => onChange(item)}>
               <StyledContent>
-                <StyledLogo width={baseStyle.dropDown.logo.width} src={getInfoByNetwork(item.network)?.logo} alt="coinLogo"/>
+                <StyledLogo width={baseStyle.dropDown.logo.width} src={assets?.[item.network]?.logo} alt="coinLogo"/>
                 <div>
                   <StyledTitle>{getAbbreviatedAddress(item.address, hiddenAddressGap?.leadingCharLimit, hiddenAddressGap?.trailingCharLimit)}</StyledTitle>
-                  <StyledSubTitle>{getInfoByNetwork(item.network)?.name} from: <StyledSpan isRedefined={item.from.startsWith("redefined")}>{item.from.startsWith("redefined") ? "redefined" : item.from}</StyledSpan></StyledSubTitle>
+                  <StyledSubTitle>{assets?.[item.network]?.name} from: <StyledSpan isRedefined={item.from.startsWith("redefined")}>{item.from.startsWith("redefined") ? "redefined" : item.from}</StyledSpan></StyledSubTitle>
                 </div>
               </StyledContent>
               <div onClick={(e) => onCopyClick(e, item.address)}>

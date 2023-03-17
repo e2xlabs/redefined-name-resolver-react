@@ -127,4 +127,18 @@ describe("RedefinedDomainResolver component", () => {
     expect(RedefinedResolver).toBeTruthy();
 
   })
+
+  it("SHOULD loading assets IF render component", async () => {
+    global.fetch = jest.fn(() =>
+        Promise.resolve({
+          json: () => Promise.resolve({mock: "mock"}),
+        }),
+    ) as jest.Mock;
+
+    _debounce.mockImplementation(fn => fn);
+
+    render(<RedefinedDomainResolver onUpdate={() => {}}/>);
+
+    expect(global.fetch).toHaveBeenCalled();
+  })
 })

@@ -6,7 +6,7 @@ export type DropdownProps = {
   loading: boolean;
   error: string | Error;
   hiddenAddressGap?: HiddenAddressGap;
-  assets: AssetsJson | undefined;
+  assets?: AssetsJson;
   onChange?: (value: Account) => void;
   onClickOutside?: () => void;
 }
