@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import _debounce from 'lodash/debounce';
 import styled, {ThemeProvider} from "styled-components";
-import {ContainerProps, RedefinedDomainResolverProps, InputProps, LogoProps, AssetsJson} from "../../types";
+import {ContainerProps, RedefinedDomainResolverProps, InputProps, LogoProps, Asset} from "../../types";
 import companyLogo from "../../assets/small-logo.svg";
 import {baseStyle, darkTheme, lightTheme} from "../../styles/baseStyle";
 import GlobalStyle from "../../styles/globalStyle";
@@ -16,7 +16,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [assets, setAssets] = useState<AssetsJson>(null);
+  const [assets, setAssets] = useState<Asset[]>([]);
 
   useEffect(() => {
     if (domain.length === 0) setDropDownActive(false);
