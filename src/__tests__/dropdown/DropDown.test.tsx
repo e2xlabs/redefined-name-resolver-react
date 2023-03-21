@@ -4,7 +4,7 @@ import DropDown from "../../components/dropdown";
 import {Account} from "@redefined/name-resolver-js";
 import {ThemeProvider} from "styled-components";
 import {lightTheme} from "../../styles/baseStyle";
-import {CoinLogos, getAbbreviatedAddress} from "../../utils";
+import {getAbbreviatedAddress} from "../../utils";
 import userEvent from "@testing-library/user-event";
 
 describe("DropDown component", () => {
@@ -46,9 +46,25 @@ describe("DropDown component", () => {
   })
 
   it("SHOULD render content IF content is not empty", () => {
+    const assets = [
+      {
+        "key": "eth",
+        "logo": "http://mock/assets/eth.svg",
+        "name":"Ethereum",
+        "symbol":"ETH",
+        "type": "EVM"
+      },
+      {
+        "key": "bsc",
+        "logo": "http://mock/assets/bsc.svg",
+        "name": "Binance",
+        "symbol": "BSC",
+        "type": "EVM"
+      }
+    ]
     render(
         <ThemeProvider theme={lightTheme}>
-          <DropDown active={true} content={data} error={""} loading={false}/>
+          <DropDown assets={assets} active={true} content={data} error={""} loading={false}/>
         </ThemeProvider>
     );
 
@@ -65,8 +81,8 @@ describe("DropDown component", () => {
     expect(from2).toBeInTheDocument()
     expect(address1).toBeInTheDocument()
     expect(address2).toBeInTheDocument()
-    expect(logo1.getAttribute("src")).toContain(CoinLogos.bsc)
-    expect(logo2.getAttribute("src")).toContain(CoinLogos.eth)
+    expect(logo1.getAttribute("src")).toContain("http://mock/assets/bsc.svg")
+    expect(logo2.getAttribute("src")).toContain("http://mock/assets/eth.svg")
   })
 
   it("SHOULD show no addresses found message IF content is empty", () => {
@@ -126,7 +142,7 @@ describe("DropDown component", () => {
   })
 
   it("SHOULD show loader IF loading content", () => {
-    const module = jest.requireActual('react-loading');
+    jest.requireActual('react-loading');
     jest.doMock("react-loading", () => {
       return () => <div>Loading...</div>;
     });

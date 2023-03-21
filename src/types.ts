@@ -6,6 +6,7 @@ export type DropdownProps = {
   loading: boolean;
   error: string | Error;
   hiddenAddressGap?: HiddenAddressGap;
+  assets?: Asset[];
   onChange?: (value: Account) => void;
   onClickOutside?: () => void;
 }
@@ -55,4 +56,12 @@ export interface ITheme {
     hover: string;
     borderColor: string;
   }
+}
+
+export type Asset = {
+  key: string;
+  logo: string;
+  name: string;
+  symbol: string;
+  type: string;
 }

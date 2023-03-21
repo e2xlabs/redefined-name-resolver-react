@@ -1,12 +1,13 @@
 import React, {useCallback, useEffect, useState} from "react";
 import _debounce from 'lodash/debounce';
 import styled, {ThemeProvider} from "styled-components";
-import {ContainerProps, RedefinedDomainResolverProps, InputProps, LogoProps} from "../../types";
+import {ContainerProps, RedefinedDomainResolverProps, InputProps, LogoProps, Asset} from "../../types";
 import companyLogo from "../../assets/small-logo.svg";
 import {baseStyle, darkTheme, lightTheme} from "../../styles/baseStyle";
 import GlobalStyle from "../../styles/globalStyle";
 import DropDown from "../dropdown";
 import {RedefinedResolver} from "@redefined/name-resolver-js";
+import {ASSETS_URL} from "../../config";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
   const {width, height, disabled, autoFocus, theme, hiddenAddressGap, resolverOptions, onUpdate} = props;
@@ -15,10 +16,24 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [assets, setAssets] = useState<Asset[]>([]);
 
   useEffect(() => {
     if (domain.length === 0) setDropDownActive(false);
-  }, [domain])
+  }, [domain]);
+
+  const fetchAssets = useCallback(async () => {
+    try {
+      const response = await fetch(ASSETS_URL);
+      setAssets(await response.json());
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchAssets();
+  }, [fetchAssets]);
 
   const resolveDomain = async (value: string) => {
     onUpdate(null);
@@ -68,6 +83,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
             content={addresses}
             onChange={onChangeValue}
             hiddenAddressGap={hiddenAddressGap}
+            assets={assets}
             onClickOutside={() => setDropDownActive(false)}
           />
       </ThemeProvider>
