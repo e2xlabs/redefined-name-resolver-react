@@ -13,11 +13,11 @@ root.render(
           <RedefinedDomainResolver
             theme={"light"}
             width={"50%"}
-            onSelect={(val) => console.log(val)}/>
+            onUpdate={(val) => console.log(val)}/>
           <RedefinedDomainResolver
             theme={"dark"}
             width={"50%"}
-            onSelect={(val) => console.log(val)}/>
+            onUpdate={(val) => console.log(val)}/>
         </div>
       </div>
     </React.StrictMode>,
