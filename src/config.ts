@@ -1,1 +1,1 @@
-export const ASSETS_URL = "https://assets.redefined.org/assets.json"
+export const ASSETS_URL = `https://assets.redefined.org/assets.json?v=${new Date().getTime()}`

@@ -1,6 +1,6 @@
 {
   "name": "@redefined/name-resolver-react",
-  "version": "1.2.2",
+  "version": "1.2.4",
   "description": "React component to resolve crypto names",
   "author": "e2xlabs",
   "repository": {
@@ -26,16 +26,18 @@
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.1",
+    "@rollup/plugin-image": "^3.0.2",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-typescript": "^11.0.0",
-    "@rollup/plugin-image": "^3.0.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/styled-components": "^5.1.26",
+    "buffer": "^5.7.1",
     "cz-conventional-changelog": "^3.3.0",
     "parcel": "^2.8.3",
+    "punycode": "^1.4.1",
     "react-app-rewire-alias": "^1.1.7",
     "react-app-rewired": "^2.2.1",
     "rollup": "^3.15.0",
@@ -46,7 +48,7 @@
   "peerDependencies": {
     "@mdi/js": "^7.1.96",
     "@mdi/react": "^1.6.1",
-    "@redefined/name-resolver-js": "^2.1.0",
+    "@redefined/name-resolver-js": "^2.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-loading": "^2.0.3",
