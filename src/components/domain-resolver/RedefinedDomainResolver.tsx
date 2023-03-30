@@ -43,16 +43,16 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
       setAddresses([]);
       setError("");
       try {
-        const response = (await new RedefinedResolver(resolverOptions).resolve(value));
+        const { response, errors } = (await new RedefinedResolver(resolverOptions).resolve(value));
         if (
-          !response.response.length && response.errors.some(it => (
+          !response.length && errors.some(it => (
             it.vendor.includes("redefined")
             && it.error.includes("No records found for domain")
           ))
         ) {
           setError( `This domain is registered but has no records.`)
         } else {
-          setAddresses(response.response);
+          setAddresses(response);
         }
       } catch (e) {
         setError(e)
