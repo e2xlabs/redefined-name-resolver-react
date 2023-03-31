@@ -77,6 +77,6 @@ jobs:
         run: npm install
 
       - name: deploy pages
-        run: npm run deploy
+        run: gh-pages -d dist -u "github-actions-bot <support+actions@github.com>"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
