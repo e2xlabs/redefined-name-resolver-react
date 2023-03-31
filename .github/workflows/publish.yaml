@@ -56,3 +56,23 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy pages:
+    runs-on: "ubuntu-latest"
+    needs: [build, test, publish]
+    if: ${{ github.ref == 'refs/heads/master' }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: route to example
+        uses: cd ./example
+      - name: run install
+        run: npm install
+      - name: deploy pages
+        run: npm run deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
