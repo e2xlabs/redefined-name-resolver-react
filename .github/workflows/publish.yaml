@@ -61,6 +61,9 @@ jobs:
     runs-on: "ubuntu-latest"
     needs: [build, test, publish]
     if: ${{ github.ref == 'refs/heads/master' }}
+    defaults:
+      run:
+        working-directory: ./example
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -69,9 +72,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-
-      - name: route to example
-        run: cd ./example
 
       - name: run install
         run: npm install
