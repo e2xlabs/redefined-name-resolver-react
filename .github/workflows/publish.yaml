@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - '*'
-
+      -
 jobs:
   build:
     runs-on: "ubuntu-latest"
@@ -55,4 +55,26 @@ jobs:
         run: npm run semantic-release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy pages:
+    runs-on: "ubuntu-latest"
+    needs: [build, test, publish]
+    if: ${{ github.ref == 'refs/heads/master' }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: route to example
+        uses: cd ./example
+      - name: run install
+        run: npm install
+      - name: deploy pages
+        run: |
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
