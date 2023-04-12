@@ -18,7 +18,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
   const [error, setError] = useState("");
   const [assets, setAssets] = useState<Asset[]>([]);
 
-  let actualVersion = 0;
+  let actualResolveRequestVersion = 0;
 
   useEffect(() => {
     if (domain.length === 0) setDropDownActive(false);
@@ -39,14 +39,15 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
 
   const resolveDomain = async (value: string) => {
     onUpdate(null);
-    const version = new Date().valueOf();
+    setAddresses([]);
+    setError("");
     if (value.length > 0) {
+      const version = new Date().valueOf();
       setDropDownActive(true);
       setLoading(true);
-      setAddresses([]);
-      setError("");
+
       try {
-        actualVersion = version;
+        actualResolveRequestVersion = version;
         const { response, errors } = (await new RedefinedResolver(resolverOptions).resolve(value));
         if (
           !response.length && errors.some(it => (
@@ -56,14 +57,14 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         ) {
           setError( `This domain is registered but has no records.`)
         } else {
-          if (version == actualVersion) {
+          if (version == actualResolveRequestVersion) {
             setAddresses(response);
           }
         }
       } catch (e) {
         setError(e)
       }
-      if (version == actualVersion) {
+      if (version == actualResolveRequestVersion) {
         setLoading(false);
       }
     }
