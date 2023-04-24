@@ -58,4 +58,4 @@ from: string
 
 ## License
 
-MIT Licensed.
+[Apache License 2.0](LICENSE)
