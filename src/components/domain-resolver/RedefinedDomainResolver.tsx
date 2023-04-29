@@ -6,7 +6,7 @@ import companyLogo from "../../assets/small-logo.svg";
 import {baseStyle, darkTheme, lightTheme} from "../../styles/baseStyle";
 import GlobalStyle from "../../styles/globalStyle";
 import DropDown from "../dropdown";
-import {RedefinedResolver} from "../../../../redefined-name-resolver-js";
+import {RedefinedResolver} from "@redefined/name-resolver-js";
 import {ASSETS_URL} from "../../config";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
