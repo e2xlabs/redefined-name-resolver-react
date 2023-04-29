@@ -6,7 +6,7 @@ import companyLogo from "../../assets/small-logo.svg";
 import {baseStyle, darkTheme, lightTheme} from "../../styles/baseStyle";
 import GlobalStyle from "../../styles/globalStyle";
 import DropDown from "../dropdown";
-import {RedefinedResolver} from "@redefined/name-resolver-js";
+import {RedefinedResolver} from "../../../../redefined-name-resolver-js";
 import {ASSETS_URL} from "../../config";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
@@ -17,6 +17,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [assets, setAssets] = useState<Asset[]>([]);
+  const [resolver, setResolver] = useState(new RedefinedResolver(resolverOptions));
 
   let actualResolveRequestVersion = 0;
 
@@ -48,7 +49,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
 
       try {
         actualResolveRequestVersion = version;
-        const { response, errors } = (await new RedefinedResolver(resolverOptions).resolve(value));
+        const { response, errors } = (await resolver.resolve(value));
         if (
           !response.length && errors.some(it => (
             it.vendor.includes("redefined")
