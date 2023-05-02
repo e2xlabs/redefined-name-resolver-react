@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import _debounce from 'lodash/debounce';
 import styled, {ThemeProvider} from "styled-components";
 import {ContainerProps, RedefinedDomainResolverProps, InputProps, LogoProps, Asset} from "../../types";
@@ -17,7 +17,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [assets, setAssets] = useState<Asset[]>([]);
-  const [resolver, setResolver] = useState(new RedefinedResolver(resolverOptions));
+  const resolver = useMemo(() => new RedefinedResolver(resolverOptions), []);
 
   let actualResolveRequestVersion = 0;
 
