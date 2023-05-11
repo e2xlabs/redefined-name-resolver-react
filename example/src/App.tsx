@@ -83,9 +83,9 @@ export default function App() {
             </div>
             <div className={"footer"}>
                 <div style={{ display: "flex" }}>
-                    <div className={"cursor-pointer hrefs"} onClick={openPrivacy}>Privacy Policy</div>
+                    <div className={"cursor-pointer link"} onClick={openPrivacy}>Privacy Policy</div>
                     <div style={{ margin: "0 3px" }}>|</div>
-                    <div className={"cursor-pointer hrefs"} onClick={openTermsConditions}>Terms & Conditions</div>
+                    <div className={"cursor-pointer link"} onClick={openTermsConditions}>Terms & Conditions</div>
                 </div>
                 <div>All rights reserved. © 2023 redefiend</div>
             </div>
