@@ -33,7 +33,7 @@ export const darkTheme: DefaultTheme = {
     secondary: "#222222",
     disabled: "#9a9a9a",
     hover: "#313131",
-    borderColor: "rgb(95%, 95%, 95%)"
+    borderColor: "#6F6F6F"
   },
 }
 
@@ -55,12 +55,13 @@ export const baseStyle = {
     fontFamily: "Poppins, serif",
     fontSize: "16px",
     color: baseTheme.colors.primary,
-    height: "40px",
-    borderRadius: "8px",
+    height: "55px",
+    borderRadius: "15px",
     borderColor: baseTheme.colors.primary,
     borderWidth: "1px",
     logo: {
-      padding: "5px"
+      padding: "12px",
+      width: "37px",
     }
   },
 

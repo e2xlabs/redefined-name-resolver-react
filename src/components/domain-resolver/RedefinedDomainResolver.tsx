@@ -94,12 +94,22 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
       <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
         <GlobalStyle/>
           <InputContainer onClick={onInputClick}>
-            {theme === "dark"
-              ? <StyledLogo inputHeight={height} disabled={disabled} src={gradientLogo} alt="logo"/>
-              : <StyledLogo inputHeight={height} disabled={disabled} src={blackLogo} alt="logo"/>
-            }
+            <StyledLogo
+              inputHeight={height}
+              disabled={disabled}
+              src={theme === "dark" ? gradientLogo : blackLogo}
+              alt="logo"
+            />
             <StyledLine></StyledLine>
-            <StyledInput isDropDownActive={dropDownActive} disabled={disabled} autoFocus={autoFocus} height={height} value={domain} onChange={onChangeInput}/>
+            <StyledInput
+              isDropDownActive={dropDownActive}
+              disabled={disabled}
+              autoFocus={autoFocus}
+              height={height}
+              placeholder="Type to search"
+              value={domain}
+              onChange={onChangeInput}
+            />
           </InputContainer>
           <DropDown
             active={dropDownActive}
@@ -127,7 +137,7 @@ const InputContainer = styled.div`
 `
 
 const StyledInput = styled.input<InputProps>`
-  padding: 0 0 0 calc(${p => p.height || baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - ${baseStyle.input.logo.padding});
+  padding: 0 0 0 calc(${p => p.height || baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - ${baseStyle.input.logo.padding} + ${baseStyle.input.logo.width} / 2);
   width: 100%;
   background: ${(props) => props.disabled ? props.theme.colors.disabled : props.theme.colors.background};
   font-family: ${baseStyle.input.fontFamily};
@@ -145,10 +155,11 @@ const StyledInput = styled.input<InputProps>`
 `;
 
 const StyledLogo = styled.img<LogoProps>`
-  width: calc(${p => p.inputHeight || baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - 2 * ${baseStyle.input.logo.padding});
+  width: ${baseStyle.input.logo.width};
   position: absolute;
   bottom: ${baseStyle.input.logo.padding};
   left: ${baseStyle.input.logo.padding};
+  top: 15%;
   background: ${(props) => props.disabled ? props.theme.colors.disabled : props.theme.colors.background};
   border-bottom-left-radius: 8px;
   border-top-left-radius: 8px;
@@ -157,8 +168,8 @@ const StyledLogo = styled.img<LogoProps>`
 const StyledLine = styled.div<LogoProps>`
   position: absolute;
   bottom: ${baseStyle.input.logo.padding};
-  left: calc(${baseStyle.input.logo.padding} + 32px);
-  top: calc(${baseStyle.input.logo.padding} + 8px);
+  left: calc(${baseStyle.input.logo.width} + ${baseStyle.input.logo.padding});
+  top: 35%;
   width: 2px;
   height: ${baseStyle.input.fontSize};
   background: ${(props) => props.theme.type === "light" ? "#222222" : "#ffffff"};
