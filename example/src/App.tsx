@@ -36,7 +36,7 @@ export default function App() {
                     <span className={"theme-text"}> : Search</span>
                 </div>
                 <div className={"dev-text-container cursor-pointer"} onClick={openDevGuide}>
-                  <div className={"dev-text"}>Developer`s Guide</div>
+                  <div className={"dev-text"}>Developer's Guide</div>
                   <img src={require("./assets/arrow.svg")} />
                 </div>
             </div>

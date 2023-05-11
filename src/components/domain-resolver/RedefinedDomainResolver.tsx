@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import _debounce from 'lodash/debounce';
 import styled, {ThemeProvider} from "styled-components";
 import {ContainerProps, RedefinedDomainResolverProps, InputProps, LogoProps, Asset} from "../../types";
-import companyLogo from "../../assets/small-logo.svg";
+import gradientLogo from "../../assets/small-logo.svg";
+import blackLogo from "../../assets/black-small-logo.svg";
 import {baseStyle, darkTheme, lightTheme} from "../../styles/baseStyle";
 import GlobalStyle from "../../styles/globalStyle";
 import DropDown from "../dropdown";
@@ -93,7 +94,11 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
       <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
         <GlobalStyle/>
           <InputContainer onClick={onInputClick}>
-            <StyledLogo inputHeight={height} disabled={disabled} src={companyLogo} alt="logo"/>
+            {theme === "dark"
+              ? <StyledLogo inputHeight={height} disabled={disabled} src={gradientLogo} alt="logo"/>
+              : <StyledLogo inputHeight={height} disabled={disabled} src={blackLogo} alt="logo"/>
+            }
+            <StyledLine></StyledLine>
             <StyledInput isDropDownActive={dropDownActive} disabled={disabled} autoFocus={autoFocus} height={height} value={domain} onChange={onChangeInput}/>
           </InputContainer>
           <DropDown
@@ -118,6 +123,7 @@ const Container = styled.div<ContainerProps>`
 
 const InputContainer = styled.div`
   display: flex;
+  align-items: center;
 `
 
 const StyledInput = styled.input<InputProps>`
@@ -146,6 +152,16 @@ const StyledLogo = styled.img<LogoProps>`
   background: ${(props) => props.disabled ? props.theme.colors.disabled : props.theme.colors.background};
   border-bottom-left-radius: 8px;
   border-top-left-radius: 8px;
+`
+
+const StyledLine = styled.div<LogoProps>`
+  position: absolute;
+  bottom: ${baseStyle.input.logo.padding};
+  left: calc(${baseStyle.input.logo.padding} + 32px);
+  top: calc(${baseStyle.input.logo.padding} + 8px);
+  width: 2px;
+  height: ${baseStyle.input.fontSize};
+  background: ${(props) => props.theme.type === "light" ? "#222222" : "#ffffff"};
 `
 
 export default RedefinedDomainResolver;
