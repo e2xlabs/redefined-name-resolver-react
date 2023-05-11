@@ -52,7 +52,7 @@ export const baseStyle = {
   },
 
   input: {
-    fontFamily: "Poppins, serif",
+    fontFamily: "Poppins, sans-serif",
     fontSize: "16px",
     color: baseTheme.colors.primary,
     height: "55px",
