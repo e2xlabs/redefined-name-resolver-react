@@ -47,7 +47,7 @@ export default function App() {
                     <img className={"cursor-pointer"} src={require("./assets/logo.svg")} onClick={openRedefined} />
                     <span className={"theme-text"} style={{paddingTop: "2px"}}> : Search</span>
                 </div>
-                <div className={"dev-text-container cursor-pointer"} onClick={openDevGuide}>
+                <div className={"dev-text-container cursor-pointer link"} onClick={openDevGuide}>
                   <div className={"dev-text"}>Developer's Guide</div>
                   <img src={require("./assets/arrow.svg")} />
                 </div>
@@ -75,7 +75,7 @@ export default function App() {
                     />
                 </div>
                 <div className={"dev-text-container support"}>
-                    <div className={"dev-text cursor-pointer"} onClick={openCurrentlySupport}>
+                    <div className={"dev-text cursor-pointer link"} onClick={openCurrentlySupport}>
                       <div>Currently Support</div>
                       <img src={require("./assets/arrow.svg")} />
                     </div>
