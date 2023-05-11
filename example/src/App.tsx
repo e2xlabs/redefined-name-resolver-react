@@ -52,7 +52,7 @@ export default function App() {
                   <img src={require("./assets/arrow.svg")} />
                 </div>
             </div>
-            <div><span className={"title"}>redefined’s Web3 Identity Resolver</span></div>
+            <div className={"title"}><span>redefined’s Web3 Identity Resolver</span></div>
             <div className={"subtitle-container"}>
               <div className={"subtitle theme-text"}>
                 Integrate redefined SDK or Widget to Search with any Social ID, Domain, Name Service, Email or Username
