@@ -29,7 +29,7 @@ export default function App() {
     }
 
     return (
-        <div className={`app ${theme}`}>
+        <div className={`app`}>
             <div className={"app-bar"}>
                 <div className={"logo-container"}>
                     <img src={require("./assets/logo.svg")} />
@@ -50,8 +50,8 @@ export default function App() {
                 <div className={"theme-btn-container"}>
                   <div className={"cursor-pointer"} onClick={swapTheme}>
                     {theme === "dark"
-                      ? <img src={require("./assets/dark.svg")} />
-                      : <img src={require("./assets/light.svg")} />
+                      ? <img src={require("./assets/sun.svg")} />
+                      : <img src={require("./assets/moon.svg")} />
                     }
                   </div>
                 </div>

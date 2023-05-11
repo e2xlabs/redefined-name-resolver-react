@@ -16,6 +16,7 @@ body {
  box-sizing: border-box;
  display: flex;
  flex-direction: column;
+ background: #222222;
 }
 
 .app-bar {
@@ -94,11 +95,7 @@ body {
  gap: 10%;
 }
 
-.app.dark {
- background: #222222;
-}
-
-.app.dark .theme-text {
+.theme-text {
  color: white;
 }
 
@@ -115,6 +112,11 @@ body {
  display: flex;
  justify-content: end;
  padding-bottom: 10px;
+}
+
+.theme-btn-container img {
+ width: 24px;
+ height: 24px;
 }
 
 .cursor-pointer {
