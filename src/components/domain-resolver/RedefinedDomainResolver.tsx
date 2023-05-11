@@ -106,7 +106,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
               disabled={disabled}
               autoFocus={autoFocus}
               height={height}
-              placeholder="Type to search"
+              placeholder={props.placeholder || "Type to search"}
               value={domain}
               onChange={onChangeInput}
             />

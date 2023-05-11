@@ -28,11 +28,15 @@ export default function App() {
         openUrl("https://redefined.gitbook.io/connect/integerate-redefined/name-resolver-js-sdk")
     }
 
+  const openRedefined = () => {
+    openUrl("https://redefined.org")
+  }
+
     return (
         <div className={`app`}>
             <div className={"app-bar"}>
                 <div className={"logo-container"}>
-                    <img src={require("./assets/logo.svg")} />
+                    <img className={"cursor-pointer"} src={require("./assets/logo.svg")} onClick={openRedefined} />
                     <span className={"theme-text"} style={{paddingTop: "2px"}}> : Search</span>
                 </div>
                 <div className={"dev-text-container cursor-pointer"} onClick={openDevGuide}>
