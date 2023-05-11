@@ -69,6 +69,10 @@ export default function App() {
                     </div>
                 </div>
             </div>
+            <div className={"footer"}>
+                <div>Privacy Policy | Terms & Conditions</div>
+                <div>All rights reserved. © 2023 redefiend</div>
+            </div>
         </div>
     )
 }
