@@ -28,9 +28,17 @@ export default function App() {
         openUrl("https://redefined.gitbook.io/connect/integerate-redefined/name-resolver-js-sdk")
     }
 
-  const openRedefined = () => {
-    openUrl("https://redefined.org")
-  }
+    const openRedefined = () => {
+        openUrl("https://redefined.org")
+    }
+
+    const openTermsConditions = () => {
+        openUrl("https://redefined.org/terms-conditions")
+    }
+
+    const openPrivacy = () => {
+        openUrl("https://redefined.org/privacy")
+    }
 
     return (
         <div className={`app`}>
@@ -74,7 +82,11 @@ export default function App() {
                 </div>
             </div>
             <div className={"footer"}>
-                <div>Privacy Policy | Terms & Conditions</div>
+                <div style={{ display: "flex" }}>
+                    <div className={"cursor-pointer hrefs"} onClick={openPrivacy}>Privacy Policy</div>
+                    <div style={{ margin: "0 3px" }}>|</div>
+                    <div className={"cursor-pointer hrefs"} onClick={openTermsConditions}>Terms & Conditions</div>
+                </div>
                 <div>All rights reserved. © 2023 redefiend</div>
             </div>
         </div>
