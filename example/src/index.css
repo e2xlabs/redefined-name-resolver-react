@@ -47,6 +47,7 @@ body {
  font-size: 16px;
  line-height: 120%;
  color: #707070;
+ display: flex;
 }
 
 .title {

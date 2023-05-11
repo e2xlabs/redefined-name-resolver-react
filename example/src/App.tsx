@@ -62,9 +62,11 @@ export default function App() {
                         onUpdate={(val) => console.log(val)}
                     />
                 </div>
-                <div className={"dev-text-container support cursor-pointer"} onClick={openCurrentlySupport}>
-                    <div className={"dev-text"}>Currently Support</div>
-                    <img src={require("./assets/arrow.svg")} />
+                <div className={"dev-text-container support"}>
+                    <div className={"dev-text cursor-pointer"} onClick={openCurrentlySupport}>
+                      <div>Currently Support</div>
+                      <img src={require("./assets/arrow.svg")} />
+                    </div>
                 </div>
             </div>
         </div>
