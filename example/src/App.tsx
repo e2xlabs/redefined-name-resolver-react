@@ -45,7 +45,7 @@ export default function App() {
             <div className={"app-bar"}>
                 <div className={"logo-container"}>
                     <img className={"cursor-pointer"} src={require("./assets/logo.svg")} onClick={openRedefined} />
-                    <span className={"theme-text"} style={{paddingTop: "2px"}}> : Search</span>
+                    <span className={"theme-text logo-subtext"}>: Search</span>
                 </div>
                 <div className={"dev-text-container cursor-pointer link"} onClick={openDevGuide}>
                   <div className={"dev-text"}>Developer's Guide</div>

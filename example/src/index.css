@@ -23,15 +23,23 @@ body {
  align-items: center;
  justify-content: space-between;
  margin-bottom: 7%;
- padding: 17px 40px;
+ padding: 16px 40px;
 }
 
 .logo-container {
  display: flex;
+ align-items: center;
 }
 
 .logo-container img {
  margin-right: 5px;
+}
+
+.logo-subtext {
+ font-size: 18px;
+ font-weight: 300;
+ padding-bottom: 4px;
+ padding-left: 2px;
 }
 
 .dev-text-container {
