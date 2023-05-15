@@ -12,7 +12,6 @@ body {
 .app {
  height: 100%;
  width: 100%;
- text-align: center;
  box-sizing: border-box;
  display: flex;
  flex-direction: column;
@@ -24,15 +23,24 @@ body {
  align-items: center;
  justify-content: space-between;
  margin-bottom: 7%;
- padding: 17px 40px;
+ padding: 16px 40px;
 }
 
 .logo-container {
  display: flex;
+ align-items: center;
 }
 
 .logo-container img {
- margin-right: 5px;
+ margin-right: 4px;
+}
+
+.logo-subtext {
+ font-size: 18px;
+ font-weight: 500;
+ padding-bottom: 4px;
+ padding-left: 2px;
+ -webkit-font-smoothing: antialiased;
 }
 
 .dev-text-container {
@@ -54,15 +62,20 @@ body {
 }
 
 .title {
+ text-align: center;
  font-weight: 500;
  font-size: 24px;
  line-height: 113%;
+}
+
+.title span {
  background: linear-gradient(-90deg, #FF8254, #FFBD80, #FFE870);
  -webkit-background-clip: text;
  -webkit-text-fill-color: transparent;
 }
 
 .subtitle-container {
+ text-align: center;
  width: 100%;
  display: flex;
  justify-content: center;
@@ -135,6 +148,12 @@ body {
  font-size: 10px;
  line-height: 120%;
  color: #707070;
+}
+
+.link:hover {
+ background: linear-gradient(-90deg, #FF8254, #FFBD80, #FFE870);
+ -webkit-background-clip: text;
+ -webkit-text-fill-color: transparent;
 }
 
 @media (max-width: 700px) {
