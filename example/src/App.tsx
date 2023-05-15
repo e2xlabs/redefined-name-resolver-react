@@ -2,7 +2,13 @@ import { RedefinedDomainResolver } from "@redefined/name-resolver-react";
 import React, { useState } from "react";
 
 export default function App() {
-
+    
+    const currentlySupportUrl = "https://redefined.gitbook.io/connect/integerate-redefined/supported-providers";
+    const devGuideUrl = "https://redefined.gitbook.io/connect/integerate-redefined/name-resolver-js-sdk";
+    const redefinedOrgUrl = "https://redefined.org";
+    const termsConditionsUrl = "https://redefined.org/terms-conditions";
+    const privacyUrl = "https://redefined.org/privacy";
+    
     const [theme, setTheme] = useState<"light" | "dark">("dark");
 
     const swapTheme = () => {
@@ -21,23 +27,23 @@ export default function App() {
     }
 
     const openCurrentlySupport = () => {
-        openUrl("https://redefined.gitbook.io/connect/integerate-redefined/supported-providers")
+        openUrl(currentlySupportUrl)
     }
 
     const openDevGuide = () => {
-        openUrl("https://redefined.gitbook.io/connect/integerate-redefined/name-resolver-js-sdk")
+        openUrl(devGuideUrl)
     }
 
     const openRedefined = () => {
-        openUrl("https://redefined.org")
+        openUrl(redefinedOrgUrl)
     }
 
     const openTermsConditions = () => {
-        openUrl("https://redefined.org/terms-conditions")
+        openUrl(termsConditionsUrl)
     }
 
     const openPrivacy = () => {
-        openUrl("https://redefined.org/privacy")
+        openUrl(privacyUrl)
     }
 
     return (
