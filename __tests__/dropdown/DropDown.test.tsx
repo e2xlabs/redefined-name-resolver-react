@@ -1,7 +1,7 @@
 import {render, screen} from "@testing-library/react"
 import React from "react";
 import DropDown from "../../src/components/dropdown";
-import {Account} from "@redefined/name-resolver-js";
+import { Account, ReverseAccount } from "@redefined/name-resolver-js";
 import {ThemeProvider} from "styled-components";
 import {lightTheme} from "../../src/styles/baseStyle";
 import {getAbbreviatedAddress} from "../../src/utils";
@@ -20,6 +20,17 @@ describe("DropDown component", () => {
       network: "eth"
     }
   ] as Account[];
+
+  const reversedData = [
+    {
+      domain: "example",
+      from: "redefined",
+    },
+    {
+      domain: "example2",
+      from: "ens",
+    }
+  ] as ReverseAccount[];
 
   it("SHOULD render component IF active = true", () => {
     render(
@@ -160,7 +171,7 @@ describe("DropDown component", () => {
     expect(loader).toBeInTheDocument()
   })
 
-  it("SHOULD abbreviate addresses IF content is not empty", () => {
+  it("SHOULD show address IF content has account", () => {
     render(
         <ThemeProvider theme={lightTheme}>
           <DropDown active={true} content={data} error={""} loading={false}/>
@@ -170,6 +181,22 @@ describe("DropDown component", () => {
     const list = screen.getByRole("list");
     const element1 = screen.getByText(getAbbreviatedAddress(data[0].address));
     const element2 = screen.getByText(getAbbreviatedAddress(data[1].address));
+
+    expect(list).toBeInTheDocument();
+    expect(element1).toBeInTheDocument()
+    expect(element2).toBeInTheDocument()
+  })
+
+  it("SHOULD show domain IF content has reversed account(domain)", () => {
+    render(
+        <ThemeProvider theme={lightTheme}>
+          <DropDown active={true} content={reversedData} error={""} loading={false}/>
+        </ThemeProvider>
+    );
+
+    const list = screen.getByRole("list");
+    const element1 = screen.getByText(reversedData[0].domain);
+    const element2 = screen.getByText(reversedData[1].domain);
 
     expect(list).toBeInTheDocument();
     expect(element1).toBeInTheDocument()

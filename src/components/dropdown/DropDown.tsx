@@ -30,7 +30,6 @@ const DropDown = (props: DropdownProps) => {
     } else if ("domain" in item) {
       return item.domain;
     }
-    return "";
   }, []);
 
   const onCopyClick = (event: any, address: string) => {
