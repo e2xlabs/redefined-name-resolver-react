@@ -1,6 +1,6 @@
 import {render, screen} from "@testing-library/react"
 import React from "react";
-import {RedefinedDomainResolver} from "../../components";
+import {RedefinedDomainResolver} from "../../src/components";
 import userEvent from "@testing-library/user-event";
 import {Account, RedefinedResolver} from "@redefined/name-resolver-js";
 import _debounce from "lodash/debounce";
@@ -19,7 +19,7 @@ const data = [
   }
 ] as Account[];
 const mockChildComponent = jest.fn().mockResolvedValue([{dfds: "fdsfs"}]);
-jest.mock("../../components/dropdown", () => (props) => {
+jest.mock("../../src/components/dropdown", () => (props) => {
   mockChildComponent(props);
   return <div data-testid="dropdown"/>;
 });

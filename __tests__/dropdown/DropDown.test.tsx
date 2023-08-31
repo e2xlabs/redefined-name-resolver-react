@@ -1,10 +1,10 @@
 import {render, screen} from "@testing-library/react"
 import React from "react";
-import DropDown from "../../components/dropdown";
+import DropDown from "../../src/components/dropdown";
 import {Account} from "@redefined/name-resolver-js";
 import {ThemeProvider} from "styled-components";
-import {lightTheme} from "../../styles/baseStyle";
-import {getAbbreviatedAddress} from "../../utils";
+import {lightTheme} from "../../src/styles/baseStyle";
+import {getAbbreviatedAddress} from "../../src/utils";
 import userEvent from "@testing-library/user-event";
 
 describe("DropDown component", () => {

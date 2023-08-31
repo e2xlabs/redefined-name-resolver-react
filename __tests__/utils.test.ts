@@ -1,4 +1,4 @@
-import {copyText, getAbbreviatedAddress, getErrorMessage} from "../utils";
+import {copyText, getAbbreviatedAddress, getErrorMessage} from "../src/utils";
 
 describe("utils", () => {
   const address = "0x12300000qt000b00000000000fdsoifj43roi34n";
