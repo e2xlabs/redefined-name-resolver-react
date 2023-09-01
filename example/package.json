@@ -19,6 +19,9 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
-    "@redefined/name-resolver-react": "^1.4.0"
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.7",
+    "@redefined/name-resolver-react": "^1.6.0"
   }
 }

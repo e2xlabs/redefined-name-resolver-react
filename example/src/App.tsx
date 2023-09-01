@@ -1,15 +1,17 @@
-import { RedefinedDomainResolver } from "@redefined/name-resolver-react";
+import { RedefinedDomainResolver, RedefinedDomainResolverReverse } from "@redefined/name-resolver-react";
 import React, { useState } from "react";
+import { Switch, Typography } from "@mui/material";
 
 export default function App() {
-    
+
     const currentlySupportUrl = "https://redefined.gitbook.io/connect/integerate-redefined/supported-providers";
     const devGuideUrl = "https://redefined.gitbook.io/connect/integerate-redefined/name-resolver-js-sdk";
     const redefinedOrgUrl = "https://redefined.org";
     const termsConditionsUrl = "https://redefined.org/terms-conditions";
     const privacyUrl = "https://redefined.org/privacy";
-    
+
     const [theme, setTheme] = useState<"light" | "dark">("dark");
+    const [isChecked, setIsChecked] = useState(false);
 
     const swapTheme = () => {
         switch (theme) {
@@ -46,6 +48,10 @@ export default function App() {
         openUrl(privacyUrl)
     }
 
+    const handleSwitchChange = () => {
+        setIsChecked(!isChecked);
+    };
+
     return (
         <div className={`app`}>
             <div className={"app-bar"}>
@@ -66,6 +72,15 @@ export default function App() {
             </div>
             <div className={"domain-resolver"}>
                 <div className={"theme-btn-container"}>
+                  <Typography className={"switch-text cursor-pointer"}>
+                    <span onClick={() => setIsChecked(false)} className={!isChecked ? 'theme-text' : ''}>Resolve</span>
+                    <Switch
+                      checked={isChecked}
+                      onChange={handleSwitchChange}
+                      color={"default"}
+                    />
+                    <span onClick={() => setIsChecked(true)} className={isChecked ? 'theme-text' : ''}>Reverse</span>
+                  </Typography>
                   <div className={"cursor-pointer"} onClick={swapTheme}>
                     {theme === "dark"
                       ? <img src={require("./assets/sun.svg")} />
@@ -74,11 +89,18 @@ export default function App() {
                   </div>
                 </div>
                 <div className={"domain-resolver-container"}>
-                    <RedefinedDomainResolver
-                        theme={theme}
-                        width={"90%"}
-                        onUpdate={(val) => console.log(val)}
-                    />
+                    {!isChecked ?
+                        <RedefinedDomainResolver
+                            theme={theme}
+                            width={"90%"}
+                            onUpdate={(val) => console.log(val)}
+                        /> :
+                        <RedefinedDomainResolverReverse
+                            theme={theme}
+                            width={"90%"}
+                            onUpdate={(val) => console.log(val)}
+                        />
+                    }
                 </div>
                 <div className={"dev-text-container support"}>
                     <div className={"dev-text cursor-pointer link"} onClick={openCurrentlySupport}>
