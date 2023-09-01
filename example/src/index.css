@@ -123,13 +123,24 @@ body {
  max-width: 540px;
  width: 90%;
  display: flex;
- justify-content: end;
+ justify-content: space-between;
+ text-align: center;
  padding-bottom: 10px;
+}
+
+.resolver-type {
+ width: 100%;
+ font-weight: 500;
+ font-size: 16px;
 }
 
 .theme-btn-container img {
  width: 24px;
  height: 24px;
+}
+
+.d-flex {
+ display: flex;
 }
 
 .cursor-pointer {
