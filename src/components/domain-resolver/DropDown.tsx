@@ -1,14 +1,13 @@
 import React, {useCallback, useEffect, useRef} from "react";
 import styled from "styled-components";
-import {DropdownProps} from "../../types";
+import {DropDownResolveProps} from "../../types";
 import Icon from "@mdi/react";
 import {mdiContentCopy} from "@mdi/js";
 import {copyText, getAbbreviatedAddress, getErrorMessage} from "../../utils";
 import ReactLoading from "react-loading";
 import {baseStyle} from "../../styles/baseStyle";
-import { Account, ReverseAccount } from "@redefined/name-resolver-js";
 
-const DropDown = (props: DropdownProps) => {
+const DropDown = (props: DropDownResolveProps) => {
   const {active, content, loading, error, assets, hiddenAddressGap, onChange, onClickOutside} = props;
   const ref = useRef<HTMLDivElement>(null);
 
@@ -23,14 +22,6 @@ const DropDown = (props: DropdownProps) => {
       document.removeEventListener('click', handleClickOutside, true);
     };
   }, [onClickOutside]);
-
-  const getTitle = useCallback((item: Account | ReverseAccount) => {
-    if ("address" in item) {
-      return getAbbreviatedAddress(item.address, hiddenAddressGap?.leadingCharLimit, hiddenAddressGap?.trailingCharLimit);
-    } else if ("domain" in item) {
-      return item.domain;
-    }
-  }, []);
 
   const onCopyClick = (event: any, address: string) => {
     copyText(address);
@@ -49,10 +40,10 @@ const DropDown = (props: DropdownProps) => {
           <ListItem key={key}>
             <ItemWrapper onClick={() => onChange(item)}>
               <StyledContent>
-                {item.network ? <StyledLogo width={baseStyle.dropDown.logo.width} src={getAssetsByNetwork(item.network)?.logo} alt="coinLogo"/> : null}
+                <StyledLogo width={baseStyle.dropDown.logo.width} src={getAssetsByNetwork(item.network)?.logo} alt="coinLogo"/>
                 <div>
-                  <StyledTitle>{getTitle(item)}</StyledTitle>
-                  {item.network ? <StyledSubTitle>{getAssetsByNetwork(item.network)?.name} from: <StyledSpan isRedefined={item.from.startsWith("redefined")}>{item.from.startsWith("redefined") ? "redefined" : item.from}</StyledSpan></StyledSubTitle> : null}
+                  <StyledTitle>{getAbbreviatedAddress(item.address, hiddenAddressGap?.leadingCharLimit, hiddenAddressGap?.trailingCharLimit)}</StyledTitle>
+                  <StyledSubTitle>{getAssetsByNetwork(item.network)?.name} from: <StyledSpan isRedefined={item.from.startsWith("redefined")}>{item.from.startsWith("redefined") ? "redefined" : item.from}</StyledSpan></StyledSubTitle>
                 </div>
               </StyledContent>
               <div onClick={(e) => onCopyClick(e, item.address)}>

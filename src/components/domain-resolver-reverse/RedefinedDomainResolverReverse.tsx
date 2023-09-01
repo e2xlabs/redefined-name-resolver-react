@@ -5,25 +5,22 @@ import {
   ContainerProps,
   InputProps,
   LogoProps,
-  Asset,
-  RedefinedAddressReverserProps
+  RedefinedDomainResolverReverseProps
 } from "../../types";
 import gradientLogo from "../../assets/small-logo.svg";
 import blackLogo from "../../assets/black-small-logo.svg";
 import {baseStyle, darkTheme, lightTheme} from "../../styles/baseStyle";
 import GlobalStyle from "../../styles/globalStyle";
-import DropDown from "../dropdown";
 import {RedefinedResolver} from "@redefined/name-resolver-js";
-import {ASSETS_URL} from "../../config";
+import DropDown from "./DropDown";
 
-const RedefinedAddressReverser = (props: RedefinedAddressReverserProps) => {
-  const {width, height, disabled, placeholder, autoFocus, theme, hiddenAddressGap, resolverOptions, onUpdate} = props;
+const RedefinedDomainResolverReverse = (props: RedefinedDomainResolverReverseProps) => {
+  const {width, height, disabled, placeholder, autoFocus, theme, resolverOptions, onUpdate} = props;
   const [dropDownActive, setDropDownActive] = useState(false);
   const [domain, setDomain] = useState("");
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [assets, setAssets] = useState<Asset[]>([]);
   const reverser = useMemo(() => new RedefinedResolver(resolverOptions), []);
 
   let actualResolveRequestVersion = 0;
@@ -31,19 +28,6 @@ const RedefinedAddressReverser = (props: RedefinedAddressReverserProps) => {
   useEffect(() => {
     if (!domain.length) setDropDownActive(false);
   }, [domain]);
-
-  const fetchAssets = useCallback(async () => {
-    try {
-      const response = await fetch(ASSETS_URL);
-      setAssets(await response.json());
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchAssets();
-  }, [fetchAssets]);
 
   const resolveDomain = async (value: string) => {
     onUpdate(null);
@@ -87,7 +71,9 @@ const RedefinedAddressReverser = (props: RedefinedAddressReverserProps) => {
   }
 
   const onInputClick = () => {
-    domain.length > 0 && setDropDownActive(true);
+    if (domain.length) {
+      setDropDownActive(true);
+    }
   }
 
   const onChangeInput = (e) => {
@@ -123,8 +109,6 @@ const RedefinedAddressReverser = (props: RedefinedAddressReverserProps) => {
             error={error}
             content={addresses}
             onChange={onChangeValue}
-            hiddenAddressGap={hiddenAddressGap}
-            assets={assets}
             onClickOutside={() => setDropDownActive(false)}
           />
       </ThemeProvider>
@@ -181,4 +165,4 @@ const StyledLine = styled.div<LogoProps>`
   background: ${(props) => props.theme.type === "light" ? "#222222" : "#ffffff"};
 `
 
-export default RedefinedAddressReverser;
+export default RedefinedDomainResolverReverse;

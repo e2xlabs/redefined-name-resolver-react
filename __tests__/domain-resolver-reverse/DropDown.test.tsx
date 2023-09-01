@@ -1,26 +1,12 @@
 import {render, screen} from "@testing-library/react"
 import React from "react";
-import DropDown from "../../src/components/dropdown";
-import { Account, ReverseAccount } from "@redefined/name-resolver-js";
+import { ReverseAccount } from "@redefined/name-resolver-js";
 import {ThemeProvider} from "styled-components";
 import {lightTheme} from "../../src/styles/baseStyle";
-import {getAbbreviatedAddress} from "../../src/utils";
 import userEvent from "@testing-library/user-event";
+import DropDown from "../../src/components/domain-resolver-reverse/DropDown";
 
 describe("DropDown component", () => {
-  const data = [
-    {
-      address: "0x123ffdsoin23e23nod23i14",
-      from: "redefined",
-      network: "bsc"
-    },
-    {
-      address: "0x321ffdsfgor3e23nod23i14",
-      from: "ens",
-      network: "eth"
-    }
-  ] as Account[];
-
   const reversedData = [
     {
       domain: "example",
@@ -35,7 +21,7 @@ describe("DropDown component", () => {
   it("SHOULD render component IF active = true", () => {
     render(
         <ThemeProvider theme={lightTheme}>
-          <DropDown active={true} content={data} error={""} loading={false}/>
+          <DropDown active={true} content={reversedData} error={""} loading={false}/>
         </ThemeProvider>
     );
 
@@ -47,7 +33,7 @@ describe("DropDown component", () => {
   it("SHOULD NOT render component IF active = false", () => {
     render(
         <ThemeProvider theme={lightTheme}>
-          <DropDown active={false} content={data} error={""} loading={false}/>
+          <DropDown active={false} content={reversedData} error={""} loading={false}/>
         </ThemeProvider>
     );
 
@@ -57,46 +43,26 @@ describe("DropDown component", () => {
   })
 
   it("SHOULD render content IF content is not empty", () => {
-    const assets = [
-      {
-        "key": "eth",
-        "logo": "http://mock/assets/eth.svg",
-        "name":"Ethereum",
-        "symbol":"ETH",
-        "type": "EVM"
-      },
-      {
-        "key": "bsc",
-        "logo": "http://mock/assets/bsc.svg",
-        "name": "Binance",
-        "symbol": "BSC",
-        "type": "EVM"
-      }
-    ]
     render(
         <ThemeProvider theme={lightTheme}>
-          <DropDown assets={assets} active={true} content={data} error={""} loading={false}/>
+          <DropDown active={true} content={reversedData} error={""} loading={false}/>
         </ThemeProvider>
     );
 
     const list = screen.getByRole("list");
-    const from1 = screen.getByText(data[0].from);
-    const address1 = screen.getByText(getAbbreviatedAddress(data[0].address));
-    const from2 = screen.getByText(data[1].from);
-    const address2 = screen.getByText(getAbbreviatedAddress(data[1].address));
-    const logo1 = screen.getAllByAltText("coinLogo")[0];
-    const logo2 = screen.getAllByAltText("coinLogo")[1];
+    const from1 = screen.getByText(reversedData[0].from);
+    const domain1 = screen.getByText(reversedData[0].domain);
+    const from2 = screen.getByText(reversedData[1].from);
+    const domain2 = screen.getByText(reversedData[1].domain);
 
     expect(list).toBeInTheDocument();
     expect(from1).toBeInTheDocument()
     expect(from2).toBeInTheDocument()
-    expect(address1).toBeInTheDocument()
-    expect(address2).toBeInTheDocument()
-    expect(logo1.getAttribute("src")).toContain("http://mock/assets/bsc.svg")
-    expect(logo2.getAttribute("src")).toContain("http://mock/assets/eth.svg")
+    expect(domain1).toBeInTheDocument()
+    expect(domain2).toBeInTheDocument()
   })
 
-  it("SHOULD show no addresses found message IF content is empty", () => {
+  it("SHOULD show no domains found message IF content is empty", () => {
     render(
         <ThemeProvider theme={lightTheme}>
           <DropDown active={true} content={[]} error={""} loading={false}/>
@@ -104,16 +70,16 @@ describe("DropDown component", () => {
     );
 
     const list = screen.queryByRole("list");
-    const msg = screen.getByText("No addresses found");
+    const msg = screen.getByText("No domains found");
 
     expect(list).not.toBeInTheDocument();
     expect(msg).toBeInTheDocument()
   })
 
-  it("SHOULD NOT show no addresses found message IF content is not empty", () => {
+  it("SHOULD NOT show no domains found message IF content is not empty", () => {
     render(
         <ThemeProvider theme={lightTheme}>
-          <DropDown active={true} content={data} error={""} loading={false}/>
+          <DropDown active={true} content={reversedData} error={""} loading={false}/>
         </ThemeProvider>
     );
 
@@ -160,7 +126,7 @@ describe("DropDown component", () => {
 
     render(
         <ThemeProvider theme={lightTheme}>
-          <DropDown active={true} content={data} error={""} loading={true}/>
+          <DropDown active={true} content={reversedData} error={""} loading={true}/>
         </ThemeProvider>
     )
 
@@ -171,23 +137,7 @@ describe("DropDown component", () => {
     expect(loader).toBeInTheDocument()
   })
 
-  it("SHOULD show address IF content has account", () => {
-    render(
-        <ThemeProvider theme={lightTheme}>
-          <DropDown active={true} content={data} error={""} loading={false}/>
-        </ThemeProvider>
-    );
-
-    const list = screen.getByRole("list");
-    const element1 = screen.getByText(getAbbreviatedAddress(data[0].address));
-    const element2 = screen.getByText(getAbbreviatedAddress(data[1].address));
-
-    expect(list).toBeInTheDocument();
-    expect(element1).toBeInTheDocument()
-    expect(element2).toBeInTheDocument()
-  })
-
-  it("SHOULD show domain IF content has reversed account(domain)", () => {
+  it("SHOULD show domain IF content has account", () => {
     render(
         <ThemeProvider theme={lightTheme}>
           <DropDown active={true} content={reversedData} error={""} loading={false}/>
@@ -203,36 +153,19 @@ describe("DropDown component", () => {
     expect(element2).toBeInTheDocument()
   })
 
-  it("SHOULD custom abbreviate addresses IF hiddenAddressGap is specified in props ", () => {
-    render(
-        <ThemeProvider theme={lightTheme}>
-          <DropDown hiddenAddressGap={{leadingCharLimit: 5, trailingCharLimit: 8}} active={true} content={data}
-                    error={""} loading={false}/>
-        </ThemeProvider>
-    );
-
-    const list = screen.getByRole("list");
-    const element1 = screen.getByText(getAbbreviatedAddress(data[0].address, 5, 8));
-    const element2 = screen.getByText(getAbbreviatedAddress(data[1].address, 5, 8));
-
-    expect(list).toBeInTheDocument();
-    expect(element1).toBeInTheDocument()
-    expect(element2).toBeInTheDocument()
-  })
-
   it("SHOULD call onChange IF click to 1 item", async () => {
     const onChange = jest.fn();
 
     render(
         <ThemeProvider theme={lightTheme}>
-          <DropDown active={true} content={data} error={""} loading={false} onChange={onChange}/>
+          <DropDown active={true} content={reversedData} error={""} loading={false} onChange={onChange}/>
         </ThemeProvider>
     );
 
-    await userEvent.click(screen.getAllByText(data[0].from)[0]);
+    await userEvent.click(screen.getAllByText(reversedData[0].from)[0]);
 
     expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith(data[0]);
+    expect(onChange).toHaveBeenCalledWith(reversedData[0]);
   })
 
   it("SHOULD call onChange IF click to 2 item", async () => {
@@ -240,14 +173,14 @@ describe("DropDown component", () => {
 
     render(
         <ThemeProvider theme={lightTheme}>
-          <DropDown active={true} content={data} error={""} loading={false} onChange={onChange}/>
+          <DropDown active={true} content={reversedData} error={""} loading={false} onChange={onChange}/>
         </ThemeProvider>
     );
 
-    await userEvent.click(screen.getAllByText(data[1].from)[0]);
+    await userEvent.click(screen.getAllByText(reversedData[1].from)[0]);
 
     expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith(data[1]);
+    expect(onChange).toHaveBeenCalledWith(reversedData[1]);
   })
 
   it("SHOULD copyAddress IF click to copy button on 1 item", async () => {
@@ -259,13 +192,13 @@ describe("DropDown component", () => {
 
     render(
         <ThemeProvider theme={lightTheme}>
-          <DropDown active={true} content={data} error={""} loading={false}/>
+          <DropDown active={true} content={reversedData} error={""} loading={false}/>
         </ThemeProvider>
     );
 
     await userEvent.click(screen.getAllByRole("presentation")[0]);
 
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(data[0].address);
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(reversedData[0].domain);
   })
 
   it("SHOULD copyAddress IF click to copy button on 2 item", async () => {
@@ -277,13 +210,13 @@ describe("DropDown component", () => {
 
     render(
         <ThemeProvider theme={lightTheme}>
-          <DropDown active={true} content={data} error={""} loading={false}/>
+          <DropDown active={true} content={reversedData} error={""} loading={false}/>
         </ThemeProvider>
     );
 
     await userEvent.click(screen.getAllByRole("presentation")[1]);
 
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(data[1].address);
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(reversedData[1].domain);
   })
 
   it("SHOULD call onClickOutside IF click to outside area", async () => {
@@ -291,7 +224,7 @@ describe("DropDown component", () => {
 
     render(
         <ThemeProvider theme={lightTheme}>
-          <DropDown active={true} content={data} error={""} loading={false} onClickOutside={onClickOutside}/>
+          <DropDown active={true} content={reversedData} error={""} loading={false} onClickOutside={onClickOutside}/>
         </ThemeProvider>
     );
 
@@ -306,11 +239,11 @@ describe("DropDown component", () => {
 
     render(
         <ThemeProvider theme={lightTheme}>
-          <DropDown active={true} content={data} onChange={onChange} error={""} loading={false} onClickOutside={onClickOutside}/>
+          <DropDown active={true} content={reversedData} onChange={onChange} error={""} loading={false} onClickOutside={onClickOutside}/>
         </ThemeProvider>
     );
 
-    await userEvent.click(screen.getAllByText(data[0].from)[0]);
+    await userEvent.click(screen.getAllByText(reversedData[0].from)[0]);
 
     expect(onClickOutside).toHaveBeenCalledTimes(0);
   })

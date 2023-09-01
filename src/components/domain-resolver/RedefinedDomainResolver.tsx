@@ -6,9 +6,9 @@ import gradientLogo from "../../assets/small-logo.svg";
 import blackLogo from "../../assets/black-small-logo.svg";
 import {baseStyle, darkTheme, lightTheme} from "../../styles/baseStyle";
 import GlobalStyle from "../../styles/globalStyle";
-import DropDown from "../dropdown";
 import {RedefinedResolver} from "@redefined/name-resolver-js";
 import {ASSETS_URL} from "../../config";
+import DropDown from "./DropDown";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
   const {width, height, disabled, autoFocus, theme, hiddenAddressGap, resolverOptions, onUpdate} = props;
