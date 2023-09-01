@@ -1,34 +1,22 @@
 import {render, screen} from "@testing-library/react"
 import React from "react";
-import {RedefinedDomainResolver} from "../../components";
 import userEvent from "@testing-library/user-event";
-import {Account, RedefinedResolver} from "@redefined/name-resolver-js";
+import { RedefinedResolver } from "@redefined/name-resolver-js";
 import _debounce from "lodash/debounce";
+import { RedefinedDomainResolverReverse } from "../../src/components";
 
 const domain = "myDomain";
-const data = [
-  {
-    address: "0x123ffdsoin23e23nod23i14",
-    from: "redefined",
-    network: "bsc"
-  },
-  {
-    address: "0x321ffdsfgor3e23nod23i14",
-    from: "ens",
-    network: "eth"
-  }
-] as Account[];
-const mockChildComponent = jest.fn().mockResolvedValue([{dfds: "fdsfs"}]);
-jest.mock("../../components/dropdown", () => (props) => {
+const mockChildComponent = jest.fn().mockResolvedValue([{val: "val"}]);
+jest.mock("../../src/components/domain-resolver-reverse/DropDown", () => (props) => {
   mockChildComponent(props);
   return <div data-testid="dropdown"/>;
 });
 
-const mockResolve = jest.fn();
+const mockReverse = jest.fn();
 jest.mock("@redefined/name-resolver-js", () => {
       return {
         RedefinedResolver: jest.fn().mockImplementation(() => {
-          return { resolve: mockResolve }
+          return { reverse: mockReverse }
         })
       }
     }
@@ -38,14 +26,14 @@ jest.mock("lodash/debounce");
 
 jest.spyOn(React, 'useCallback').mockImplementation(f => f);
 
-describe("RedefinedDomainResolver component", () => {
+describe("RedefinedDomainResolverReverse component", () => {
 
   beforeEach(() => {
-    mockResolve.mockClear();
+    mockReverse.mockClear();
   });
 
   it("SHOULD render input with log IF mount component", () => {
-    render(<RedefinedDomainResolver onUpdate={() => {
+    render(<RedefinedDomainResolverReverse onUpdate={() => {
     }}/>);
 
     const logo = screen.getByAltText("logo");
@@ -56,7 +44,7 @@ describe("RedefinedDomainResolver component", () => {
   })
 
   it("SHOULD render input with log IF mount component", () => {
-    render(<RedefinedDomainResolver onUpdate={() => {
+    render(<RedefinedDomainResolverReverse onUpdate={() => {
     }}/>);
 
     const logo = screen.getByAltText("logo");
@@ -69,7 +57,7 @@ describe("RedefinedDomainResolver component", () => {
   it("SHOULD change domain value IF typing text", async () => {
     _debounce.mockImplementation(fn => fn);
 
-    render(<RedefinedDomainResolver onUpdate={() => {
+    render(<RedefinedDomainResolverReverse onUpdate={() => {
     }}/>);
 
     expect(screen.queryByDisplayValue(/myDomain/)).toBeNull();
@@ -85,7 +73,7 @@ describe("RedefinedDomainResolver component", () => {
   it("SHOULD open dropdown IF typing text", async () => {
     _debounce.mockImplementation(fn => fn);
 
-    render(<RedefinedDomainResolver onUpdate={() => {
+    render(<RedefinedDomainResolverReverse onUpdate={() => {
     }}/>);
 
     expect(screen.queryByDisplayValue(/myDomain/)).toBeNull();
@@ -100,7 +88,7 @@ describe("RedefinedDomainResolver component", () => {
   it("SHOULD called DropDown component with props If DomainResolver is passed props", async () => {
     _debounce.mockImplementation(fn => fn);
 
-    render(<RedefinedDomainResolver hiddenAddressGap={{leadingCharLimit: 5, trailingCharLimit: 6}} onUpdate={jest.fn()}/>);
+    render(<RedefinedDomainResolverReverse onUpdate={jest.fn()}/>);
 
     expect(mockChildComponent).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -108,7 +96,6 @@ describe("RedefinedDomainResolver component", () => {
           loading: false,
           error: "",
           content: [],
-          hiddenAddressGap: {leadingCharLimit: 5, trailingCharLimit: 6},
         })
     );
   })
@@ -116,7 +103,7 @@ describe("RedefinedDomainResolver component", () => {
   it("SHOULD loading account IF typing text", async () => {
     _debounce.mockImplementation(fn => fn);
 
-    render(<RedefinedDomainResolver onUpdate={() => {}}/>);
+    render(<RedefinedDomainResolverReverse onUpdate={() => {}}/>);
 
     const input = screen.getByRole("textbox");
 
@@ -126,19 +113,5 @@ describe("RedefinedDomainResolver component", () => {
 
     expect(RedefinedResolver).toBeTruthy();
 
-  })
-
-  it("SHOULD loading assets IF render component", async () => {
-    global.fetch = jest.fn(() =>
-        Promise.resolve({
-          json: () => Promise.resolve({mock: "mock"}),
-        }),
-    ) as jest.Mock;
-
-    _debounce.mockImplementation(fn => fn);
-
-    render(<RedefinedDomainResolver onUpdate={() => {}}/>);
-
-    expect(global.fetch).toHaveBeenCalled();
   })
 })

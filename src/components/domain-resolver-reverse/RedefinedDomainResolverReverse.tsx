@@ -1,56 +1,46 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import _debounce from 'lodash/debounce';
 import styled, {ThemeProvider} from "styled-components";
-import {ContainerProps, RedefinedDomainResolverProps, InputProps, LogoProps, Asset} from "../../types";
+import {
+  ContainerProps,
+  InputProps,
+  LogoProps,
+  RedefinedDomainResolverReverseProps
+} from "../../types";
 import gradientLogo from "../../assets/small-logo.svg";
 import blackLogo from "../../assets/black-small-logo.svg";
 import {baseStyle, darkTheme, lightTheme} from "../../styles/baseStyle";
 import GlobalStyle from "../../styles/globalStyle";
 import {RedefinedResolver} from "@redefined/name-resolver-js";
-import {ASSETS_URL} from "../../config";
 import DropDown from "./DropDown";
 
-const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
-  const {width, height, disabled, autoFocus, theme, hiddenAddressGap, resolverOptions, onUpdate} = props;
+const RedefinedDomainResolverReverse = (props: RedefinedDomainResolverReverseProps) => {
+  const {width, height, disabled, placeholder, autoFocus, theme, resolverOptions, onUpdate} = props;
   const [dropDownActive, setDropDownActive] = useState(false);
   const [domain, setDomain] = useState("");
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [assets, setAssets] = useState<Asset[]>([]);
-  const resolver = useMemo(() => new RedefinedResolver(resolverOptions), []);
+  const reverser = useMemo(() => new RedefinedResolver(resolverOptions), []);
 
   let actualResolveRequestVersion = 0;
 
   useEffect(() => {
-    if (domain.length === 0) setDropDownActive(false);
+    if (!domain.length) setDropDownActive(false);
   }, [domain]);
-
-  const fetchAssets = useCallback(async () => {
-    try {
-      const response = await fetch(ASSETS_URL);
-      setAssets(await response.json());
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchAssets();
-  }, [fetchAssets]);
 
   const resolveDomain = async (value: string) => {
     onUpdate(null);
     setAddresses([]);
     setError("");
-    if (value.length > 0) {
-      const version = new Date().valueOf();
+    if (value.length) {
+      const version = Date.now();
       setDropDownActive(true);
       setLoading(true);
 
       try {
         actualResolveRequestVersion = version;
-        const { response, errors } = (await resolver.resolve(value));
+        const { response, errors } = (await reverser.reverse(value));
         if (
           !response.length && errors.some(it => (
             it.vendor.includes("redefined")
@@ -81,7 +71,9 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
   }
 
   const onInputClick = () => {
-    domain.length > 0 && setDropDownActive(true);
+    if (domain.length) {
+      setDropDownActive(true);
+    }
   }
 
   const onChangeInput = (e) => {
@@ -100,13 +92,13 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
               src={theme === "dark" ? gradientLogo : blackLogo}
               alt="logo"
             />
-            <StyledLine></StyledLine>
+            <StyledLine />
             <StyledInput
               isDropDownActive={dropDownActive}
               disabled={disabled}
               autoFocus={autoFocus}
               height={height}
-              placeholder={props.placeholder || "Type to search"}
+              placeholder={placeholder || "Type to search"}
               value={domain}
               onChange={onChangeInput}
             />
@@ -117,8 +109,6 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
             error={error}
             content={addresses}
             onChange={onChangeValue}
-            hiddenAddressGap={hiddenAddressGap}
-            assets={assets}
             onClickOutside={() => setDropDownActive(false)}
           />
       </ThemeProvider>
@@ -175,4 +165,4 @@ const StyledLine = styled.div<LogoProps>`
   background: ${(props) => props.theme.type === "light" ? "#222222" : "#ffffff"};
 `
 
-export default RedefinedDomainResolver;
+export default RedefinedDomainResolverReverse;

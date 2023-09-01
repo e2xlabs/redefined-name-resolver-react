@@ -1,6 +1,6 @@
-import {Account, ResolverOptions} from "@redefined/name-resolver-js";
+import { Account, ResolverOptions, ReverseAccount } from "@redefined/name-resolver-js";
 
-export type DropdownProps = {
+export type DropDownResolveProps = {
   active: boolean;
   content: Account[];
   loading: boolean;
@@ -8,6 +8,15 @@ export type DropdownProps = {
   hiddenAddressGap?: HiddenAddressGap;
   assets?: Asset[];
   onChange?: (value: Account) => void;
+  onClickOutside?: () => void;
+}
+
+export type DropDownReverseProps = {
+  active: boolean;
+  content: ReverseAccount[];
+  loading: boolean;
+  error: string | Error;
+  onChange?: (value: ReverseAccount) => void;
   onClickOutside?: () => void;
 }
 
@@ -25,6 +34,18 @@ export interface RedefinedDomainResolverProps {
   autoFocus?: boolean;
   disabled?: boolean;
   hiddenAddressGap?: HiddenAddressGap;
+  resolverOptions?: ResolverOptions;
+  placeholder?: string
+
+  onUpdate(account: Account | null): void;
+}
+
+export interface RedefinedDomainResolverReverseProps {
+  theme?: Theme;
+  width?: string;
+  height?: string;
+  autoFocus?: boolean;
+  disabled?: boolean;
   resolverOptions?: ResolverOptions;
   placeholder?: string
 

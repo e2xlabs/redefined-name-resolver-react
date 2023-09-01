@@ -1,13 +1,13 @@
 import React, {useCallback, useEffect, useRef} from "react";
 import styled from "styled-components";
-import {DropdownProps} from "../../types";
+import {DropDownResolveProps} from "../../types";
 import Icon from "@mdi/react";
 import {mdiContentCopy} from "@mdi/js";
 import {copyText, getAbbreviatedAddress, getErrorMessage} from "../../utils";
 import ReactLoading from "react-loading";
 import {baseStyle} from "../../styles/baseStyle";
 
-const DropDown = (props: DropdownProps) => {
+const DropDown = (props: DropDownResolveProps) => {
   const {active, content, loading, error, assets, hiddenAddressGap, onChange, onClickOutside} = props;
   const ref = useRef<HTMLDivElement>(null);
 
@@ -36,7 +36,7 @@ const DropDown = (props: DropdownProps) => {
     <DropDownWrapper ref={ref} data-testid="dropdown">
       {loading ? <StyledLoader data-testid="loader" type="spinningBubbles" color={baseStyle.brandColor} height={baseStyle.loader.height} width={baseStyle.loader.height}/> : null}
       {!loading && content.length > 0 ? <UnorderedList>
-        {content.sort((a, b) => a.network.localeCompare(b.network)).map((item, key) => (
+        {content.sort((a, b) => a.network?.localeCompare(b.network)).map((item, key) => (
           <ListItem key={key}>
             <ItemWrapper onClick={() => onChange(item)}>
               <StyledContent>
