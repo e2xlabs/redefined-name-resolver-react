@@ -106,7 +106,7 @@ const RedefinedAddressReverser = (props: RedefinedAddressReverserProps) => {
               src={theme === "dark" ? gradientLogo : blackLogo}
               alt="logo"
             />
-            <StyledLine></StyledLine>
+            <StyledLine />
             <StyledInput
               isDropDownActive={dropDownActive}
               disabled={disabled}
