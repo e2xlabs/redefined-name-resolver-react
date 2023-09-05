@@ -1,129 +1,155 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import _debounce from 'lodash/debounce';
-import styled, {ThemeProvider} from "styled-components";
-import {ContainerProps, RedefinedDomainResolverProps, InputProps, LogoProps, Asset} from "../../types";
+import styled, { ThemeProvider } from "styled-components";
+import { ContainerProps, RedefinedDomainResolverProps, InputProps, LogoProps, Asset } from "../../types";
 import gradientLogo from "../../assets/small-logo.svg";
 import blackLogo from "../../assets/black-small-logo.svg";
-import {baseStyle, darkTheme, lightTheme} from "../../styles/baseStyle";
+import { baseStyle, darkTheme, lightTheme } from "../../styles/baseStyle";
 import GlobalStyle from "../../styles/globalStyle";
-import {RedefinedResolver} from "@redefined/name-resolver-js";
-import {ASSETS_URL} from "../../config";
-import DropDown from "./DropDown";
+import { RedefinedResolver } from "@redefined/name-resolver-js";
+import { ASSETS_URL } from "../../config";
+import DropDown from "../dropdown";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
-  const {width, height, disabled, autoFocus, theme, hiddenAddressGap, resolverOptions, onUpdate} = props;
-  const [dropDownActive, setDropDownActive] = useState(false);
-  const [domain, setDomain] = useState("");
-  const [addresses, setAddresses] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [assets, setAssets] = useState<Asset[]>([]);
-  const resolver = useMemo(() => new RedefinedResolver(resolverOptions), []);
+    const { width, height, disabled, autoFocus, theme, type, hiddenAddressGap, resolverOptions, onUpdate } = props;
+    const [dropDownActive, setDropDownActive] = useState(false);
+    const [domain, setDomain] = useState("");
+    const [addresses, setAddresses] = useState([]);
+    const [domains, setDomains] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [assets, setAssets] = useState<Asset[]>([]);
+    const resolver = useMemo(() => new RedefinedResolver(resolverOptions), []);
 
-  let actualResolveRequestVersion = 0;
+    let actualResolveRequestVersion = 0;
 
-  useEffect(() => {
-    if (domain.length === 0) setDropDownActive(false);
-  }, [domain]);
+    useEffect(() => {
+        if (!domain.length) setDropDownActive(false);
+    }, [domain]);
 
-  const fetchAssets = useCallback(async () => {
-    try {
-      const response = await fetch(ASSETS_URL);
-      setAssets(await response.json());
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchAssets();
-  }, [fetchAssets]);
-
-  const resolveDomain = async (value: string) => {
-    onUpdate(null);
-    setAddresses([]);
-    setError("");
-    if (value.length > 0) {
-      const version = new Date().valueOf();
-      setDropDownActive(true);
-      setLoading(true);
-
-      try {
-        actualResolveRequestVersion = version;
-        const { response, errors } = (await resolver.resolve(value));
-        if (
-          !response.length && errors.some(it => (
-            it.vendor.includes("redefined")
-            && it.error.includes("No records found for domain")
-          ))
-        ) {
-          setError( `This domain is registered but has no records.`)
-        } else {
-          if (version == actualResolveRequestVersion) {
-            setAddresses(response);
-          }
+    const fetchAssets = useCallback(async () => {
+        try {
+            const response = await fetch(ASSETS_URL);
+            setAssets(await response.json());
+        } catch (e) {
+            console.log(e);
         }
-      } catch (e) {
-        setError(e)
-      }
-      if (version == actualResolveRequestVersion) {
-        setLoading(false);
-      }
+    }, []);
+
+    useEffect(() => {
+        fetchAssets();
+    }, [fetchAssets]);
+
+    const resolveDomain = async (value: string) => {
+        onUpdate(null);
+        setAddresses([]);
+        setDomains([]);
+        setError("");
+
+        if (value.length) {
+            const version = Date.now();
+            setDropDownActive(true);
+            setLoading(true);
+
+            try {
+                actualResolveRequestVersion = version;
+
+                let resolverResponse;
+                let reverseResponse;
+
+                switch (type) {
+                    case "combined":
+                        resolverResponse = await resolver.resolve(value);
+                        reverseResponse = await resolver.reverse(value);
+                        break;
+                    case "resolve":
+                        resolverResponse = await resolver.resolve(value);
+                        reverseResponse = { response: [], errors: [] };
+                        break;
+                    case "reverse":
+                        reverseResponse = await resolver.reverse(value);
+                        resolverResponse = { response: [], errors: [] };
+                        break;
+                }
+
+                if (
+                    !resolverResponse.response.length && resolverResponse.errors.some(it => (
+                        it.vendor.includes("redefined")
+                        && it.error.includes("No records found for domain")
+                    ))
+                ) {
+                    setError(`This domain is registered but has no records.`)
+                } else {
+                    if (version == actualResolveRequestVersion) {
+                        setAddresses(resolverResponse.response);
+                        setDomains(reverseResponse.response);
+                    }
+                }
+            } catch (e) {
+                setError(e)
+            }
+            if (version == actualResolveRequestVersion) {
+                setLoading(false);
+            }
+        }
     }
-  }
 
-  const resolveDomainWithDebounce
-    = useCallback(_debounce(resolveDomain, 500), []);
+    const resolveDomainWithDebounce
+        = useCallback(_debounce(resolveDomain, 500), []);
 
-  const onChangeValue = (value) => {
-    setDropDownActive(false);
-    onUpdate(value);
-  }
+    const onChangeValue = (value) => {
+        setDropDownActive(false);
+        onUpdate(value);
+    }
 
-  const onInputClick = () => {
-    domain.length > 0 && setDropDownActive(true);
-  }
+    const onInputClick = () => {
+        if (domain.length) {
+            setDropDownActive(true);
+        }
+    }
 
-  const onChangeInput = (e) => {
-    setDomain(e.target.value);
-    resolveDomainWithDebounce(e.target.value);
-  }
+    const onChangeInput = (e) => {
+        setDomain(e.target.value);
+        resolveDomainWithDebounce(e.target.value);
+    }
 
-  return (
-    <Container width={width}>
-      <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
-        <GlobalStyle/>
-          <InputContainer onClick={onInputClick}>
-            <StyledLogo
-              inputHeight={height}
-              disabled={disabled}
-              src={theme === "dark" ? gradientLogo : blackLogo}
-              alt="logo"
-            />
-            <StyledLine></StyledLine>
-            <StyledInput
-              isDropDownActive={dropDownActive}
-              disabled={disabled}
-              autoFocus={autoFocus}
-              height={height}
-              placeholder={props.placeholder || "Type to search"}
-              value={domain}
-              onChange={onChangeInput}
-            />
-          </InputContainer>
-          <DropDown
-            active={dropDownActive}
-            loading={loading}
-            error={error}
-            content={addresses}
-            onChange={onChangeValue}
-            hiddenAddressGap={hiddenAddressGap}
-            assets={assets}
-            onClickOutside={() => setDropDownActive(false)}
-          />
-      </ThemeProvider>
-    </Container>
-  );
+    return (
+        <Container width={width}>
+            <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+                <GlobalStyle/>
+                <InputContainer onClick={onInputClick}>
+                    <StyledLogo
+                        inputHeight={height}
+                        disabled={disabled}
+                        src={theme === "dark" ? gradientLogo : blackLogo}
+                        alt="logo"
+                    />
+                    <StyledLine></StyledLine>
+                    <StyledInput
+                        isDropDownActive={dropDownActive}
+                        disabled={disabled}
+                        autoFocus={autoFocus}
+                        height={height}
+                        placeholder={props.placeholder || "Type to search"}
+                        value={domain}
+                        onChange={onChangeInput}
+                    />
+                </InputContainer>
+                <DropDown
+                    type={type}
+                    active={dropDownActive}
+                    loading={loading}
+                    error={error}
+                    resolveContent={addresses}
+                    reverseContent={domains}
+                    onChange={onChangeValue}
+                    hiddenAddressGap={hiddenAddressGap}
+                    assets={assets}
+                    onClickOutside={() => setDropDownActive(false)}
+                />
+            </ThemeProvider>
+        </Container>
+    );
 }
 
 const Container = styled.div<ContainerProps>`
