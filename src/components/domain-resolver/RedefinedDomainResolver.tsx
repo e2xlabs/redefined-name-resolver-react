@@ -59,10 +59,6 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                 let reverseResponse;
 
                 switch (type) {
-                    case "combined":
-                        resolverResponse = await resolver.resolve(value);
-                        reverseResponse = await resolver.reverse(value);
-                        break;
                     case "resolve":
                         resolverResponse = await resolver.resolve(value);
                         reverseResponse = { response: [], errors: [] };
@@ -71,6 +67,9 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                         reverseResponse = await resolver.reverse(value);
                         resolverResponse = { response: [], errors: [] };
                         break;
+                    default:
+                        resolverResponse = await resolver.resolve(value);
+                        reverseResponse = await resolver.reverse(value);
                 }
 
                 if (

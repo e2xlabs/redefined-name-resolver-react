@@ -61,7 +61,7 @@ export default function App() {
             <div className={"title"}><span>redefined’s Web3 Identity Resolver</span></div>
             <div className={"subtitle-container"}>
               <div className={"subtitle theme-text"}>
-                Integrate redefined SDK or Widget to Search with any Social ID, Domain, Name Service, Email or Username
+                  Integrate redefined's API, SDK or Widget to Search with any Social ID, Domain, Name Service, Email, Username or Wallet addresses
               </div>
             </div>
             <div className={"domain-resolver"}>

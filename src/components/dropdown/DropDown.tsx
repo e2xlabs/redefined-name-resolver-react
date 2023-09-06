@@ -37,8 +37,7 @@ const DropDown = (props: DropDownProps) => {
 
     const noFoundMessages = {
         resolve: "No addresses found",
-        reverse: "No domains found",
-        combined: "No addresses or domains found",
+        reverse: "No domains found"
     };
 
     return active ? (
@@ -71,7 +70,7 @@ const DropDown = (props: DropDownProps) => {
                 </UnorderedList>
             ) : null}
             {!loading && !error && !(resolveContent.length || reverseContent.length) ? (
-                <StyledNotFoundMessage>{noFoundMessages[type] || ""}</StyledNotFoundMessage>
+                <StyledNotFoundMessage>{noFoundMessages[type] || "No addresses or domains found"}</StyledNotFoundMessage>
             ) : null}
             {error ? <StyledErrorMessage>{getErrorMessage(error)}</StyledErrorMessage> : null}
         </StyledDropDown>
