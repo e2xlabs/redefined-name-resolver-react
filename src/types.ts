@@ -1,22 +1,18 @@
 import { Account, ResolverOptions, ReverseAccount } from "@redefined/name-resolver-js";
 
 export type DropDownProps = {
-  type: Type;
   active: boolean;
   resolveContent: Account[];
   reverseContent: ReverseAccount[];
   loading: boolean;
   error: string | Error;
   hiddenAddressGap?: HiddenAddressGap;
-  assets?: Asset[];
   onChange?: (value: Account | ReverseAccount) => void;
   onClickOutside?: () => void;
 }
 
 export type ResolveItemProps = {
   item: Account;
-  assets: Asset[];
-  hiddenAddressGap?: HiddenAddressGap;
   onChange?: (value: Account) => void;
 }
 
@@ -28,7 +24,7 @@ export type ReverseItemProps = {
 export type Theme = "light" | "dark";
 export type Type = "resolve" | "reverse" | "combined";
 
-type HiddenAddressGap = {
+export type HiddenAddressGap = {
   leadingCharLimit: number;
   trailingCharLimit: number;
 }

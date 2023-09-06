@@ -5,9 +5,11 @@ import Icon from "@mdi/react";
 import { mdiContentCopy } from "@mdi/js";
 import { copyText, getAbbreviatedAddress } from "../../utils";
 import { baseStyle } from "../../styles/baseStyle";
+import { useRedefinedDomainResolverContext } from "../../context/RedefinedDomainResolverContext";
 
 const ResolveItem = (props: ResolveItemProps) => {
-    const { item, assets, hiddenAddressGap, onChange } = props;
+    const { item, onChange } = props;
+    const { assets, hiddenAddressGap } = useRedefinedDomainResolverContext();
 
     const onCopyClick = (event: any, address: string) => {
         copyText(address);
