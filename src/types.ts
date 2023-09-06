@@ -7,18 +7,18 @@ export type DropDownProps = {
   loading: boolean;
   error: string | Error;
   hiddenAddressGap?: HiddenAddressGap;
-  onChange?: (value: Account | ReverseAccount) => void;
+  onChange?: (value: TypedResult) => void;
   onClickOutside?: () => void;
 }
 
 export type ResolveItemProps = {
   item: Account;
-  onChange?: (value: Account) => void;
+  onChange?: (value: Account & { type: "resolve" }) => void;
 }
 
 export type ReverseItemProps = {
   item: ReverseAccount;
-  onChange?: (value: ReverseAccount) => void;
+  onChange?: (value: ReverseAccount & { type: "reverse" }) => void;
 }
 
 export type Theme = "light" | "dark";
@@ -28,6 +28,8 @@ export type HiddenAddressGap = {
   leadingCharLimit: number;
   trailingCharLimit: number;
 }
+
+export type TypedResult = (Account | ReverseAccount) & { type: "resolve" | "reverse" }
 
 export interface RedefinedDomainResolverProps {
   theme?: Theme;
@@ -40,7 +42,7 @@ export interface RedefinedDomainResolverProps {
   resolverOptions?: ResolverOptions;
   placeholder?: string
 
-  onUpdate(account: Account | ReverseAccount): void;
+  onUpdate(result: TypedResult): void;
 }
 
 export interface ContainerProps {

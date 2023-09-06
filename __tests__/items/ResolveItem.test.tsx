@@ -76,7 +76,7 @@ describe("ResolveItem component", () => {
         );
         const itemWrapper = getByText("0x1 ... 34n");
         fireEvent.click(itemWrapper);
-        expect(mockProps.onChange).toHaveBeenCalledWith(mockProps.item);
+        expect(mockProps.onChange).toHaveBeenCalledWith({ ...mockProps.item, type: "resolve" });
     });
 
     it("SHOULD copies text IF copy icon is clicked", () => {

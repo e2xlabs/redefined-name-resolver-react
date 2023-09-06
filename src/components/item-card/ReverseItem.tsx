@@ -15,7 +15,7 @@ const ReverseItem = (props: ReverseItemProps) => {
     }
 
     return (
-        <ItemWrapper onClick={() => onChange(item)}>
+        <ItemWrapper onClick={() => onChange({ ...item, type: "reverse" })}>
             <StyledContent>
                 <div>
                     <StyledTitle>{item.domain}</StyledTitle>

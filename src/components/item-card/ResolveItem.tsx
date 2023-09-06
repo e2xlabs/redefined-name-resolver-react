@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
-import { ResolveItemProps } from "../../types";
+import { ResolveItemProps, TypedResult } from "../../types";
 import Icon from "@mdi/react";
 import { mdiContentCopy } from "@mdi/js";
 import { copyText, getAbbreviatedAddress } from "../../utils";
@@ -21,7 +21,7 @@ const ResolveItem = (props: ResolveItemProps) => {
     ), [assets]);
 
     return (
-        <ItemWrapper onClick={() => onChange(item)}>
+        <ItemWrapper onClick={() => onChange({ ...item, type: "resolve" })}>
             <StyledContent>
                 <StyledLogo
                     width={baseStyle.dropDown.logo.width}

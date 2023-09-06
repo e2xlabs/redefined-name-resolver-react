@@ -59,7 +59,7 @@ describe("ReverseItem component", () => {
         );
         const itemWrapper = getByText("example");
         fireEvent.click(itemWrapper);
-        expect(mockProps.onChange).toHaveBeenCalledWith(mockProps.item);
+        expect(mockProps.onChange).toHaveBeenCalledWith({ ...mockProps.item, type: "reverse" });
     });
 
     it("SHOULD copies text IF copy icon is clicked", () => {
