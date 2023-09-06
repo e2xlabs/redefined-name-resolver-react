@@ -1,34 +1,39 @@
 import { Account, ResolverOptions, ReverseAccount } from "@redefined/name-resolver-js";
 
-export type DropDownResolveProps = {
+export type DropDownProps = {
   active: boolean;
-  content: Account[];
+  resolveContent: Account[];
+  reverseContent: ReverseAccount[];
   loading: boolean;
   error: string | Error;
   hiddenAddressGap?: HiddenAddressGap;
-  assets?: Asset[];
-  onChange?: (value: Account) => void;
+  onChange?: (value: TypedResult) => void;
   onClickOutside?: () => void;
 }
 
-export type DropDownReverseProps = {
-  active: boolean;
-  content: ReverseAccount[];
-  loading: boolean;
-  error: string | Error;
-  onChange?: (value: ReverseAccount) => void;
-  onClickOutside?: () => void;
+export type ResolveItemProps = {
+  item: Account;
+  onChange?: (value: Account & { type: "resolve" }) => void;
 }
 
-export type Theme = "light" | "dark"
+export type ReverseItemProps = {
+  item: ReverseAccount;
+  onChange?: (value: ReverseAccount & { type: "reverse" }) => void;
+}
 
-type HiddenAddressGap = {
+export type Theme = "light" | "dark";
+export type Type = "resolve" | "reverse" | "combined";
+
+export type HiddenAddressGap = {
   leadingCharLimit: number;
   trailingCharLimit: number;
 }
 
+export type TypedResult = (Account | ReverseAccount) & { type: "resolve" | "reverse" }
+
 export interface RedefinedDomainResolverProps {
   theme?: Theme;
+  type?: Type;
   width?: string;
   height?: string;
   autoFocus?: boolean;
@@ -37,19 +42,7 @@ export interface RedefinedDomainResolverProps {
   resolverOptions?: ResolverOptions;
   placeholder?: string
 
-  onUpdate(account: Account | null): void;
-}
-
-export interface RedefinedDomainResolverReverseProps {
-  theme?: Theme;
-  width?: string;
-  height?: string;
-  autoFocus?: boolean;
-  disabled?: boolean;
-  resolverOptions?: ResolverOptions;
-  placeholder?: string
-
-  onUpdate(account: Account | null): void;
+  onUpdate(result: TypedResult): void;
 }
 
 export interface ContainerProps {

@@ -1,1 +1,1 @@
-export {default} from "./RedefinedDomainResolver"
+export { default } from "./RedefinedDomainResolver"
