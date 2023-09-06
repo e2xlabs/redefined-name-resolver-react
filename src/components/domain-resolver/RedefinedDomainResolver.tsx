@@ -12,7 +12,7 @@ import DropDown from "../dropdown";
 import { RedefinedDomainResolverProvider } from "../../context/RedefinedDomainResolverContext";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
-    const { width, height, disabled, autoFocus, theme, type, hiddenAddressGap, resolverOptions, onUpdate } = props;
+    const { width, height, placeholder, disabled, autoFocus, theme, type, hiddenAddressGap, resolverOptions, onUpdate } = props;
     const [dropDownActive, setDropDownActive] = useState(false);
     const [domain, setDomain] = useState("");
     const [addresses, setAddresses] = useState([]);
@@ -132,7 +132,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                             disabled={disabled}
                             autoFocus={autoFocus}
                             height={height}
-                            placeholder={props.placeholder || "Type to search"}
+                            placeholder={placeholder || "Type to search"}
                             value={domain}
                             onChange={onChangeInput}
                         />
