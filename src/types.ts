@@ -1,4 +1,29 @@
-import { Account, ResolverOptions, ReverseAccount } from "@redefined/name-resolver-js";
+import { ResolverVendor } from "@redefined/name-resolver-js";
+
+export type Account ={
+  address: string;
+  network: string;
+  vendor: string;
+}
+
+export type ReverseAccount = {
+  domain: string,
+  vendor: ResolverVendor
+};
+
+export type ResolveResponse = {
+  data: Account[];
+  expiresAt: number;
+  completeness: number;
+  processedVendors: ResolverVendor[];
+}
+
+export type ReverseResponse = {
+  data: ReverseAccount[];
+  expiresAt: number;
+  completeness: number;
+  processedVendors: ResolverVendor[];
+}
 
 export type DropDownProps = {
   active: boolean;
@@ -30,6 +55,11 @@ export type HiddenAddressGap = {
 }
 
 export type TypedResult = (Account | ReverseAccount) & { type: "resolve" | "reverse" }
+
+export type ResolverOptions = {
+  networks?: string[];
+  vendors?: ResolverVendor[];
+};
 
 export interface RedefinedDomainResolverProps {
   theme?: Theme;

@@ -1,26 +1,35 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import _debounce from 'lodash/debounce';
 import styled, { ThemeProvider } from "styled-components";
-import { ContainerProps, RedefinedDomainResolverProps, InputProps, LogoProps, Asset } from "../../types";
+import {
+    ContainerProps,
+    RedefinedDomainResolverProps,
+    InputProps,
+    LogoProps,
+    Asset,
+    ResolveResponse,
+    ReverseResponse,
+    Account,
+    ReverseAccount,
+} from "../../types";
 import gradientLogo from "../../assets/small-logo.svg";
 import blackLogo from "../../assets/black-small-logo.svg";
 import { baseStyle, darkTheme, lightTheme } from "../../styles/baseStyle";
 import GlobalStyle from "../../styles/globalStyle";
-import { RedefinedResolver } from "@redefined/name-resolver-js";
-import { ASSETS_URL } from "../../config";
+import { API_URL, ASSETS_URL } from "../../config";
 import DropDown from "../dropdown";
 import { RedefinedDomainResolverProvider } from "../../context/RedefinedDomainResolverContext";
+import axios from "axios";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
     const { width, height, placeholder, disabled, autoFocus, theme, type, hiddenAddressGap, resolverOptions, onUpdate } = props;
     const [dropDownActive, setDropDownActive] = useState(false);
     const [domain, setDomain] = useState("");
-    const [addresses, setAddresses] = useState([]);
-    const [domains, setDomains] = useState([]);
+    const [addresses, setAddresses] = useState<Account[]>([]);
+    const [domains, setDomains] = useState<ReverseAccount[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [assets, setAssets] = useState<Asset[]>([]);
-    const resolver = useMemo(() => new RedefinedResolver(resolverOptions), []);
 
     let actualResolveRequestVersion = 0;
 
@@ -41,6 +50,27 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         fetchAssets();
     }, [fetchAssets]);
 
+    const resolve = useCallback(async (domain: string) => {
+        const networks = props.resolverOptions?.networks;
+        const vendors = props.resolverOptions?.vendors;
+
+        try {
+            return (await axios.get<ResolveResponse>(`${API_URL}/resolve?domain=${domain}&networks=${networks?.join(",")}&vendors=${vendors?.join(",")}`)).data;
+        } catch (e) {
+            throw Error(`Failed to resolve! ${e.message}`);
+        }
+    }, []);
+
+    const reverse = useCallback(async (address: string) => {
+        const vendors = props.resolverOptions?.vendors;
+
+        try {
+            return (await axios.get<ReverseResponse>(`${API_URL}/reverse?address=${address}&vendors=${vendors?.join(",")}`)).data;
+        } catch (e) {
+            throw Error(`Failed to reverse! ${e.message}`);
+        }
+    }, []);
+
     const resolveDomain = async (value: string) => {
         onUpdate(null);
         setAddresses([]);
@@ -55,35 +85,24 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
             try {
                 actualResolveRequestVersion = version;
 
-                let resolverResponse;
-                let reverseResponse;
+                let resolverResponse: ResolveResponse;
+                let reverseResponse: ReverseResponse;
 
                 switch (type) {
                     case "resolve":
-                        resolverResponse = await resolver.resolve(value);
-                        reverseResponse = { response: [], errors: [] };
+                        resolverResponse = await resolve(value);
                         break;
                     case "reverse":
-                        reverseResponse = await resolver.reverse(value);
-                        resolverResponse = { response: [], errors: [] };
+                        reverseResponse = await reverse(value);
                         break;
                     default:
-                        resolverResponse = await resolver.resolve(value);
-                        reverseResponse = await resolver.reverse(value);
+                        resolverResponse = await resolve(value);
+                        reverseResponse = await reverse(value);
                 }
 
-                if (
-                    !resolverResponse.response.length && resolverResponse.errors.some(it => (
-                        it.vendor.includes("redefined")
-                        && it.error.includes("No records found for domain")
-                    ))
-                ) {
-                    setError(`This domain is registered but has no records.`)
-                } else {
-                    if (version == actualResolveRequestVersion) {
-                        setAddresses(resolverResponse.response);
-                        setDomains(reverseResponse.response);
-                    }
+                if (version == actualResolveRequestVersion) {
+                    setAddresses(resolverResponse.data || []);
+                    setDomains(reverseResponse.data || []);
                 }
             } catch (e) {
                 setError(e)
@@ -94,8 +113,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         }
     }
 
-    const resolveDomainWithDebounce
-        = useCallback(_debounce(resolveDomain, 500), []);
+    const resolveDomainWithDebounce = useCallback(_debounce(resolveDomain, 500), []);
 
     const onChangeValue = (value) => {
         setDropDownActive(false);
