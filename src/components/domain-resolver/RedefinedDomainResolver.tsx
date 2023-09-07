@@ -20,6 +20,7 @@ import { API_URL, ASSETS_URL } from "../../config";
 import DropDown from "../dropdown";
 import { RedefinedDomainResolverProvider } from "../../context/RedefinedDomainResolverContext";
 import axios from "axios";
+import moment from "moment";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
     const { width, height, placeholder, disabled, autoFocus, theme, type, hiddenAddressGap, resolverOptions, onUpdate } = props;
@@ -30,6 +31,8 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [assets, setAssets] = useState<Asset[]>([]);
+    const [fetchInterval, setFetchInterval] = useState<any>(null);
+    const [reFetchTime, setReFetchTime] = useState<null | string>(null);
 
     let actualResolveRequestVersion = 0;
 
@@ -90,11 +93,50 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         }
     }, []);
 
+    const initiateAutoFetchTimeout = useCallback((fetchedAt: number) => {
+        const eventTime = moment().add(fetchedAt, "milliseconds").unix();
+
+        const interval = setInterval(() => {
+            const currentTime = moment().unix();
+            const diffTime = eventTime - currentTime;
+
+            const durationMoment = moment.duration(diffTime * 1000, "milliseconds");
+            const seconds = durationMoment.seconds();
+
+            if (seconds <= 0) {
+                clearFetchInterval();
+                setReFetchTime(null);
+                // reFetchDomain();
+                return;
+            }
+
+            setReFetchTime(`00:${seconds > 10 ? seconds : `0${seconds}`}`);
+        }, 1000);
+
+        setFetchInterval(interval);
+    }, []);
+
+    const clearFetchInterval = useCallback(() => {
+        setFetchInterval(interval => {
+            clearInterval(interval);
+            return null;
+        })
+    }, [])
+
+    const reFetchDomain = useCallback(() => {
+        setDomain(domain => {
+            resolveDomain(domain);
+            return domain;
+        })
+    }, [])
+
     const resolveDomain = async (value: string) => {
         onUpdate(null);
         setAddresses([]);
         setDomains([]);
         setError("");
+        setReFetchTime(null);
+        clearFetchInterval();
 
         if (value.length) {
             const version = Date.now();
@@ -107,21 +149,24 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                 let resolverResponse: ResolveResponse;
                 let reverseResponse: ReverseResponse;
 
-                switch (type) {
+                switch (type || "resolve") {
                     case "resolve":
                         resolverResponse = await resolve(value);
+                        if (resolverResponse.data.length) {
+                            initiateAutoFetchTimeout(resolverResponse.expiresAt)
+                        }
                         break;
                     case "reverse":
                         reverseResponse = await reverse(value);
+                        if (reverseResponse.data.length) {
+                            initiateAutoFetchTimeout(reverseResponse.expiresAt)
+                        }
                         break;
-                    default:
-                        resolverResponse = await resolve(value);
-                        reverseResponse = await reverse(value);
                 }
 
                 if (version == actualResolveRequestVersion) {
-                    setAddresses(resolverResponse.data || []);
-                    setDomains(reverseResponse.data || []);
+                    setAddresses(resolverResponse?.data || []);
+                    setDomains(reverseResponse?.data || []);
                 }
             } catch (e) {
                 setError(e)
@@ -182,6 +227,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                         onChange={onChangeValue}
                         onClickOutside={() => setDropDownActive(false)}
                     />
+                    {reFetchTime && <StyledTimeout>Re-fetch after {reFetchTime}</StyledTimeout>}
                 </RedefinedDomainResolverProvider>
             </ThemeProvider>
         </Container>
@@ -237,4 +283,11 @@ const StyledLine = styled.div<LogoProps>`
   background: ${(props) => props.theme.type === "light" ? "#222222" : "#ffffff"};
 `
 
+const StyledTimeout = styled.div<LogoProps>`
+  position: absolute;
+  bottom: 2px;
+  right: ${baseStyle.input.logo.padding};
+  font-size: ${baseStyle.input.timeout.fontSize};
+  color: ${(props) => props.theme.type === "light" ? "#222222" : "#ffffff"};
+`
 export default RedefinedDomainResolver;

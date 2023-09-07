@@ -1,10 +1,19 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import RedefinedDomainResolver from "./components/domain-resolver";
+import momentDurationFormatSetup from "moment-duration-format";
+import moment from "moment";
+
+momentDurationFormatSetup(moment);
+// @ts-ignore
+typeof moment.duration.fn.format === "function";
+// @ts-ignore
+typeof moment.duration.format === "function";
+
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
     <React.StrictMode>
-        <RedefinedDomainResolver onUpdate={(item) => {console.log(item)}} />
+        <RedefinedDomainResolver type="resolve" onUpdate={(item) => {console.log(item)}} />
     </React.StrictMode>,
 )
