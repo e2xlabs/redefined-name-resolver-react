@@ -51,21 +51,40 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
     }, [fetchAssets]);
 
     const resolve = useCallback(async (domain: string) => {
+
+        const params = new URLSearchParams();
+
+        params.set('domain', domain);
+
         const networks = props.resolverOptions?.networks;
+        if (networks) {
+            params.set('networks', networks?.join(","));
+        }
+
         const vendors = props.resolverOptions?.vendors;
+        if (vendors) {
+            params.set('vendors', vendors?.join(","));
+        }
 
         try {
-            return (await axios.get<ResolveResponse>(`${API_URL}/resolve?domain=${domain}&networks=${networks?.join(",")}&vendors=${vendors?.join(",")}`)).data;
+            return (await axios.get<ResolveResponse>(`${API_URL}/resolve?${params.toString()}`)).data;
         } catch (e) {
             throw Error(`Failed to resolve! ${e.message}`);
         }
     }, []);
 
     const reverse = useCallback(async (address: string) => {
+        const params = new URLSearchParams();
+
+        params.set('address', address);
+
         const vendors = props.resolverOptions?.vendors;
+        if (vendors) {
+            params.set('vendors', vendors?.join(","));
+        }
 
         try {
-            return (await axios.get<ReverseResponse>(`${API_URL}/reverse?address=${address}&vendors=${vendors?.join(",")}`)).data;
+            return (await axios.get<ReverseResponse>(`${API_URL}/reverse?${params.toString()}`)).data;
         } catch (e) {
             throw Error(`Failed to reverse! ${e.message}`);
         }

@@ -33,8 +33,8 @@ const ResolveItem = (props: ResolveItemProps) => {
                         {getAbbreviatedAddress(item.address, hiddenAddressGap?.leadingCharLimit, hiddenAddressGap?.trailingCharLimit)}
                     </StyledTitle>
                     <StyledSubTitle>
-                        {getAssetsByNetwork(item.network)?.name} from: <StyledSpan isRedefined={item.from.startsWith("redefined")}>
-                            {item.from.startsWith("redefined") ? "redefined" : item.from}
+                        {getAssetsByNetwork(item.network)?.name} from: <StyledSpan isRedefined={item.vendor.startsWith("redefined")}>
+                            {item.vendor.startsWith("redefined") ? "redefined" : item.vendor}
                         </StyledSpan>
                     </StyledSubTitle>
                 </div>

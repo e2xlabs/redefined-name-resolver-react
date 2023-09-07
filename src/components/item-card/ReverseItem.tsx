@@ -20,8 +20,8 @@ const ReverseItem = (props: ReverseItemProps) => {
                 <div>
                     <StyledTitle>{item.domain}</StyledTitle>
                     <StyledSubTitle>from:
-                        <StyledSpan isRedefined={item.from.startsWith("redefined")}>
-                            {item.from.startsWith("redefined") ? "redefined" : item.from}
+                        <StyledSpan isRedefined={item.vendor.startsWith("redefined")}>
+                            {item.vendor.startsWith("redefined") ? "redefined" : item.vendor}
                         </StyledSpan>
                     </StyledSubTitle>
                 </div>
