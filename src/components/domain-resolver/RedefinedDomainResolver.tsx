@@ -96,7 +96,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
     const initiateAutoFetchTimeout = useCallback((fetchedAt: number) => {
         const diff = moment().diff(fetchedAt);
 
-s        if (diff < 1000 * 60 * 5) {
+        if (diff < 1000 * 60 * 5) {
             setReFetchTime(moment(fetchedAt).format("mm:ss"));
             return;
         }
