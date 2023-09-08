@@ -13,14 +13,14 @@ export type ReverseAccount = {
 
 export type ResolveResponse = {
   data: Account[];
-  expiresAt: number;
+  fetchedAt: number;
   completeness: number;
   processedVendors: ResolverVendor[];
 }
 
 export type ReverseResponse = {
   data: ReverseAccount[];
-  expiresAt: number;
+  fetchedAt: number;
   completeness: number;
   processedVendors: ResolverVendor[];
 }

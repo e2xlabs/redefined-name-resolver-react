@@ -5,11 +5,6 @@ import momentDurationFormatSetup from "moment-duration-format";
 import moment from "moment";
 
 momentDurationFormatSetup(moment);
-// @ts-ignore
-typeof moment.duration.fn.format === "function";
-// @ts-ignore
-typeof moment.duration.format === "function";
-
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(

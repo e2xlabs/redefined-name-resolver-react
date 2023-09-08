@@ -31,7 +31,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [assets, setAssets] = useState<Asset[]>([]);
-    const [fetchInterval, setFetchInterval] = useState<any>(null);
+    const [fetchTimeout, setFetchTimeout] = useState<any>(null);
     const [reFetchTime, setReFetchTime] = useState<null | string>(null);
 
     let actualResolveRequestVersion = 0;
@@ -94,31 +94,23 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
     }, []);
 
     const initiateAutoFetchTimeout = useCallback((fetchedAt: number) => {
-        const eventTime = moment().add(fetchedAt, "milliseconds").unix();
+        const diff = moment().diff(fetchedAt);
 
-        const interval = setInterval(() => {
-            const currentTime = moment().unix();
-            const diffTime = eventTime - currentTime;
+s        if (diff < 1000 * 60 * 5) {
+            setReFetchTime(moment(fetchedAt).format("mm:ss"));
+            return;
+        }
 
-            const durationMoment = moment.duration(diffTime * 1000, "milliseconds");
-            const seconds = durationMoment.seconds();
+        const timeout = setTimeout(() => {
+            reFetchDomain();
+        }, diff);
 
-            if (seconds <= 0) {
-                clearFetchInterval();
-                setReFetchTime(null);
-                // reFetchDomain();
-                return;
-            }
-
-            setReFetchTime(`00:${seconds > 10 ? seconds : `0${seconds}`}`);
-        }, 1000);
-
-        setFetchInterval(interval);
+        setFetchTimeout(timeout);
     }, []);
 
-    const clearFetchInterval = useCallback(() => {
-        setFetchInterval(interval => {
-            clearInterval(interval);
+    const clearFetchTimeout = useCallback(() => {
+        setFetchTimeout(timeout => {
+            clearTimeout(timeout);
             return null;
         })
     }, [])
@@ -136,7 +128,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         setDomains([]);
         setError("");
         setReFetchTime(null);
-        clearFetchInterval();
+        clearFetchTimeout();
 
         if (value.length) {
             const version = Date.now();
@@ -152,14 +144,16 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                 switch (type || "resolve") {
                     case "resolve":
                         resolverResponse = await resolve(value);
+                        setReFetchTime(moment(resolverResponse.fetchedAt).format("YYYY-MM-DD HH:mm:ss"));
                         if (resolverResponse.data.length) {
-                            initiateAutoFetchTimeout(resolverResponse.expiresAt)
+                            initiateAutoFetchTimeout(resolverResponse.fetchedAt)
                         }
                         break;
                     case "reverse":
                         reverseResponse = await reverse(value);
+                        setReFetchTime(moment(reverseResponse.fetchedAt).format("YYYY-MM-DD HH:mm:ss"));
                         if (reverseResponse.data.length) {
-                            initiateAutoFetchTimeout(reverseResponse.expiresAt)
+                            initiateAutoFetchTimeout(reverseResponse.fetchedAt)
                         }
                         break;
                 }
@@ -227,7 +221,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                         onChange={onChangeValue}
                         onClickOutside={() => setDropDownActive(false)}
                     />
-                    {reFetchTime && <StyledTimeout>Re-fetch after {reFetchTime}</StyledTimeout>}
+                    {reFetchTime && <StyledTimeout>Last updated at {reFetchTime}</StyledTimeout>}
                 </RedefinedDomainResolverProvider>
             </ThemeProvider>
         </Container>
