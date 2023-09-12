@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import _debounce from 'lodash/debounce';
 import styled, { ThemeProvider } from "styled-components";
 import {
@@ -23,16 +23,26 @@ import axios from "axios";
 import moment from "moment";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
-    const { width, height, placeholder, disabled, autoFocus, theme, type, hiddenAddressGap, resolverOptions, onUpdate } = props;
+    const {
+        width,
+        height,
+        placeholder,
+        disabled,
+        autoFocus,
+        theme,
+        type,
+        hiddenAddressGap,
+        resolverOptions,
+        onUpdate
+    } = props;
     const [dropDownActive, setDropDownActive] = useState(false);
     const [domain, setDomain] = useState("");
-    const [addresses, setAddresses] = useState<Account[]>([]);
-    const [domains, setDomains] = useState<ReverseAccount[]>([]);
+    const [accounts, setAccounts] = useState<Account[]>([]);
+    const [reverseAccounts, setReverseAccounts] = useState<ReverseAccount[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [assets, setAssets] = useState<Asset[]>([]);
     const [fetchTimeout, setFetchTimeout] = useState<any>(null);
-    const [reFetchTime, setReFetchTime] = useState<null | string>(null);
 
     let actualResolveRequestVersion = 0;
 
@@ -42,8 +52,8 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
 
     const fetchAssets = useCallback(async () => {
         try {
-            const response = await fetch(ASSETS_URL);
-            setAssets(await response.json());
+            const response = await axios.get(ASSETS_URL);
+            setAssets(response.data);
         } catch (e) {
             console.log(e);
         }
@@ -59,12 +69,12 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
 
         params.set('domain', domain);
 
-        const networks = props.resolverOptions?.networks;
+        const networks = resolverOptions?.networks;
         if (networks) {
             params.set('networks', networks?.join(","));
         }
 
-        const vendors = props.resolverOptions?.vendors;
+        const vendors = resolverOptions?.vendors;
         if (vendors) {
             params.set('vendors', vendors?.join(","));
         }
@@ -81,7 +91,8 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
 
         params.set('address', address);
 
-        const vendors = props.resolverOptions?.vendors;
+        const vendors = resolverOptions?.vendors;
+
         if (vendors) {
             params.set('vendors', vendors?.join(","));
         }
@@ -93,42 +104,38 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         }
     }, []);
 
-    const initiateAutoFetchTimeout = useCallback((fetchedAt: number) => {
+    const initiateAutoFetchTimeout = (fetchedAt: number) => {
+        clearFetchTimeout();
         const diff = moment().diff(fetchedAt);
 
-        if (diff < 1000 * 60 * 5) {
-            setReFetchTime(moment(fetchedAt).format("mm:ss"));
-            return;
+        if (diff > 60 * 1000) {
+            resolveDomain(domain);
         }
 
         const timeout = setTimeout(() => {
             reFetchDomain();
-        }, diff);
+        }, 60 * 1000);
 
         setFetchTimeout(timeout);
-    }, []);
+    }
 
-    const clearFetchTimeout = useCallback(() => {
-        setFetchTimeout(timeout => {
-            clearTimeout(timeout);
+    const clearFetchTimeout = () => {
+        setFetchTimeout(() => {
+            clearTimeout(fetchTimeout);
             return null;
         })
-    }, [])
+    }
 
-    const reFetchDomain = useCallback(() => {
-        setDomain(domain => {
-            resolveDomain(domain);
-            return domain;
-        })
-    }, [])
+    const reFetchDomain = () => {
+        resolveDomain(domain);
+        setDomain(domain);
+    }
 
     const resolveDomain = async (value: string) => {
         onUpdate(null);
-        setAddresses([]);
-        setDomains([]);
+        setAccounts([]);
+        setReverseAccounts([]);
         setError("");
-        setReFetchTime(null);
-        clearFetchTimeout();
 
         if (value.length) {
             const version = Date.now();
@@ -141,26 +148,31 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                 let resolverResponse: ResolveResponse;
                 let reverseResponse: ReverseResponse;
 
-                switch (type || "resolve") {
+                switch (type) {
                     case "resolve":
                         resolverResponse = await resolve(value);
-                        setReFetchTime(moment(resolverResponse.fetchedAt).format("YYYY-MM-DD HH:mm:ss"));
-                        if (resolverResponse.data.length) {
-                            initiateAutoFetchTimeout(resolverResponse.fetchedAt)
-                        }
+                        console.log(resolverResponse);
                         break;
                     case "reverse":
                         reverseResponse = await reverse(value);
-                        setReFetchTime(moment(reverseResponse.fetchedAt).format("YYYY-MM-DD HH:mm:ss"));
-                        if (reverseResponse.data.length) {
-                            initiateAutoFetchTimeout(reverseResponse.fetchedAt)
-                        }
                         break;
+                    default:
+                        resolverResponse = await resolve(value);
+                        reverseResponse = await reverse(value);
                 }
 
                 if (version == actualResolveRequestVersion) {
-                    setAddresses(resolverResponse?.data || []);
-                    setDomains(reverseResponse?.data || []);
+                    setAccounts(resolverResponse?.data || []);
+                    setReverseAccounts(reverseResponse?.data || []);
+
+                    if (resolverResponse?.data.length || reverseResponse?.data.length) {
+                        initiateAutoFetchTimeout(
+                            Math.min(
+                                ...resolverResponse?.data.map(it => it.fetchedAt) || [],
+                                ...reverseResponse?.data.map(it => it.fetchedAt) || []
+                            )
+                        )
+                    }
                 }
             } catch (e) {
                 setError(e)
@@ -201,7 +213,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                             src={theme === "dark" ? gradientLogo : blackLogo}
                             alt="logo"
                         />
-                        <StyledLine />
+                        <StyledLine/>
                         <StyledInput
                             isDropDownActive={dropDownActive}
                             disabled={disabled}
@@ -216,12 +228,11 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                         active={dropDownActive}
                         loading={loading}
                         error={error}
-                        resolveContent={addresses}
-                        reverseContent={domains}
+                        resolveContent={accounts}
+                        reverseContent={reverseAccounts}
                         onChange={onChangeValue}
                         onClickOutside={() => setDropDownActive(false)}
                     />
-                    {reFetchTime && <StyledTimeout>Last updated at {reFetchTime}</StyledTimeout>}
                 </RedefinedDomainResolverProvider>
             </ThemeProvider>
         </Container>
@@ -277,11 +288,4 @@ const StyledLine = styled.div<LogoProps>`
   background: ${(props) => props.theme.type === "light" ? "#222222" : "#ffffff"};
 `
 
-const StyledTimeout = styled.div<LogoProps>`
-  position: absolute;
-  bottom: 2px;
-  right: ${baseStyle.input.logo.padding};
-  font-size: ${baseStyle.input.timeout.fontSize};
-  color: ${(props) => props.theme.type === "light" ? "#222222" : "#ffffff"};
-`
 export default RedefinedDomainResolver;

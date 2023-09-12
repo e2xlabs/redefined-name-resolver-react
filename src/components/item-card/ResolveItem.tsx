@@ -1,11 +1,12 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
-import { ResolveItemProps, TypedResult } from "../../types";
+import { ResolveItemProps } from "../../types";
 import Icon from "@mdi/react";
 import { mdiContentCopy } from "@mdi/js";
 import { copyText, getAbbreviatedAddress } from "../../utils";
 import { baseStyle } from "../../styles/baseStyle";
 import { useRedefinedDomainResolverContext } from "../../context/RedefinedDomainResolverContext";
+import Timeout from "../timeout/Timeout";
 
 const ResolveItem = (props: ResolveItemProps) => {
     const { item, onChange } = props;
@@ -33,12 +34,14 @@ const ResolveItem = (props: ResolveItemProps) => {
                         {getAbbreviatedAddress(item.address, hiddenAddressGap?.leadingCharLimit, hiddenAddressGap?.trailingCharLimit)}
                     </StyledTitle>
                     <StyledSubTitle>
-                        {getAssetsByNetwork(item.network)?.name} from: <StyledSpan isRedefined={item.vendor.startsWith("redefined")}>
-                            {item.vendor.startsWith("redefined") ? "redefined" : item.vendor}
-                        </StyledSpan>
+                        {getAssetsByNetwork(item.network)?.name} from: <StyledSpan
+                        isRedefined={item.vendor.startsWith("redefined")}>
+                        {item.vendor.startsWith("redefined") ? "redefined" : item.vendor}
+                    </StyledSpan>
                     </StyledSubTitle>
                 </div>
             </StyledContent>
+            {item && <StyledTimeout fetchedAt={item.fetchedAt}/>}
             <div onClick={(e) => onCopyClick(e, item.address)}>
                 <StyledIcon path={mdiContentCopy}/>
             </div>
@@ -93,6 +96,13 @@ const StyledIcon = styled(Icon)`
     transition: 0.5s ease all;
   }
 `
+
+const StyledTimeout = styled(Timeout)`
+  position: absolute;
+  bottom: 2px;
+  right: ${baseStyle.input.logo.padding};
+`
+
 const StyledSpan = styled.span<{ isRedefined: boolean }>`
   ${({ isRedefined }) => isRedefined ? baseStyle.brandTextColor : null}
 `;

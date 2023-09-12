@@ -57,6 +57,9 @@
     "@mdi/js": "^7.1.96",
     "@mdi/react": "^1.6.1",
     "@redefined/name-resolver-js": "^2.10.3",
+    "axios": "^1.5.0",
+    "moment": "^2.29.4",
+    "moment-duration-format": "^2.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-loading": "^2.0.3",
@@ -73,10 +76,5 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  },
-  "dependencies": {
-    "axios": "^1.5.0",
-    "moment": "^2.29.4",
-    "moment-duration-format": "^2.3.2"
   }
 }

@@ -4,11 +4,13 @@ export type Account ={
   address: string;
   network: string;
   vendor: string;
+  fetchedAt: number;
 }
 
 export type ReverseAccount = {
   domain: string,
-  vendor: ResolverVendor
+  vendor: ResolverVendor,
+  fetchedAt: number;
 };
 
 export type ResolveResponse = {
