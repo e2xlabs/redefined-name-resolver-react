@@ -104,17 +104,19 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         }
     }, []);
 
-    const initiateAutoFetchTimeout = (fetchedAt: number) => {
+    const initiateAutoFetchTimeout = async (domain: string, fetchedAt: number) => {
+        console.log(domain);
         clearFetchTimeout();
         const diff = moment().diff(fetchedAt);
+        console.log(diff);
 
-        if (diff > 60 * 1000) {
-            resolveDomain(domain);
+        if (diff > 65 * 1000) {
+            await resolveDomain(domain);
         }
 
-        const timeout = setTimeout(() => {
-            reFetchDomain();
-        }, 60 * 1000);
+        const timeout = setTimeout(async () => {
+            await resolveDomain(domain);
+        }, 55 * 1000);
 
         setFetchTimeout(timeout);
     }
@@ -126,12 +128,8 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         })
     }
 
-    const reFetchDomain = () => {
-        resolveDomain(domain);
-        setDomain(domain);
-    }
-
     const resolveDomain = async (value: string) => {
+        console.log(1);
         onUpdate(null);
         setAccounts([]);
         setReverseAccounts([]);
@@ -141,39 +139,57 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
             const version = Date.now();
             setDropDownActive(true);
             setLoading(true);
+            let completeness = 0;
 
             try {
                 actualResolveRequestVersion = version;
 
-                let resolverResponse: ResolveResponse;
-                let reverseResponse: ReverseResponse;
+                do {
+                    let resolverResponse: ResolveResponse;
+                    let reverseResponse: ReverseResponse;
 
-                switch (type) {
-                    case "resolve":
-                        resolverResponse = await resolve(value);
-                        console.log(resolverResponse);
-                        break;
-                    case "reverse":
-                        reverseResponse = await reverse(value);
-                        break;
-                    default:
-                        resolverResponse = await resolve(value);
-                        reverseResponse = await reverse(value);
-                }
+                    switch (type) {
+                        case "resolve":
+                            resolverResponse = await resolve(value);
+                            console.log(resolverResponse);
+                            completeness = resolverResponse?.completeness || 0;
+                            break;
+                        case "reverse":
+                            reverseResponse = await reverse(value);
+                            completeness = resolverResponse?.completeness || 0;
+                            break;
+                        default:
+                            resolverResponse = await resolve(value);
+                            reverseResponse = await reverse(value);
+                            completeness = Math.min(resolverResponse?.completeness || 0, reverseResponse?.completeness || 0);
+                    }
 
-                if (version == actualResolveRequestVersion) {
+                    if (version != actualResolveRequestVersion) {
+                        break;
+                    }
+
                     setAccounts(resolverResponse?.data || []);
                     setReverseAccounts(reverseResponse?.data || []);
 
-                    if (resolverResponse?.data.length || reverseResponse?.data.length) {
-                        initiateAutoFetchTimeout(
-                            Math.min(
-                                ...resolverResponse?.data.map(it => it.fetchedAt) || [],
-                                ...reverseResponse?.data.map(it => it.fetchedAt) || []
+                    if (version == actualResolveRequestVersion) {
+                        setAccounts(resolverResponse?.data || []);
+                        setReverseAccounts(reverseResponse?.data || []);
+
+                        if (resolverResponse?.data.length || reverseResponse?.data.length) {
+                            await initiateAutoFetchTimeout(
+                                value,
+                                Math.min(
+                                    ...resolverResponse?.data.map(it => it.fetchedAt) || [],
+                                    ...reverseResponse?.data.map(it => it.fetchedAt) || []
+                                )
                             )
-                        )
+                        }
                     }
-                }
+
+                    if (completeness < 1) {
+                        await new Promise((resolve) => setTimeout(resolve, 300));
+                    }
+                } while (completeness < 1);
             } catch (e) {
                 setError(e)
             }
