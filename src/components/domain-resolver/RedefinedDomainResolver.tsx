@@ -163,7 +163,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                             ...reverseResponse?.data.map(it => it.fetchedAt) || []
                         );
 
-                        isActual = minFetchedAt && moment().diff(minFetchedAt) < 60000;
+                        isActual = !isFinite(minFetchedAt) || moment().diff(minFetchedAt) < 60000;
                     } else {
                         break;
                     }

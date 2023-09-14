@@ -65,7 +65,6 @@ const ItemWrapper = styled.div<{disabled: boolean}>`
   padding: 5px 5px;
   justify-content: space-between;
   align-items: center;
-  background: ${(props) => props.disabled ? props.theme.colors.disabled : props.theme.colors.background};
   pointer-events: ${(props) => props.disabled && "none"};
   opacity: ${(props) => props.disabled ? 0.5 : 1};
   border-radius: ${baseStyle.input.borderRadius};

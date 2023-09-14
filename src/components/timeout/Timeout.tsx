@@ -29,10 +29,10 @@ const getTimeElapsedMessage = (fetchedAt: number) => {
     } else {
         const elapsedMinutes = currentTime.diff(fetchedTime, 'minutes');
         if (elapsedMinutes < 60) {
-            return `Actual ${Math.floor(elapsedMinutes)} min ago`;
+            return `Actual ${Math.floor(elapsedMinutes)} min ago. Refreshing...`;
         } else {
             const elapsedHours = currentTime.diff(fetchedTime, 'hours');
-            return `Actual ${Math.floor(elapsedHours)} hr ago`;
+            return `Actual ${Math.floor(elapsedHours)} hr ago. Refreshing...`;
         }
     }
 };

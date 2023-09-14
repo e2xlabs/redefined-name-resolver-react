@@ -30,7 +30,7 @@ describe('Timeout component', () => {
         const formatSpy = jest.spyOn(moment.prototype, 'format').mockReturnValue('2023-09-11 12:34:56');
 
         const { getByText } = render(<Timeout fetchedAt={fetchedAt}/>);
-        expect(getByText('Actual 45 min ago')).toBeInTheDocument();
+        expect(getByText('Actual 45 min ago. Refreshing...')).toBeInTheDocument();
 
         formatSpy.mockRestore();
     });
@@ -40,7 +40,7 @@ describe('Timeout component', () => {
         const formatSpy = jest.spyOn(moment.prototype, 'format').mockReturnValue('2023-09-11 12:34:56');
 
         const { getByText } = render(<Timeout fetchedAt={fetchedAt}/>);
-        expect(getByText('Actual 2 hr ago')).toBeInTheDocument();
+        expect(getByText('Actual 2 hr ago. Refreshing...')).toBeInTheDocument();
 
         formatSpy.mockRestore();
     });
