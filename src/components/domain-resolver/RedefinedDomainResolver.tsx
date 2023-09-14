@@ -1,26 +1,51 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import _debounce from 'lodash/debounce';
 import styled, { ThemeProvider } from "styled-components";
-import { ContainerProps, RedefinedDomainResolverProps, InputProps, LogoProps, Asset } from "../../types";
+import {
+    Account,
+    Asset,
+    ContainerProps,
+    InputProps,
+    LogoProps,
+    RedefinedDomainResolverProps,
+    ResolveResponse,
+    ReverseAccount,
+    ReverseResponse,
+} from "../../types";
 import gradientLogo from "../../assets/small-logo.svg";
 import blackLogo from "../../assets/black-small-logo.svg";
 import { baseStyle, darkTheme, lightTheme } from "../../styles/baseStyle";
 import GlobalStyle from "../../styles/globalStyle";
-import { RedefinedResolver } from "@redefined/name-resolver-js";
-import { ASSETS_URL } from "../../config";
+import { API_URL, ASSETS_URL } from "../../config";
 import DropDown from "../dropdown";
 import { RedefinedDomainResolverProvider } from "../../context/RedefinedDomainResolverContext";
+import axios from "axios";
+import moment from "moment";
+import ReactLoading from "react-loading";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
-    const { width, height, placeholder, disabled, autoFocus, theme, type, hiddenAddressGap, resolverOptions, onUpdate } = props;
+    const {
+        width,
+        height,
+        placeholder,
+        disabled,
+        autoFocus,
+        theme,
+        type,
+        hiddenAddressGap,
+        resolverOptions,
+        onUpdate
+    } = props;
     const [dropDownActive, setDropDownActive] = useState(false);
     const [domain, setDomain] = useState("");
-    const [addresses, setAddresses] = useState([]);
-    const [domains, setDomains] = useState([]);
+    const [accounts, setAccounts] = useState<Account[]>([]);
+    const [reverseAccounts, setReverseAccounts] = useState<ReverseAccount[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [assets, setAssets] = useState<Asset[]>([]);
-    const resolver = useMemo(() => new RedefinedResolver(resolverOptions), []);
+    const [nextFetchTimeout, setNextFetchTimeout]= useState(0);
+    const domainRef = useRef(domain);
+    domainRef.current = domain;
 
     let actualResolveRequestVersion = 0;
 
@@ -30,10 +55,10 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
 
     const fetchAssets = useCallback(async () => {
         try {
-            const response = await fetch(ASSETS_URL);
-            setAssets(await response.json());
+            const response = await axios.get(ASSETS_URL);
+            setAssets(response.data);
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     }, []);
 
@@ -41,61 +66,134 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         fetchAssets();
     }, [fetchAssets]);
 
+    const resolve = useCallback(async (domain: string) => {
+
+        const params = new URLSearchParams();
+
+        params.set('domain', domain);
+
+        const networks = resolverOptions?.networks;
+        if (networks) {
+            params.set('networks', networks?.join(","));
+        }
+
+        const vendors = resolverOptions?.vendors;
+        if (vendors) {
+            params.set('vendors', vendors?.join(","));
+        }
+
+        try {
+            return (await axios.get<ResolveResponse>(`${API_URL}/resolve?${params.toString()}`)).data;
+        } catch (e) {
+            throw Error(`Failed to resolve! ${e.message}`);
+        }
+    }, [resolverOptions]);
+
+    const reverse = useCallback(async (address: string) => {
+        const params = new URLSearchParams();
+
+        params.set('address', address);
+
+        const vendors = resolverOptions?.vendors;
+
+        if (vendors) {
+            params.set('vendors', vendors?.join(","));
+        }
+
+        try {
+            return (await axios.get<ReverseResponse>(`${API_URL}/reverse?${params.toString()}`)).data;
+        } catch (e) {
+            throw Error(`Failed to reverse! ${e.message}`);
+        }
+    }, [resolverOptions]);
+
+    const initiateAutoFetchTimeout = useCallback(async (fetchedAt: number) => {
+        const now = moment();
+        const diff = now.diff(fetchedAt);
+
+        setNextFetchTimeout(60000 - diff);
+    }, []);
+
+    useEffect(() => {
+        let timeout = setTimeout(async () => await resolveDomain(domainRef.current), nextFetchTimeout);
+
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [nextFetchTimeout])
+
     const resolveDomain = async (value: string) => {
         onUpdate(null);
-        setAddresses([]);
-        setDomains([]);
         setError("");
 
         if (value.length) {
             const version = Date.now();
-            setDropDownActive(true);
             setLoading(true);
+            let completeness = 0;
+            let isActual = false;
+            let resolverResponse: ResolveResponse;
+            let reverseResponse: ReverseResponse;
 
             try {
                 actualResolveRequestVersion = version;
 
-                let resolverResponse;
-                let reverseResponse;
+                do {
 
-                switch (type) {
-                    case "resolve":
-                        resolverResponse = await resolver.resolve(value);
-                        reverseResponse = { response: [], errors: [] };
-                        break;
-                    case "reverse":
-                        reverseResponse = await resolver.reverse(value);
-                        resolverResponse = { response: [], errors: [] };
-                        break;
-                    default:
-                        resolverResponse = await resolver.resolve(value);
-                        reverseResponse = await resolver.reverse(value);
-                }
-
-                if (
-                    !resolverResponse.response.length && resolverResponse.errors.some(it => (
-                        it.vendor.includes("redefined")
-                        && it.error.includes("No records found for domain")
-                    ))
-                ) {
-                    setError(`This domain is registered but has no records.`)
-                } else {
-                    if (version == actualResolveRequestVersion) {
-                        setAddresses(resolverResponse.response);
-                        setDomains(reverseResponse.response);
+                    switch (type) {
+                        case "resolve":
+                            resolverResponse = await resolve(value);
+                            completeness = resolverResponse?.completeness || 0;
+                            break;
+                        case "reverse":
+                            reverseResponse = await reverse(value);
+                            completeness = resolverResponse?.completeness || 0;
+                            break;
+                        default:
+                            resolverResponse = await resolve(value);
+                            reverseResponse = await reverse(value);
+                            completeness = Math.min(resolverResponse?.completeness || 0, reverseResponse?.completeness || 0);
                     }
+
+                    if (version == actualResolveRequestVersion) {
+                        setAccounts(resolverResponse?.data || []);
+                        setReverseAccounts(reverseResponse?.data || []);
+
+                        const minFetchedAt = Math.min(
+                            ...resolverResponse?.data.map(it => it.fetchedAt) || [],
+                            ...reverseResponse?.data.map(it => it.fetchedAt) || []
+                        );
+
+                        isActual = minFetchedAt && moment().diff(minFetchedAt) < 60000;
+                    } else {
+                        break;
+                    }
+
+                    if (completeness < 1 || !isActual) {
+                        await new Promise((resolve) => setTimeout(resolve, 1000));
+                    }
+                } while (completeness < 1 && isActual);
+
+
+                if (resolverResponse?.data.length || reverseResponse?.data.length) {
+                    await initiateAutoFetchTimeout(
+                        Math.min(
+                            ...resolverResponse?.data.map(it => it.fetchedAt) || [],
+                            ...reverseResponse?.data.map(it => it.fetchedAt) || []
+                        )
+                    )
                 }
             } catch (e) {
+                console.log(e);
                 setError(e)
             }
             if (version == actualResolveRequestVersion) {
+                setDropDownActive(true);
                 setLoading(false);
             }
         }
     }
 
-    const resolveDomainWithDebounce
-        = useCallback(_debounce(resolveDomain, 500), []);
+    const resolveDomainWithDebounce = useCallback(_debounce(resolveDomain, 500), []);
 
     const onChangeValue = (value) => {
         setDropDownActive(false);
@@ -108,7 +206,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         }
     }
 
-    const onChangeInput = (e) => {
+    const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDomain(e.target.value);
         resolveDomainWithDebounce(e.target.value);
     }
@@ -117,7 +215,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         <Container width={width}>
             <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
                 <RedefinedDomainResolverProvider type={type} assets={assets} hiddenAddressGap={hiddenAddressGap}>
-                    <GlobalStyle/>
+                    <GlobalStyle />
                     <InputContainer onClick={onInputClick}>
                         <StyledLogo
                             inputHeight={height}
@@ -135,13 +233,20 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                             value={domain}
                             onChange={onChangeInput}
                         />
+                        {loading && (
+                            <StyledLoader
+                                type="spinningBubbles"
+                                color={baseStyle.brandColor}
+                                height={baseStyle.loader.height}
+                                width={baseStyle.loader.height}
+                            />
+                        )}
                     </InputContainer>
                     <DropDown
                         active={dropDownActive}
-                        loading={loading}
                         error={error}
-                        resolveContent={addresses}
-                        reverseContent={domains}
+                        resolveContent={accounts}
+                        reverseContent={reverseAccounts}
                         onChange={onChangeValue}
                         onClickOutside={() => setDropDownActive(false)}
                     />
@@ -162,7 +267,7 @@ const InputContainer = styled.div`
 `
 
 const StyledInput = styled.input<InputProps>`
-  padding: 0 0 0 calc(${p => p.height || baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - ${baseStyle.input.logo.padding} + ${baseStyle.input.logo.width} / 2);
+  padding: 0 40px 0 calc(${p => p.height || baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - ${baseStyle.input.logo.padding} + ${baseStyle.input.logo.width} / 2);
   width: 100%;
   background: ${(props) => props.disabled ? props.theme.colors.disabled : props.theme.colors.background};
   font-family: ${baseStyle.input.fontFamily};
@@ -199,5 +304,10 @@ const StyledLine = styled.div<LogoProps>`
   height: ${baseStyle.input.fontSize};
   background: ${(props) => props.theme.type === "light" ? "#222222" : "#ffffff"};
 `
+
+const StyledLoader = styled(ReactLoading)`
+  position: absolute;
+  right: 10px;
+`;
 
 export default RedefinedDomainResolver;

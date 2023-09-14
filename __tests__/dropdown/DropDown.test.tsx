@@ -1,35 +1,31 @@
 import React from "react";
 import { render, fireEvent, getAllByText } from "@testing-library/react";
-import { DropDownProps, ResolveItemProps, ReverseItemProps, Type } from "../../src/types";
+import { Account, DropDownProps, ResolveItemProps, ReverseAccount, ReverseItemProps, Type } from "../../src/types";
 import DropDown from "../../src/components/dropdown";
 import { lightTheme } from "../../src/styles/baseStyle";
 import { ThemeProvider } from "styled-components";
-import { Account, ReverseAccount } from "@redefined/name-resolver-js";
 import { RedefinedDomainResolverProvider } from "../../src/context/RedefinedDomainResolverContext";
 
 jest.mock("../../src/components/item-card/ResolveItem", () => (props: ResolveItemProps) =>
     <div>{props.item.address + props.item.network}</div>);
 jest.mock("../../src/components/item-card/ReverseItem", () => (props: ReverseItemProps) =>
     <div>{props.item.domain}</div>);
-jest.mock("react-loading", () => () =>
-    <div>Loading...</div>);
 
 describe("DropDown component", () => {
     const mockResolveContent: Account[] = [
-        { address: "Address1", network: "Network 1", from: "ResolverVendor1" },
-        { address: "Address2", network: "Network 2", from: "ResolverVendor2" },
+        { address: "Address1", network: "Network 1", vendor: "ResolverVendor1", fetchedAt: 1694685227142 },
+        { address: "Address2", network: "Network 2", vendor: "ResolverVendor2", fetchedAt: 1694685227142 },
     ];
 
     const mockReverseContent: ReverseAccount[] = [
-        { domain: "example.com", from: "ResolverVendor1" },
-        { domain: "example.org", from: "ResolverVendor2" },
+        { domain: "example.com", vendor: "ResolverVendor1", fetchedAt: 1694685227142 },
+        { domain: "example.org", vendor: "ResolverVendor2", fetchedAt: 1694685227142 },
     ];
 
     const mockProps: DropDownProps = {
         active: true,
         resolveContent: mockResolveContent,
         reverseContent: mockReverseContent,
-        loading: false,
         error: "",
         hiddenAddressGap: undefined,
         onChange: jest.fn(),
@@ -75,18 +71,6 @@ describe("DropDown component", () => {
             </ThemeProvider>
         );
         expect(container.firstChild).toBeNull();
-    });
-
-    it("SHOULD render loader when loading is true", () => {
-        const { getByText } = render(
-            <ThemeProvider theme={lightTheme}>
-                <RedefinedDomainResolverProvider {...mockContext}>
-                    <DropDown {...mockProps} loading={true}/>
-                </RedefinedDomainResolverProvider>
-            </ThemeProvider>
-        );
-        const loaderElement = getByText("Loading...");
-        expect(loaderElement).toBeInTheDocument();
     });
 
     it("SHOULD render resolveContent items when not loading and resolveContent has items", () => {

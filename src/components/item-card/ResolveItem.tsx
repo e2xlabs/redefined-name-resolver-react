@@ -1,11 +1,13 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
-import { ResolveItemProps, TypedResult } from "../../types";
+import { ResolveItemProps } from "../../types";
 import Icon from "@mdi/react";
 import { mdiContentCopy } from "@mdi/js";
 import { copyText, getAbbreviatedAddress } from "../../utils";
 import { baseStyle } from "../../styles/baseStyle";
 import { useRedefinedDomainResolverContext } from "../../context/RedefinedDomainResolverContext";
+import Timeout from "../timeout/Timeout";
+import moment from "moment";
 
 const ResolveItem = (props: ResolveItemProps) => {
     const { item, onChange } = props;
@@ -21,7 +23,7 @@ const ResolveItem = (props: ResolveItemProps) => {
     ), [assets]);
 
     return (
-        <ItemWrapper onClick={() => onChange({ ...item, type: "resolve" })}>
+        <ItemWrapper disabled={moment().diff(item.fetchedAt) > 60000} onClick={() => onChange({ ...item, type: "resolve" })}>
             <StyledContent>
                 <StyledLogo
                     width={baseStyle.dropDown.logo.width}
@@ -33,13 +35,14 @@ const ResolveItem = (props: ResolveItemProps) => {
                         {getAbbreviatedAddress(item.address, hiddenAddressGap?.leadingCharLimit, hiddenAddressGap?.trailingCharLimit)}
                     </StyledTitle>
                     <StyledSubTitle>
-                        {getAssetsByNetwork(item.network)?.name} from: <StyledSpan isRedefined={item.from.startsWith("redefined")}>
-                            {item.from.startsWith("redefined") ? "redefined" : item.from}
-                        </StyledSpan>
+                        {getAssetsByNetwork(item.network)?.name} from: <StyledSpan isRedefined={item.vendor.startsWith("redefined")}>
+                        {item.vendor.startsWith("redefined") ? "redefined" : item.vendor}
+                    </StyledSpan>
                     </StyledSubTitle>
                 </div>
             </StyledContent>
-            <div onClick={(e) => onCopyClick(e, item.address)}>
+            {item && <StyledTimeout fetchedAt={item.fetchedAt}/>}
+            <div style={{pointerEvents: "all"}} onClick={(e) => onCopyClick(e, item.address)}>
                 <StyledIcon path={mdiContentCopy}/>
             </div>
         </ItemWrapper>
@@ -57,14 +60,18 @@ const StyledSubTitle = styled.div`
   font-size: 12px;
 `
 
-const ItemWrapper = styled.div`
+const ItemWrapper = styled.div<{disabled: boolean}>`
   display: flex;
   padding: 5px 5px;
   justify-content: space-between;
   align-items: center;
+  background: ${(props) => props.disabled ? props.theme.colors.disabled : props.theme.colors.background};
+  pointer-events: ${(props) => props.disabled && "none"};
+  opacity: ${(props) => props.disabled ? 0.5 : 1};
+  border-radius: ${baseStyle.input.borderRadius};
 
   :hover {
-    background: ${({ theme }) => theme.colors.hover};
+    background: ${(props) => !props.disabled && props.theme.colors.hover};
     border-radius: ${baseStyle.input.borderRadius};
     cursor: pointer;
   }
@@ -93,6 +100,13 @@ const StyledIcon = styled(Icon)`
     transition: 0.5s ease all;
   }
 `
+
+const StyledTimeout = styled(Timeout)`
+  position: absolute;
+  bottom: 2px;
+  right: ${baseStyle.input.logo.padding};
+`
+
 const StyledSpan = styled.span<{ isRedefined: boolean }>`
   ${({ isRedefined }) => isRedefined ? baseStyle.brandTextColor : null}
 `;

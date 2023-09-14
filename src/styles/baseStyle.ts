@@ -62,6 +62,9 @@ export const baseStyle = {
     logo: {
       padding: "12px",
       width: "37px",
+    },
+    timeout: {
+      fontSize: "11px",
     }
   },
 
