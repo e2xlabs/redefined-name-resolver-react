@@ -9,7 +9,8 @@ import { RedefinedDomainResolverProvider } from "../../src/context/RedefinedDoma
 const mockProps: ReverseItemProps = {
     item: {
         domain: "example",
-        from: "MockResolverVendor",
+        vendor: "MockResolverVendor",
+        fetchedAt: 1694685227142
     },
     onChange: jest.fn(),
 };

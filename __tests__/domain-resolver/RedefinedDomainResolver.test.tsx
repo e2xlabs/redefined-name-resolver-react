@@ -1,146 +1,183 @@
-import { render, screen } from "@testing-library/react"
-import React from "react";
-import userEvent from "@testing-library/user-event";
-import { RedefinedResolver } from "@redefined/name-resolver-js";
-import _debounce from "lodash/debounce";
+import React from 'react';
+import { render, fireEvent, waitFor, act, findByText } from '@testing-library/react';
+import axios from 'axios';
 import RedefinedDomainResolver from "../../src/components/domain-resolver";
+import { API_URL, ASSETS_URL } from "../../src/config";
+import { Asset, ResolveResponse, ReverseResponse } from "../../src/types";
 
-const mockChildComponent = jest.fn().mockResolvedValue([{ dfds: "fdsfs" }]);
-jest.mock("../../src/components/dropdown", () => (props) => {
-    mockChildComponent(props);
-    return <div data-testid="dropdown"/>;
+Date.now = jest.fn().mockReturnValue(new Date(1694694967494));
+jest.mock('axios');
+jest.mock('lodash/debounce', () => jest.fn((fn) => fn));
+jest.mock("react-loading", () => () =>
+    <div>Loading...</div>);
+jest.mock('moment', () => {
+    return () => jest.requireActual('moment')(new Date(1694694967494));
 });
 
-const mockResolve = jest.fn();
-jest.mock("@redefined/name-resolver-js", () => {
-        return {
-            RedefinedResolver: jest.fn().mockImplementation(() => {
-                return { resolve: mockResolve }
-            })
+describe('RedefinedDomainResolver Component', () => {
+    jest.useFakeTimers();
+
+    const resolveResponse: ResolveResponse = {
+        data: [
+            {
+                address: '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+                network: 'Network1',
+                vendor: 'Vendor1',
+                fetchedAt: 1694694957494,
+            },
+        ],
+        completeness: 1,
+        processedVendors: ['Vendor1'],
+    };
+
+    const reverseResponse: ReverseResponse = {
+        data: [
+            {
+                domain: 'example.com',
+                vendor: 'Vendor1',
+                fetchedAt: 1694694957494,
+            },
+        ],
+        fetchedAt: 1694694957494,
+        completeness: 1,
+        processedVendors: ['Vendor1'],
+    };
+
+    const assets: Asset[] = [
+        {
+            key: '1',
+            logo: 'logo.png',
+            name: 'Asset Name',
+            symbol: 'AN',
+            type: 'crypto',
+        },
+        {
+            key: '2',
+            logo: 'logo2.png',
+            name: 'Asset Name2',
+            symbol: 'AN2',
+            type: 'crypto2',
         }
-    }
-);
-
-jest.mock("lodash/debounce");
-
-jest.spyOn(React, 'useCallback').mockImplementation(f => f);
-
-describe("RedefinedDomainResolver component", () => {
-    const domain = "myDomain";
+    ];
 
     beforeEach(() => {
-        mockResolve.mockClear();
+        jest.clearAllMocks();
     });
 
-    it("SHOULD render input with log IF mount component", () => {
-        render(
-            <RedefinedDomainResolver onUpdate={() => {}}/>
-        );
+    it('SHOULD render RedefinedDomainResolver component', () => {
+        const { getByPlaceholderText } = render(<RedefinedDomainResolver onUpdate={() => {}} />);
+        const inputElement = getByPlaceholderText('Type to search');
+        expect(inputElement).toBeInTheDocument();
+    });
 
-        const logo = screen.getByAltText("logo");
-        const input = screen.getByRole("textbox");
+    it('SHOULD update input value and trigger debounce', async () => {
+        (axios.get as jest.Mock).mockResolvedValueOnce({ data: assets });
+        (axios.get as jest.Mock).mockResolvedValueOnce({ data: resolveResponse });
+        (axios.get as jest.Mock).mockResolvedValueOnce({ data: reverseResponse });
 
-        expect(logo).toBeInTheDocument();
-        expect(input).toBeInTheDocument();
-    })
+        const { getByPlaceholderText } = render(<RedefinedDomainResolver onUpdate={() => {}} />);
+        const inputElement = getByPlaceholderText('Type to search');
 
-    it("SHOULD render input with log IF mount component", () => {
-        render(
-            <RedefinedDomainResolver onUpdate={() => {}}/>
-        );
+        act(() => {
+            fireEvent.change(inputElement, { target: { value: 'example.com' } });
+        });
 
-        const logo = screen.getByAltText("logo");
-        const input = screen.getByRole("textbox");
+        expect(inputElement).toHaveValue("example.com");
+        await waitFor(() => expect((axios.get as jest.Mock)).toHaveBeenCalledWith(ASSETS_URL));
+        await waitFor(() => expect((axios.get as jest.Mock)).toHaveBeenCalledWith(API_URL + "/resolve?domain=example.com"));
+        await waitFor(() => expect((axios.get as jest.Mock)).toHaveBeenCalledWith(API_URL + "/reverse?address=example.com"));
 
-        expect(logo).toBeInTheDocument();
-        expect(input).toBeInTheDocument();
-    })
+    });
 
-    it("SHOULD change domain value IF typing text", async () => {
-        _debounce.mockImplementation(fn => fn);
+    it('SHOULD fetch assets on component mount', async () => {
+        (axios.get as jest.Mock).mockResolvedValueOnce({ data: assets });
+        render(<RedefinedDomainResolver onUpdate={() => {}} />);
 
-        render(
-            <RedefinedDomainResolver onUpdate={() => {}}/>
-        );
+        await waitFor(() => expect((axios.get as jest.Mock)).toHaveBeenCalledTimes(1));
+        await waitFor(() => expect((axios.get as jest.Mock)).toHaveBeenCalledWith(ASSETS_URL));
+    });
 
-        expect(screen.queryByDisplayValue(/myDomain/)).toBeNull();
+    it('SHOULD display error message on failed API request', async () => {
+        (axios.get as jest.Mock).mockRejectedValue(new Error('API Error'));
+        const { getByPlaceholderText, findByText } = render(<RedefinedDomainResolver onUpdate={() => {}} />);
+        const inputElement = getByPlaceholderText('Type to search');
 
-        const input = screen.getByRole("textbox");
+        fireEvent.change(inputElement, { target: { value: 'example.com' } });
 
-        await userEvent.type(input, "myDomain");
+        const errorText = await findByText('Failed to resolve! API Error');
+        expect(errorText).toBeInTheDocument();
+    });
 
-        expect(screen.queryByDisplayValue(/myDomain/)).toBeInTheDocument();
-    })
+    it('SHOULD open dropdown IF input click and content already exists', () => {
+        (axios.get as jest.Mock).mockResolvedValueOnce({ data: assets });
+        (axios.get as jest.Mock).mockResolvedValueOnce({ data: resolveResponse });
+        (axios.get as jest.Mock).mockResolvedValueOnce({ data: reverseResponse });
+
+        const { getByPlaceholderText, container } = render(<RedefinedDomainResolver onUpdate={() => {}} />);
+        const inputElement = getByPlaceholderText('Type to search');
+
+        act(() => {
+            fireEvent.change(inputElement, { target: { value: 'example.com' } });
+        });
+
+        expect(inputElement).toHaveValue("example.com");
+
+        fireEvent.click(inputElement);
+        const dropdownElement = container.querySelector(".dropdown");
+        expect(dropdownElement).toBeInTheDocument();
+    });
+
+    it('SHOULD update loading state during data fetching', async () => {
+        (axios.get as jest.Mock).mockResolvedValueOnce({ data: assets });
+        (axios.get as jest.Mock).mockResolvedValueOnce({ data: resolveResponse });
+        (axios.get as jest.Mock).mockResolvedValueOnce({ data: reverseResponse });
+
+        const { getByPlaceholderText, getByText, queryByTestId } = render(<RedefinedDomainResolver onUpdate={() => {}} />);
+        const inputElement = getByPlaceholderText('Type to search');
+
+        fireEvent.change(inputElement, { target: { value: 'example.com' } });
+
+        const loadingIndicator = await getByText('Loading...');
+        expect(loadingIndicator).toBeInTheDocument();
+    });
+
+    it('SHOULD trigger onUpdate callback with selected value', async () => {
+        (axios.get as jest.Mock).mockResolvedValueOnce({ data: assets });
+        (axios.get as jest.Mock).mockResolvedValue({ data: resolveResponse });
+
+        const mockOnUpdate = jest.fn();
+        const { getByPlaceholderText, getByText } = render(<RedefinedDomainResolver type={"resolve"} onUpdate={mockOnUpdate} />);
+        const inputElement = getByPlaceholderText('Type to search');
+        const inputValue = 'example.com';
+
+        await act(() => {
+            fireEvent.change(inputElement, { target: { value: 'example.com' } });
+        });
+
+        await act(() => {
+            fireEvent.click(getByText("0xffff ... ffff"));
+        });
 
 
-    it("SHOULD open dropdown IF typing text", async () => {
-        _debounce.mockImplementation(fn => fn);
+        await waitFor(() => {
+            expect(mockOnUpdate).toHaveBeenNthCalledWith(1, null);
+            expect(mockOnUpdate).toHaveBeenNthCalledWith(2, {
+                address: '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+                network: 'Network1',
+                vendor: 'Vendor1',
+                type: 'resolve',
+                fetchedAt: 1694694957494,
+            });
+        });
+    });
 
-        render(
-            <RedefinedDomainResolver onUpdate={() => {}}/>
-        );
+    it('SHOULD not open dropdown when input is empty', () => {
+        const { getByPlaceholderText, queryByTestId } = render(<RedefinedDomainResolver onUpdate={() => {}} />);
+        const inputElement = getByPlaceholderText('Type to search');
 
-        expect(screen.queryByDisplayValue(/myDomain/)).toBeNull();
+        fireEvent.click(inputElement);
+        const dropdown = queryByTestId('dropdown');
+        expect(dropdown).toBeNull();
+    });
 
-        const input = screen.getByRole("textbox");
-
-        await userEvent.type(input, domain);
-
-        expect(screen.getByTestId("dropdown")).toBeInTheDocument();
-    })
-
-    it("SHOULD called DropDown component with props If DomainResolver is passed props", async () => {
-        _debounce.mockImplementation(fn => fn);
-
-        render(
-            <RedefinedDomainResolver
-                type={"resolve"}
-                hiddenAddressGap={{ leadingCharLimit: 5, trailingCharLimit: 6 }}
-                onUpdate={jest.fn()}
-            />
-        );
-
-        expect(mockChildComponent).toHaveBeenCalledWith(
-            expect.objectContaining({
-                active: false,
-                loading: false,
-                error: "",
-                resolveContent: [],
-                reverseContent: [],
-            })
-        );
-    })
-
-    it("SHOULD loading account IF typing text", async () => {
-        _debounce.mockImplementation(fn => fn);
-
-        render(
-            <RedefinedDomainResolver onUpdate={() => {}}/>
-        );
-
-        const input = screen.getByRole("textbox");
-
-        await userEvent.type(input, domain);
-
-        expect(screen.queryByDisplayValue(/myDomain/)).toBeInTheDocument();
-
-        expect(RedefinedResolver).toBeTruthy();
-
-    })
-
-    it("SHOULD loading assets IF render component", async () => {
-        global.fetch = jest.fn(() =>
-            Promise.resolve({
-                json: () => Promise.resolve({ mock: "mock" }),
-            }),
-        ) as jest.Mock;
-
-        _debounce.mockImplementation(fn => fn);
-
-        render(
-            <RedefinedDomainResolver onUpdate={() => {}}/>
-        );
-
-        expect(global.fetch).toHaveBeenCalled();
-    })
-})
+});

@@ -10,7 +10,8 @@ const mockProps: ResolveItemProps = {
     item: {
         address: "0x12300000qt000b00000000000fdsoifj43roi34n",
         network: "MockNetwork",
-        from: "MockResolverVendor",
+        vendor: "MockResolverVendor",
+        fetchedAt: 1694685227142
     },
     onChange: jest.fn(),
 };

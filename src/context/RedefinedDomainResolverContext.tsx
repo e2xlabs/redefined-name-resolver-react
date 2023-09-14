@@ -22,9 +22,5 @@ export const RedefinedDomainResolverProvider = ({ type, assets, hiddenAddressGap
 );
 
 export const useRedefinedDomainResolverContext = () => {
-    const context = useContext(RedefinedDomainResolverContext);
-    if (!context) {
-        throw new Error("useRedefinedDomainResolverContext must be used within a RedefinedDomainResolverProvider");
-    }
-    return context;
+    return useContext(RedefinedDomainResolverContext);
 };

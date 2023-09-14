@@ -58,7 +58,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
             const response = await axios.get(ASSETS_URL);
             setAssets(response.data);
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     }, []);
 
@@ -87,7 +87,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         } catch (e) {
             throw Error(`Failed to resolve! ${e.message}`);
         }
-    }, []);
+    }, [resolverOptions]);
 
     const reverse = useCallback(async (address: string) => {
         const params = new URLSearchParams();
@@ -105,14 +105,14 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         } catch (e) {
             throw Error(`Failed to reverse! ${e.message}`);
         }
-    }, []);
+    }, [resolverOptions]);
 
-    const initiateAutoFetchTimeout = async (fetchedAt: number) => {
+    const initiateAutoFetchTimeout = useCallback(async (fetchedAt: number) => {
         const now = moment();
         const diff = now.diff(fetchedAt);
 
         setNextFetchTimeout(60000 - diff);
-    }
+    }, []);
 
     useEffect(() => {
         let timeout = setTimeout(async () => await resolveDomain(domainRef.current), nextFetchTimeout);
@@ -131,13 +131,13 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
             setLoading(true);
             let completeness = 0;
             let isActual = false;
+            let resolverResponse: ResolveResponse;
+            let reverseResponse: ReverseResponse;
 
             try {
                 actualResolveRequestVersion = version;
 
                 do {
-                    let resolverResponse: ResolveResponse;
-                    let reverseResponse: ReverseResponse;
 
                     switch (type) {
                         case "resolve":
@@ -157,31 +157,33 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                     if (version == actualResolveRequestVersion) {
                         setAccounts(resolverResponse?.data || []);
                         setReverseAccounts(reverseResponse?.data || []);
+
                         const minFetchedAt = Math.min(
                             ...resolverResponse?.data.map(it => it.fetchedAt) || [],
                             ...reverseResponse?.data.map(it => it.fetchedAt) || []
                         );
-                        isActual = minFetchedAt && moment().diff(minFetchedAt) < 60000;
 
-                        if (resolverResponse?.data.length || reverseResponse?.data.length) {
-                            await initiateAutoFetchTimeout(
-                                Math.min(
-                                    ...resolverResponse?.data.map(it => it.fetchedAt) || [],
-                                    ...reverseResponse?.data.map(it => it.fetchedAt) || []
-                                )
-                            )
-                        }
+                        isActual = minFetchedAt && moment().diff(minFetchedAt) < 60000;
                     } else {
                         break;
                     }
 
                     if (completeness < 1 || !isActual) {
-                        console.log(completeness);
-                        console.log(isActual);
-                        await new Promise((resolve) => setTimeout(resolve, 3000));
+                        await new Promise((resolve) => setTimeout(resolve, 1000));
                     }
                 } while (completeness < 1 && isActual);
+
+
+                if (resolverResponse?.data.length || reverseResponse?.data.length) {
+                    await initiateAutoFetchTimeout(
+                        Math.min(
+                            ...resolverResponse?.data.map(it => it.fetchedAt) || [],
+                            ...reverseResponse?.data.map(it => it.fetchedAt) || []
+                        )
+                    )
+                }
             } catch (e) {
+                console.log(e);
                 setError(e)
             }
             if (version == actualResolveRequestVersion) {
@@ -204,7 +206,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         }
     }
 
-    const onChangeInput = (e) => {
+    const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDomain(e.target.value);
         resolveDomainWithDebounce(e.target.value);
     }
@@ -213,7 +215,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         <Container width={width}>
             <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
                 <RedefinedDomainResolverProvider type={type} assets={assets} hiddenAddressGap={hiddenAddressGap}>
-                    <GlobalStyle/>
+                    <GlobalStyle />
                     <InputContainer onClick={onInputClick}>
                         <StyledLogo
                             inputHeight={height}
@@ -221,7 +223,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                             src={theme === "dark" ? gradientLogo : blackLogo}
                             alt="logo"
                         />
-                        <StyledLine/>
+                        <StyledLine />
                         <StyledInput
                             isDropDownActive={dropDownActive}
                             disabled={disabled}
