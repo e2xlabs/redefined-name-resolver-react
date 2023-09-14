@@ -29,7 +29,7 @@ const ReverseItem = (props: ReverseItemProps) => {
                 </div>
             </StyledContent>
             {item && <StyledTimeout fetchedAt={item.fetchedAt}/>}
-            <div onClick={(e) => onCopyClick(e, item.domain)}>
+            <div style={{pointerEvents: "all"}} onClick={(e) => onCopyClick(e, item.domain)}>
                 <StyledIcon path={mdiContentCopy}/>
             </div>
         </ItemWrapper>
@@ -53,10 +53,12 @@ const ItemWrapper = styled.div<{disabled: boolean}>`
   justify-content: space-between;
   align-items: center;
   background: ${(props) => props.disabled ? props.theme.colors.disabled : props.theme.colors.background};
+  pointer-events: ${(props) => props.disabled && "none"};
+  opacity: ${(props) => props.disabled ? 0.5 : 1};
   border-radius: ${baseStyle.input.borderRadius};
 
   :hover {
-    background: ${({ theme }) => theme.colors.hover};
+    background: ${(props) => !props.disabled && props.theme.colors.hover};
     border-radius: ${baseStyle.input.borderRadius};
     cursor: pointer;
   }
