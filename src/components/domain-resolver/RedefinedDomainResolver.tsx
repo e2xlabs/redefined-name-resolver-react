@@ -171,8 +171,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                     if (completeness < 1 || !isActual) {
                         await new Promise((resolve) => setTimeout(resolve, 1000));
                     }
-                } while (completeness < 1 && isActual);
-
+                } while (completeness < 1 || !isActual);
 
                 if (resolverResponse?.data.length || reverseResponse?.data.length) {
                     await initiateAutoFetchTimeout(
