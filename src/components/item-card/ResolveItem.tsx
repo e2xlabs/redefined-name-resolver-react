@@ -7,6 +7,7 @@ import { copyText, getAbbreviatedAddress } from "../../utils";
 import { baseStyle } from "../../styles/baseStyle";
 import { useRedefinedDomainResolverContext } from "../../context/RedefinedDomainResolverContext";
 import Timeout from "../timeout/Timeout";
+import moment from "moment";
 
 const ResolveItem = (props: ResolveItemProps) => {
     const { item, onChange } = props;
@@ -22,7 +23,7 @@ const ResolveItem = (props: ResolveItemProps) => {
     ), [assets]);
 
     return (
-        <ItemWrapper onClick={() => onChange({ ...item, type: "resolve" })}>
+        <ItemWrapper disabled={moment().diff(item.fetchedAt) > 60000} onClick={() => onChange({ ...item, type: "resolve" })}>
             <StyledContent>
                 <StyledLogo
                     width={baseStyle.dropDown.logo.width}
@@ -34,8 +35,7 @@ const ResolveItem = (props: ResolveItemProps) => {
                         {getAbbreviatedAddress(item.address, hiddenAddressGap?.leadingCharLimit, hiddenAddressGap?.trailingCharLimit)}
                     </StyledTitle>
                     <StyledSubTitle>
-                        {getAssetsByNetwork(item.network)?.name} from: <StyledSpan
-                        isRedefined={item.vendor.startsWith("redefined")}>
+                        {getAssetsByNetwork(item.network)?.name} from: <StyledSpan isRedefined={item.vendor.startsWith("redefined")}>
                         {item.vendor.startsWith("redefined") ? "redefined" : item.vendor}
                     </StyledSpan>
                     </StyledSubTitle>
@@ -60,11 +60,13 @@ const StyledSubTitle = styled.div`
   font-size: 12px;
 `
 
-const ItemWrapper = styled.div`
+const ItemWrapper = styled.div<{disabled: boolean}>`
   display: flex;
   padding: 5px 5px;
   justify-content: space-between;
   align-items: center;
+  background: ${(props) => props.disabled ? props.theme.colors.disabled : props.theme.colors.background};
+  border-radius: ${baseStyle.input.borderRadius};
 
   :hover {
     background: ${({ theme }) => theme.colors.hover};

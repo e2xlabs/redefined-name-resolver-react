@@ -5,6 +5,8 @@ import Icon from "@mdi/react";
 import { mdiContentCopy } from "@mdi/js";
 import { copyText } from "../../utils";
 import { baseStyle } from "../../styles/baseStyle";
+import Timeout from "../timeout/Timeout";
+import moment from "moment/moment";
 
 const ReverseItem = (props: ReverseItemProps) => {
     const { item, onChange } = props;
@@ -15,7 +17,7 @@ const ReverseItem = (props: ReverseItemProps) => {
     }
 
     return (
-        <ItemWrapper onClick={() => onChange({ ...item, type: "reverse" })}>
+        <ItemWrapper disabled={moment().diff(item.fetchedAt) > 60000} onClick={() => onChange({ ...item, type: "reverse" })}>
             <StyledContent>
                 <div>
                     <StyledTitle>{item.domain}</StyledTitle>
@@ -26,6 +28,7 @@ const ReverseItem = (props: ReverseItemProps) => {
                     </StyledSubTitle>
                 </div>
             </StyledContent>
+            {item && <StyledTimeout fetchedAt={item.fetchedAt}/>}
             <div onClick={(e) => onCopyClick(e, item.domain)}>
                 <StyledIcon path={mdiContentCopy}/>
             </div>
@@ -44,11 +47,13 @@ const StyledSubTitle = styled.div`
   font-size: 12px;
 `
 
-const ItemWrapper = styled.div`
+const ItemWrapper = styled.div<{disabled: boolean}>`
   display: flex;
   padding: 5px 5px;
   justify-content: space-between;
   align-items: center;
+  background: ${(props) => props.disabled ? props.theme.colors.disabled : props.theme.colors.background};
+  border-radius: ${baseStyle.input.borderRadius};
 
   :hover {
     background: ${({ theme }) => theme.colors.hover};
@@ -77,5 +82,11 @@ const StyledIcon = styled(Icon)`
 const StyledSpan = styled.span<{ isRedefined: boolean }>`
   ${({ isRedefined }) => isRedefined ? baseStyle.brandTextColor : null}
 `;
+
+const StyledTimeout = styled(Timeout)`
+  position: absolute;
+  bottom: 2px;
+  right: ${baseStyle.input.logo.padding};
+`
 
 export default ReverseItem;

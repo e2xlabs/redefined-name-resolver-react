@@ -1,16 +1,16 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import _debounce from 'lodash/debounce';
 import styled, { ThemeProvider } from "styled-components";
 import {
+    Account,
+    Asset,
     ContainerProps,
-    RedefinedDomainResolverProps,
     InputProps,
     LogoProps,
-    Asset,
+    RedefinedDomainResolverProps,
     ResolveResponse,
-    ReverseResponse,
-    Account,
     ReverseAccount,
+    ReverseResponse,
 } from "../../types";
 import gradientLogo from "../../assets/small-logo.svg";
 import blackLogo from "../../assets/black-small-logo.svg";
@@ -21,6 +21,7 @@ import DropDown from "../dropdown";
 import { RedefinedDomainResolverProvider } from "../../context/RedefinedDomainResolverContext";
 import axios from "axios";
 import moment from "moment";
+import ReactLoading from "react-loading";
 
 const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
     const {
@@ -42,7 +43,9 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [assets, setAssets] = useState<Asset[]>([]);
-    const [fetchTimeout, setFetchTimeout] = useState<any>(null);
+    const [nextFetchTimeout, setNextFetchTimeout]= useState(0);
+    const domainRef = useRef(domain);
+    domainRef.current = domain;
 
     let actualResolveRequestVersion = 0;
 
@@ -104,42 +107,30 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         }
     }, []);
 
-    const initiateAutoFetchTimeout = async (domain: string, fetchedAt: number) => {
-        console.log(domain);
-        clearFetchTimeout();
-        const diff = moment().diff(fetchedAt);
-        console.log(diff);
+    const initiateAutoFetchTimeout = async (fetchedAt: number) => {
+        const now = moment();
+        const diff = now.diff(fetchedAt);
 
-        if (diff > 65 * 1000) {
-            await resolveDomain(domain);
-        }
-
-        const timeout = setTimeout(async () => {
-            await resolveDomain(domain);
-        }, 55 * 1000);
-
-        setFetchTimeout(timeout);
+        setNextFetchTimeout(60000 - diff);
     }
 
-    const clearFetchTimeout = () => {
-        setFetchTimeout(() => {
-            clearTimeout(fetchTimeout);
-            return null;
-        })
-    }
+    useEffect(() => {
+        let timeout = setTimeout(async () => await resolveDomain(domainRef.current), nextFetchTimeout);
+
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [nextFetchTimeout])
 
     const resolveDomain = async (value: string) => {
-        console.log(1);
         onUpdate(null);
-        setAccounts([]);
-        setReverseAccounts([]);
         setError("");
 
         if (value.length) {
             const version = Date.now();
-            setDropDownActive(true);
             setLoading(true);
             let completeness = 0;
+            let isActual = false;
 
             try {
                 actualResolveRequestVersion = version;
@@ -151,7 +142,6 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                     switch (type) {
                         case "resolve":
                             resolverResponse = await resolve(value);
-                            console.log(resolverResponse);
                             completeness = resolverResponse?.completeness || 0;
                             break;
                         case "reverse":
@@ -164,36 +154,38 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                             completeness = Math.min(resolverResponse?.completeness || 0, reverseResponse?.completeness || 0);
                     }
 
-                    if (version != actualResolveRequestVersion) {
-                        break;
-                    }
-
-                    setAccounts(resolverResponse?.data || []);
-                    setReverseAccounts(reverseResponse?.data || []);
-
                     if (version == actualResolveRequestVersion) {
                         setAccounts(resolverResponse?.data || []);
                         setReverseAccounts(reverseResponse?.data || []);
+                        const minFetchedAt = Math.min(
+                            ...resolverResponse?.data.map(it => it.fetchedAt) || [],
+                            ...reverseResponse?.data.map(it => it.fetchedAt) || []
+                        );
+                        isActual = minFetchedAt && moment().diff(minFetchedAt) < 60000;
 
                         if (resolverResponse?.data.length || reverseResponse?.data.length) {
                             await initiateAutoFetchTimeout(
-                                value,
                                 Math.min(
                                     ...resolverResponse?.data.map(it => it.fetchedAt) || [],
                                     ...reverseResponse?.data.map(it => it.fetchedAt) || []
                                 )
                             )
                         }
+                    } else {
+                        break;
                     }
 
-                    if (completeness < 1) {
-                        await new Promise((resolve) => setTimeout(resolve, 300));
+                    if (completeness < 1 || !isActual) {
+                        console.log(completeness);
+                        console.log(isActual);
+                        await new Promise((resolve) => setTimeout(resolve, 3000));
                     }
-                } while (completeness < 1);
+                } while (completeness < 1 && isActual);
             } catch (e) {
                 setError(e)
             }
             if (version == actualResolveRequestVersion) {
+                setDropDownActive(true);
                 setLoading(false);
             }
         }
@@ -239,10 +231,17 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                             value={domain}
                             onChange={onChangeInput}
                         />
+                        {loading && (
+                            <StyledLoader
+                                type="spinningBubbles"
+                                color={baseStyle.brandColor}
+                                height={baseStyle.loader.height}
+                                width={baseStyle.loader.height}
+                            />
+                        )}
                     </InputContainer>
                     <DropDown
                         active={dropDownActive}
-                        loading={loading}
                         error={error}
                         resolveContent={accounts}
                         reverseContent={reverseAccounts}
@@ -266,7 +265,7 @@ const InputContainer = styled.div`
 `
 
 const StyledInput = styled.input<InputProps>`
-  padding: 0 0 0 calc(${p => p.height || baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - ${baseStyle.input.logo.padding} + ${baseStyle.input.logo.width} / 2);
+  padding: 0 40px 0 calc(${p => p.height || baseStyle.input.height} + 2 * ${baseStyle.input.borderWidth} - ${baseStyle.input.logo.padding} + ${baseStyle.input.logo.width} / 2);
   width: 100%;
   background: ${(props) => props.disabled ? props.theme.colors.disabled : props.theme.colors.background};
   font-family: ${baseStyle.input.fontFamily};
@@ -303,5 +302,10 @@ const StyledLine = styled.div<LogoProps>`
   height: ${baseStyle.input.fontSize};
   background: ${(props) => props.theme.type === "light" ? "#222222" : "#ffffff"};
 `
+
+const StyledLoader = styled(ReactLoading)`
+  position: absolute;
+  right: 10px;
+`;
 
 export default RedefinedDomainResolver;

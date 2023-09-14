@@ -12,7 +12,7 @@ const Timeout = ({ fetchedAt }: { fetchedAt: number }) => {
         return () => {
             clearInterval(intervalId);
         };
-    }, []);
+    }, [fetchedAt]);
 
     return <StyledFetchedAt>{data}</StyledFetchedAt>
 }

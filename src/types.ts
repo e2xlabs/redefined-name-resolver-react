@@ -15,7 +15,6 @@ export type ReverseAccount = {
 
 export type ResolveResponse = {
   data: Account[];
-  fetchedAt: number;
   completeness: number;
   processedVendors: ResolverVendor[];
 }
@@ -31,7 +30,6 @@ export type DropDownProps = {
   active: boolean;
   resolveContent: Account[];
   reverseContent: ReverseAccount[];
-  loading: boolean;
   error: string | Error;
   hiddenAddressGap?: HiddenAddressGap;
   onChange?: (value: TypedResult) => void;

@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { DropDownProps } from "../../types";
 import { getErrorMessage } from "../../utils";
-import ReactLoading from "react-loading";
 import { baseStyle } from "../../styles/baseStyle";
 import ResolveItem from "../item-card/ResolveItem";
 import ReverseItem from "../item-card/ReverseItem";
@@ -13,7 +12,6 @@ const DropDown = (props: DropDownProps) => {
         active,
         resolveContent,
         reverseContent,
-        loading,
         error,
         onChange,
         onClickOutside
@@ -42,15 +40,7 @@ const DropDown = (props: DropDownProps) => {
 
     return active ? (
         <StyledDropDown className="dropdown" ref={ref}>
-            {loading && (
-                <StyledLoader
-                    type="spinningBubbles"
-                    color={baseStyle.brandColor}
-                    height={baseStyle.loader.height}
-                    width={baseStyle.loader.height}
-                />
-            )}
-            {!loading && (resolveContent.length || reverseContent.length) ? (
+            {resolveContent.length || reverseContent.length ? (
                 <UnorderedList>
                     {resolveContent
                         .sort((a, b) => a.network?.localeCompare(b.network) || 0)
@@ -69,7 +59,7 @@ const DropDown = (props: DropDownProps) => {
                     ))}
                 </UnorderedList>
             ) : null}
-            {!loading && !error && !(resolveContent.length || reverseContent.length) ? (
+            {!error && !(resolveContent.length || reverseContent.length) ? (
                 <StyledNotFoundMessage>{noFoundMessages[type] || "No addresses or domains found"}</StyledNotFoundMessage>
             ) : null}
             {error ? <StyledErrorMessage>{getErrorMessage(error)}</StyledErrorMessage> : null}
@@ -99,11 +89,6 @@ const UnorderedList = styled.ul`
 
 const ListItem = styled.li`
   font-weight: 300;
-`;
-
-const StyledLoader = styled(ReactLoading)`
-  margin: 0 auto;
-  padding: 10px;
 `;
 
 const StyledErrorMessage = styled.div`
