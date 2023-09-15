@@ -35,6 +35,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         hiddenAddressGap,
         resolverOptions,
         defaultValue,
+        onUpdateInput,
         onUpdate
     } = props;
     const [dropDownActive, setDropDownActive] = useState(false);
@@ -214,6 +215,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
 
     const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDomain(e.target.value);
+        onUpdateInput(e.target.value);
         resolveDomainWithDebounce(e.target.value);
     }
 

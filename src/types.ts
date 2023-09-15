@@ -70,6 +70,7 @@ export interface RedefinedDomainResolverProps {
   resolverOptions?: ResolverOptions;
   placeholder?: string;
   defaultValue?: string;
+  onUpdateInput?(val: string): void;
 
   onUpdate(result: TypedResult): void;
 }
