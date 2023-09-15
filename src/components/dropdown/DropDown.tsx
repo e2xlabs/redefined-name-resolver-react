@@ -6,6 +6,7 @@ import { baseStyle } from "../../styles/baseStyle";
 import ResolveItem from "../item-card/ResolveItem";
 import ReverseItem from "../item-card/ReverseItem";
 import { useRedefinedDomainResolverContext } from "../../context/RedefinedDomainResolverContext";
+import moment from "moment";
 
 const DropDown = (props: DropDownProps) => {
     const {
@@ -45,7 +46,7 @@ const DropDown = (props: DropDownProps) => {
                     {resolveContent
                         .sort((a, b) => a.network?.localeCompare(b.network) || 0)
                         .map((item, key) => (
-                            <ListItem key={key}>
+                            <ListItem disabled={moment().diff(item.fetchedAt) > 60000} key={key}>
                                 <ResolveItem
                                     item={item}
                                     onChange={onChange}
@@ -53,7 +54,7 @@ const DropDown = (props: DropDownProps) => {
                             </ListItem>
                         ))}
                     {reverseContent.map((item, key) => (
-                        <ListItem key={key}>
+                        <ListItem disabled={moment().diff(item.fetchedAt) > 60000} key={key}>
                             <ReverseItem item={item} onChange={onChange}/>
                         </ListItem>
                     ))}
@@ -82,13 +83,26 @@ const StyledDropDown = styled.div`
 const UnorderedList = styled.ul`
   list-style: none;
   margin: 0;
-  padding: 5px 5px;
+  padding: 0;
   max-height: 30vh;
   overflow: auto;
 `;
 
-const ListItem = styled.li`
+const ListItem = styled.li<{disabled: boolean}>`
   font-weight: 300;
+  pointer-events: ${(props) => props.disabled && "none"};
+  opacity: ${(props) => props.disabled ? 0.5 : 1};
+  padding: 0 17px;
+
+  :hover {
+    background: ${(props) => !props.disabled && props.theme.colors.hover};
+    cursor: pointer;
+  }
+  
+  :last-child {
+    border-bottom-left-radius: ${baseStyle.input.borderRadius};
+    border-bottom-right-radius: ${baseStyle.input.borderRadius};
+  }
 `;
 
 const StyledErrorMessage = styled.div`

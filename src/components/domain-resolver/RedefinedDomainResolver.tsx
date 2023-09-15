@@ -34,10 +34,11 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
         type,
         hiddenAddressGap,
         resolverOptions,
+        defaultValue,
         onUpdate
     } = props;
     const [dropDownActive, setDropDownActive] = useState(false);
-    const [domain, setDomain] = useState("");
+    const [domain, setDomain] = useState(defaultValue || "");
     const [accounts, setAccounts] = useState<Account[]>([]);
     const [reverseAccounts, setReverseAccounts] = useState<ReverseAccount[]>([]);
     const [loading, setLoading] = useState(false);
@@ -158,6 +159,10 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
                         setAccounts(resolverResponse?.data || []);
                         setReverseAccounts(reverseResponse?.data || []);
 
+                        if (resolverResponse?.data.length || reverseResponse?.data.length) {
+                            setDropDownActive(true);
+                        }
+
                         const minFetchedAt = Math.min(
                             ...resolverResponse?.data.map(it => it.fetchedAt) || [],
                             ...reverseResponse?.data.map(it => it.fetchedAt) || []
@@ -184,9 +189,11 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
             } catch (e) {
                 console.log(e);
                 setError(e)
-            }
-            if (version == actualResolveRequestVersion) {
+            } finally {
                 setDropDownActive(true);
+            }
+
+            if (version == actualResolveRequestVersion) {
                 setLoading(false);
             }
         }

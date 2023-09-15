@@ -7,7 +7,6 @@ import { copyText, getAbbreviatedAddress } from "../../utils";
 import { baseStyle } from "../../styles/baseStyle";
 import { useRedefinedDomainResolverContext } from "../../context/RedefinedDomainResolverContext";
 import Timeout from "../timeout/Timeout";
-import moment from "moment";
 
 const ResolveItem = (props: ResolveItemProps) => {
     const { item, onChange } = props;
@@ -23,10 +22,11 @@ const ResolveItem = (props: ResolveItemProps) => {
     ), [assets]);
 
     return (
-        <ItemWrapper disabled={moment().diff(item.fetchedAt) > 60000} onClick={() => onChange({ ...item, type: "resolve" })}>
+        <ItemWrapper onClick={() => onChange({ ...item, type: "resolve" })}>
             <StyledContent>
                 <StyledLogo
                     width={baseStyle.dropDown.logo.width}
+                    height={baseStyle.dropDown.logo.height}
                     src={getAssetsByNetwork(item.network)?.logo}
                     alt="coinLogo"
                 />
@@ -41,7 +41,7 @@ const ResolveItem = (props: ResolveItemProps) => {
                     </StyledSubTitle>
                 </div>
             </StyledContent>
-            {item && <StyledTimeout fetchedAt={item.fetchedAt}/>}
+            {item && <Timeout fetchedAt={item.fetchedAt}/>}
             <div style={{pointerEvents: "all"}} onClick={(e) => onCopyClick(e, item.address)}>
                 <StyledIcon path={mdiContentCopy}/>
             </div>
@@ -60,30 +60,22 @@ const StyledSubTitle = styled.div`
   font-size: 12px;
 `
 
-const ItemWrapper = styled.div<{disabled: boolean}>`
+const ItemWrapper = styled.div`
   display: flex;
-  padding: 5px 5px;
+  padding: 5px;
   justify-content: space-between;
   align-items: center;
-  pointer-events: ${(props) => props.disabled && "none"};
-  opacity: ${(props) => props.disabled ? 0.5 : 1};
-  border-radius: ${baseStyle.input.borderRadius};
-
-  :hover {
-    background: ${(props) => !props.disabled && props.theme.colors.hover};
-    border-radius: ${baseStyle.input.borderRadius};
-    cursor: pointer;
-  }
 `
 
 const StyledContent = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
+  width: 40%;
 `
 
 const StyledLogo = styled.img`
-  margin-right: 10px;
+  margin-right: 17px;
   background: white;
   border-radius: ${baseStyle.dropDown.logo.width};
 `
@@ -98,12 +90,6 @@ const StyledIcon = styled(Icon)`
     color: ${baseStyle.brandColor};
     transition: 0.5s ease all;
   }
-`
-
-const StyledTimeout = styled(Timeout)`
-  position: absolute;
-  bottom: 2px;
-  right: ${baseStyle.input.logo.padding};
 `
 
 const StyledSpan = styled.span<{ isRedefined: boolean }>`

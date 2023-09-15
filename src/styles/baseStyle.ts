@@ -70,7 +70,8 @@ export const baseStyle = {
 
   dropDown: {
     logo: {
-      width: "20px",
+      width: "25px",
+      height: "25px",
     },
     copyIcon: {
       width: "20px"

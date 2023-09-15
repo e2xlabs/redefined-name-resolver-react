@@ -68,7 +68,8 @@ export interface RedefinedDomainResolverProps {
   disabled?: boolean;
   hiddenAddressGap?: HiddenAddressGap;
   resolverOptions?: ResolverOptions;
-  placeholder?: string
+  placeholder?: string;
+  defaultValue?: string;
 
   onUpdate(result: TypedResult): void;
 }
