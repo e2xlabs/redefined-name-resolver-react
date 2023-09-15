@@ -7,7 +7,7 @@ const Timeout = ({ fetchedAt }: { fetchedAt: number }) => {
     const [data, setData] = useState(getTimeElapsedMessage(fetchedAt));
 
     useEffect(() => {
-        const intervalId = setInterval(() => setData(getTimeElapsedMessage(fetchedAt)), 1000);
+        const intervalId = setInterval(() => setData(getTimeElapsedMessage(fetchedAt)), 100);
 
         return () => {
             clearInterval(intervalId);
@@ -39,7 +39,7 @@ const getTimeElapsedMessage = (fetchedAt: number) => {
 
 const StyledFetchedAt = styled.span`
   font-size: ${baseStyle.input.timeout.fontSize};
-  color: ${(props) => props.theme.type === "light" ? "#222222" : "#ffffff"};
+  color: darkgrey;
 `
 
 export default Timeout;

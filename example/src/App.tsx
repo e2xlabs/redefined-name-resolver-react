@@ -8,7 +8,9 @@ export default function App() {
     const redefinedOrgUrl = "https://redefined.org";
     const termsConditionsUrl = "https://redefined.org/terms-conditions";
     const privacyUrl = "https://redefined.org/privacy";
-    
+    const queryParameters = new URLSearchParams(window.location.search);
+    const value = queryParameters.get("value");
+
     const [theme, setTheme] = useState<"light" | "dark">("dark");
 
     const swapTheme = () => {

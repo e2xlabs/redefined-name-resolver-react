@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor, act, findByText } from '@testing-library/react';
+import { render, fireEvent, waitFor, act } from '@testing-library/react';
 import axios from 'axios';
 import RedefinedDomainResolver from "../../src/components/domain-resolver";
 import { API_URL, ASSETS_URL } from "../../src/config";
@@ -132,7 +132,7 @@ describe('RedefinedDomainResolver Component', () => {
         (axios.get as jest.Mock).mockResolvedValueOnce({ data: resolveResponse });
         (axios.get as jest.Mock).mockResolvedValueOnce({ data: reverseResponse });
 
-        const { getByPlaceholderText, getByText, queryByTestId } = render(<RedefinedDomainResolver onUpdate={() => {}} />);
+        const { getByPlaceholderText, getByText } = render(<RedefinedDomainResolver onUpdate={() => {}} />);
         const inputElement = getByPlaceholderText('Type to search');
 
         fireEvent.change(inputElement, { target: { value: 'example.com' } });
@@ -148,7 +148,6 @@ describe('RedefinedDomainResolver Component', () => {
         const mockOnUpdate = jest.fn();
         const { getByPlaceholderText, getByText } = render(<RedefinedDomainResolver type={"resolve"} onUpdate={mockOnUpdate} />);
         const inputElement = getByPlaceholderText('Type to search');
-        const inputValue = 'example.com';
 
         await act(() => {
             fireEvent.change(inputElement, { target: { value: 'example.com' } });
