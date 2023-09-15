@@ -5,6 +5,6 @@ import RedefinedDomainResolver from "./components/domain-resolver";
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
     <React.StrictMode>
-        <RedefinedDomainResolver theme={"light"} onUpdate={() => {}} />
+        <RedefinedDomainResolver theme={"dark"} onUpdate={() => {}} />
     </React.StrictMode>,
 )

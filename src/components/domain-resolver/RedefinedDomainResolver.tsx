@@ -215,7 +215,7 @@ const RedefinedDomainResolver = (props: RedefinedDomainResolverProps) => {
 
     const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDomain(e.target.value);
-        onUpdateInput(e.target.value);
+        onUpdateInput && onUpdateInput(e.target.value);
         resolveDomainWithDebounce(e.target.value);
     }
 
