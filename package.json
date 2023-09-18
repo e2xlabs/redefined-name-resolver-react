@@ -1,6 +1,6 @@
 {
   "name": "@redefined/name-resolver-react",
-  "version": "1.8.4",
+  "version": "1.8.5",
   "description": "React component to resolve crypto names",
   "author": "e2xlabs",
   "repository": {
