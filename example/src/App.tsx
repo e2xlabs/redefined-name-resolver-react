@@ -48,6 +48,12 @@ export default function App() {
         openUrl(privacyUrl)
     }
 
+    const updateQueryParam = (inputValue) => {
+        queryParameters.set('value', inputValue);
+        const newURL = `${window.location.pathname}?${queryParameters.toString()}`;
+        window.history.pushState({}, '', newURL);
+    };
+
     return (
         <div className={`app`}>
             <div className={"app-bar"}>
@@ -80,6 +86,8 @@ export default function App() {
                         theme={theme}
                         width={"90%"}
                         onUpdate={(val) => console.log(val)}
+                        defaultValue={value}
+                        onUpdateInput={(val) => updateQueryParam(val)}
                     />
                 </div>
                 <div className={"dev-text-container support"}>
