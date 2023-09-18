@@ -78,12 +78,13 @@ const StyledDropDown = styled.div`
   border-right: ${baseStyle.input.borderWidth} solid ${({ theme }) => theme.colors.borderColor};
   background: ${({ theme }) => theme.colors.background};
   transition: 0.5s ease all;
+  overflow: hidden;
 `;
 
 const UnorderedList = styled.ul`
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 10px 0;
   max-height: 30vh;
   overflow: auto;
 `;
@@ -97,11 +98,6 @@ const ListItem = styled.li<{disabled: boolean}>`
   :hover {
     background: ${(props) => !props.disabled && props.theme.colors.hover};
     cursor: pointer;
-  }
-  
-  :last-child {
-    border-bottom-left-radius: ${baseStyle.input.borderRadius};
-    border-bottom-right-radius: ${baseStyle.input.borderRadius};
   }
 `;
 
