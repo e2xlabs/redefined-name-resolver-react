@@ -18,7 +18,7 @@ const ReverseItem = (props: ReverseItemProps) => {
     return (
         <ItemWrapper onClick={() => onChange({ ...item, type: "reverse" })}>
             <StyledContent>
-                <div>
+                <div style={{maxWidth: "130%"}}>
                     <StyledTitle>{item.domain}</StyledTitle>
                     <StyledSubTitle>from: <StyledSpan isRedefined={item.vendor.startsWith("redefined")}>
                             {item.vendor.startsWith("redefined") ? "redefined" : item.vendor}
@@ -40,7 +40,6 @@ const StyledTitle = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 22%;
 `
 
 const StyledSubTitle = styled.div`
