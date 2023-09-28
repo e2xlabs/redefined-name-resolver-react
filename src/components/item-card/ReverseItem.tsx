@@ -18,7 +18,7 @@ const ReverseItem = (props: ReverseItemProps) => {
     return (
         <ItemWrapper onClick={() => onChange({ ...item, type: "reverse" })}>
             <StyledContent>
-                <div>
+                <div style={{maxWidth: "130%"}}>
                     <StyledTitle>{item.domain}</StyledTitle>
                     <StyledSubTitle>from: <StyledSpan isRedefined={item.vendor.startsWith("redefined")}>
                             {item.vendor.startsWith("redefined") ? "redefined" : item.vendor}
@@ -35,9 +35,11 @@ const ReverseItem = (props: ReverseItemProps) => {
 }
 
 const StyledTitle = styled.div`
-  cursor: pointer;
   color: ${({ theme }) => theme.colors.primary};
   font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const StyledSubTitle = styled.div`
@@ -50,6 +52,7 @@ const ItemWrapper = styled.div`
   padding: 5px;
   justify-content: space-between;
   align-items: center;
+  overflow-x: hidden;
 
   :hover {
     border-radius: ${baseStyle.input.borderRadius};
