@@ -35,9 +35,12 @@ const ReverseItem = (props: ReverseItemProps) => {
 }
 
 const StyledTitle = styled.div`
-  cursor: pointer;
   color: ${({ theme }) => theme.colors.primary};
   font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 22%;
 `
 
 const StyledSubTitle = styled.div`
@@ -50,6 +53,7 @@ const ItemWrapper = styled.div`
   padding: 5px;
   justify-content: space-between;
   align-items: center;
+  overflow-x: hidden;
 
   :hover {
     border-radius: ${baseStyle.input.borderRadius};
